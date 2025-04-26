@@ -37,6 +37,7 @@ interface TravelScheduleBlock {
   start: Date;
   end: Date;
   series: SeriesId[];
+  outcome: [number, number];
 }
 
 interface HistoricalRecord {
@@ -52,12 +53,13 @@ interface HistoricalRecord {
 const SEASON_START = new Date(2024, 2, 20);
 const SEASON_END = new Date(2024, 9, 1);
 
-const CHART_HEIGHT = 200;
+const CHART_HEIGHT = 600;
+const FIVE_HUNDRED_RECORD_Y = CHART_HEIGHT / 2;
 const CHART_WIDTH = 800;
 const CHART_PADDING = 10;
 const SERIES_SCALE = 3.0;
 const DAY_LENGTH_MS = 1000 * 60 * 60 * 24;
-const TEAM_ID = 140;
+const TEAM_ID = 146;
 
 const parseScheduleData = (json: any): ScheduleData => {
   for (let [key, value] of Object.entries(json.teams)) {
@@ -92,7 +94,7 @@ const opponentId = (team: TeamId, series: Series): TeamId =>
   series.home === team ? series.away : series.home;
 
 const seriesOutcome = (team: TeamId, series: Series) => {
-  let outcome = [0, 0];
+  let outcome: [number, number] = [0, 0];
 
   for (let i = 0; i < series.scores.length; i += 2) {
     if (series.scores[i] > series.scores[i + 1]) {
@@ -113,11 +115,11 @@ const seriesOutcomeColor = (team: TeamId, series: Series) => {
   const outcome = seriesOutcome(team, series);
 
   if (outcome[1] === 0) {
-    return "oklch(0.768 0.233 130.85)";
-  } else if (outcome[0] > outcome[1]) {
     return "oklch(0.532 0.157 131.589)";
+  } else if (outcome[0] > outcome[1]) {
+    return "oklch(0.768 0.233 130.85)";
   } else if (outcome[0] === outcome[1]) {
-    return "oklch(0.9 0 0)";
+    return "oklch(0.6 0 0)";
   } else if (outcome[0] === 0) {
     return "oklch(0.505 0.213 27.518)";
   } else {
@@ -152,7 +154,7 @@ const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b"));
 chart
   .append("g")
   .attr("class", "x-axis")
-  .attr("transform", `translate(10, 150)`)
+  .attr("transform", `translate(10, ${CHART_HEIGHT - 20})`)
   .call(xAxis);
 
 const yScale = d3.scaleLinear().domain([10, -10]).range([0, CHART_HEIGHT]);
@@ -174,6 +176,11 @@ for (let seriesId of schedule) {
 
   if (currentLeg && currentLeg.location === location) {
     currentLeg.series.push(seriesId);
+
+    const outcome = seriesOutcome(TEAM_ID, scheduleData.series[seriesId]);
+    currentLeg.outcome[0] += outcome[0];
+    currentLeg.outcome[1] += outcome[1];
+
     currentLeg.end = series.end;
   } else {
     currentLeg && travelSchedule.push(currentLeg);
@@ -182,6 +189,7 @@ for (let seriesId of schedule) {
       series: [seriesId],
       start: series.start,
       end: series.end,
+      outcome: seriesOutcome(TEAM_ID, scheduleData.series[seriesId]),
     };
   }
 }
@@ -202,8 +210,20 @@ chart
     block.location === Location.Home ? "#f0f0f0" : "#f7f7f7"
   )
   .attr("x", (block: TravelScheduleBlock) => xScale(block.start))
-  .attr("height", 130)
+  .attr("height", CHART_HEIGHT - 40)
   .attr("y", 17);
+
+// 500 Record
+chart
+  .append("line")
+  .attr("x1", 0)
+  .attr("x2", CHART_WIDTH)
+  .attr("y1", FIVE_HUNDRED_RECORD_Y)
+  .attr("y2", FIVE_HUNDRED_RECORD_Y)
+  .style("stroke-dasharray", "5,3")
+  .style("stroke", "gray");
+
+let rollingY = FIVE_HUNDRED_RECORD_Y - 100;
 
 // Travel aggregate records
 chart
@@ -219,8 +239,21 @@ chart
     seriesOutcomeColor(TEAM_ID, scheduleData.series[block.series[0]])
   )
   .attr("x", (block: TravelScheduleBlock) => xScale(block.start))
-  .attr("height", 5)
-  .attr("y", 135);
+  .attr("height", (block: TravelScheduleBlock) => {
+    const recordChange = block.outcome[1] - block.outcome[0];
+    // console.log(block.outcome);
+    return 5 * Math.abs(recordChange) || 1;
+  })
+  .attr("y", (block: TravelScheduleBlock) => {
+    const recordChange = block.outcome[1] - block.outcome[0];
+
+    const current = rollingY;
+    rollingY += recordChange * 5;
+
+    return current + (recordChange < 0 ? recordChange * 5 : 0);
+  });
+
+rollingY = FIVE_HUNDRED_RECORD_Y;
 
 // Series
 chart
@@ -228,7 +261,12 @@ chart
   .selectAll()
   .data(schedule)
   .join("rect")
-  .attr("height", 5)
+  .attr("height", (id: SeriesId) => {
+    const outcome = seriesOutcome(TEAM_ID, scheduleData.series[id]);
+    const recordChange = outcome[1] - outcome[0];
+
+    return 5 * Math.abs(recordChange) || 1;
+  })
   .attr(
     "width",
     (id: SeriesId) =>
@@ -239,7 +277,15 @@ chart
     seriesOutcomeColor(TEAM_ID, scheduleData.series[id])
   )
   .attr("x", (id: SeriesId) => xScale(scheduleData.series[id].start))
-  .attr("y", 50);
+  .attr("y", (id: SeriesId) => {
+    const outcome = seriesOutcome(TEAM_ID, scheduleData.series[id]);
+    const recordChange = outcome[1] - outcome[0];
+
+    const current = rollingY;
+    rollingY += recordChange * 5;
+
+    return current + (recordChange < 0 ? recordChange * 5 : 0);
+  });
 
 // Logos
 chart
