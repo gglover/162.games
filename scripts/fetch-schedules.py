@@ -3,8 +3,8 @@ import json
 import time
 from pprint import pprint
 
-SEASON_START = '03/18/2024'
-SEASON_END = '10/5/2024'
+SEASON_START = '03/18/2025'
+SEASON_END = '10/5/2025'
 
 teams = statsapi.lookup_team('', activeStatus='Y')
 

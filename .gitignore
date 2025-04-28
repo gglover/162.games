@@ -1,5 +1,7 @@
 node_modules
 scripts/data
+scripts/data_2024
+src/data*
 .venv
 .vscode
 mlb
