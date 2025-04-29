@@ -1,27 +1,16 @@
 import "./style.css";
-import data from "./data_2024.json";
+import data from "./data.json";
 import { ScheduleData, Series, TeamId } from "./interfaces";
-import renderScheduleChart from "./chart/schedule";
+import renderChart from "./chart/container";
 
 // Core JSON data preprocessing (Global, one-time)
 //
 const parseScheduleData = (json: any): ScheduleData => {
-  for (let [key, value] of Object.entries(json.teams)) {
-    delete json.teams[key];
-    json.teams[parseInt(key)] = value;
-  }
-
-  for (let date in json.records) {
-    for (let [key, value] of Object.entries(json.records[date])) {
-      delete json.records[date][key];
-      json.records[date][parseInt(key)] = value;
-    }
-  }
-
-  for (let [key, value] of Object.entries(json.series as Series)) {
-    delete json.series[key];
-    json.series[parseInt(key)] = value;
-
+  // NEXT:
+  //
+  // Fix rankings to aggregate and go day by day in rankings curve.
+  //
+  for (let value of Object.values(json.series as Series)) {
     value.start = new Date(value.start);
 
     const end = new Date(value.end);
@@ -29,19 +18,22 @@ const parseScheduleData = (json: any): ScheduleData => {
     value.end = end;
   }
 
+  json.daysWithGamesPlayed = Object.keys(json.records)
+    .map((isoDateKey) => new Date(isoDateKey))
+    .sort((a, b) => a - b);
+
   return json as ScheduleData;
 };
 
 const scheduleData = parseScheduleData(data);
 
-const DEFAULT_TEAM_ID = 136;
-const DEFAULT_SEASON_ID = 2025;
+const DEFAULT_TEAM_ID = "136";
 
 const renderTeamChart = (id: TeamId) => {
   // season
   // teamId
   // scheduleData
-  renderScheduleChart(scheduleData, parseInt(id));
+  renderChart(scheduleData, id);
 };
 
 // TODO:
@@ -60,3 +52,5 @@ for (let teamId in scheduleData.teams) {
 
   teamLinks?.appendChild(teamLink);
 }
+
+renderTeamChart(DEFAULT_TEAM_ID);

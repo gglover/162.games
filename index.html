@@ -8,8 +8,51 @@
   </head>
   <body>
     <main id="app">
-      <div class="team-links"></div>
-      <div class="team-chart"></div>
+      <div class="team-links mb-8"></div>
+      <div class="flex gap-4 justify-center">
+        <div class="flex flex-col gap-2 team-overview w-36">
+          <div class="h-[150px] flex items-center mb-5">
+            <div
+              class="w-30 h-30 mx-auto bg-gray-300 p-8 rounded-full relative"
+            >
+              <img class="team-logo object-contain w-1/1 h-1/1" />
+              <div
+                class="absolute rounded-full border-b-gray-100 border border-gray-200 bg-white w-7 h-7 text-center bottom-0 right-0"
+              >
+                🔥
+              </div>
+            </div>
+          </div>
+          <h1 class="text-lg text-black">Seattle Mariners</h1>
+          <p class="text-black text-xs">16 - 12</p>
+          <p class="text-black text-xs">1st [AL West]</p>
+          <p class="text-black text-xs mb-2">7th [MLB]</p>
+          <p class="text-black text-xs mb-2">Strength of Schedule</p>
+          <p class="text-black text-xs mb-2 flex-grow">
+            Strength of Remaining Schedule
+          </p>
+          <select
+            class="bg-transparent placeholder:text-gray-400 text-gray-700 text-xs border border-gray-200 rounded pl-2 pr-5 py-1 transition duration-300 ease focus:outline-none focus:border-gray-400 hover:border-gray-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
+          >
+            <option selected>2025</option>
+            <option>2024</option>
+            <option>2023</option>
+          </select>
+        </div>
+        <div class="team-chart grid">
+          <div class="rankings-y-axis"></div>
+          <div class="rankings border-y-1 border-gray-500"></div>
+
+          <div></div>
+          <div class="opponent-logos"></div>
+
+          <div class="schedule-y-axis"></div>
+          <div class="schedule border border-x-0 border-gray-500"></div>
+
+          <div></div>
+          <div class="footer"></div>
+        </div>
+      </div>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>

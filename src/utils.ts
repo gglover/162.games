@@ -1,6 +1,8 @@
 import { Series, TeamId } from "./interfaces";
 import { SVGS } from "./svgs";
 
+export const dateToRecordsKey = (date: Date) => date.toISOString().slice(0, 10);
+
 export const teamLogoFromId = (id: TeamId): string => SVGS[`LOGO_${id}`];
 
 export const opponentId = (team: TeamId, series: Series): TeamId =>
