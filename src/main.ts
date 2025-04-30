@@ -2,6 +2,8 @@ import "./style.css";
 import data from "./data.json";
 import { ScheduleData, Series, TeamId } from "./interfaces";
 import renderChart from "./chart/container";
+import renderSquare from "./chart/square";
+import { dateToRecordsKey } from "./utils";
 
 // Core JSON data preprocessing (Global, one-time)
 //
@@ -53,4 +55,8 @@ for (let teamId in scheduleData.teams) {
   teamLinks?.appendChild(teamLink);
 }
 
-renderTeamChart(DEFAULT_TEAM_ID);
+// renderTeamChart(DEFAULT_TEAM_ID);
+
+// const todayKey = dateToRecordsKey(new Date());
+const todayKey = "2024-09-30";
+renderSquare(scheduleData.records[todayKey]);

@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+
 import {
   ScheduleData,
   SeriesId,
@@ -91,6 +92,29 @@ const renderSchedule = (
     .attr("height", CHART_HEIGHT)
     .attr("y", 0);
 
+  // Home icons
+  //
+  // chart
+  //   .append("g")
+  //   .selectAll()
+  //   .data(
+  //     travelSchedule.filter(
+  //       (block: TravelScheduleBlock) => block.location === SeriesLocation.Home
+  //     )
+  //   )
+  //   .join("image")
+  //   .attr("xlink:href", SVGS.HOUSE)
+  //   .attr("opacity", 0.5)
+  //   .attr("x", (block: TravelScheduleBlock) => {
+  //     const start = xScale(block.end);
+  //     const end = xScale(block.start);
+
+  //     return start + (end - start) / 2 - 8;
+  //   })
+  //   .attr("y", CHART_HEIGHT - 20)
+  //   .attr("height", 16)
+  //   .attr("width", 16);
+
   // 500 record line
   //
   chart
@@ -166,9 +190,9 @@ const renderSchedule = (
         .slice(0, 10);
       const records = scheduleData.records[dateIndex][opponent];
 
-      if (records[4] - records[5] >= 2) {
+      if (records[3] >= 0.8) {
         return "🔥";
-      } else if (records[4] - records[5] <= -2) {
+      } else if (records[3] <= 0.2) {
         return "❄️";
       }
 

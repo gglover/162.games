@@ -14,7 +14,6 @@ import {
 } from "../utils";
 import {
   CHART_WIDTH,
-  CHART_PADDING,
   CHART_HEIGHT,
   SEASON_START,
   SEASON_END,

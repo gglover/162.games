@@ -7,7 +7,7 @@ const renderRankingsYAxis = (yScale: d3.ScaleLinear<number, number>) => {
     .attr("width", Y_AXIS_WIDTH)
     .attr("height", RANKINGS_HEIGHT);
 
-  const ordinalSuffix = (n) => {
+  const ordinalSuffix = (n: number) => {
     const s = ["th", "st", "nd", "rd"],
       v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);

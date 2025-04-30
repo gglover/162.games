@@ -1,12 +1,20 @@
 import * as d3 from "d3";
 import {
+  CHART_HEIGHT,
   CHART_WIDTH,
   RANKINGS_HEIGHT,
   RANKINGS_PADDING,
+  SEASON_END,
   SEASON_START,
 } from "./constants";
-import { ScheduleData, SeriesId, TeamId } from "../interfaces";
-import { dateToRecordsKey, opponentId } from "../utils";
+import {
+  ScheduleData,
+  SeriesId,
+  SeriesLocation,
+  TeamId,
+  TravelScheduleBlock,
+} from "../interfaces";
+import { dateToRecordsKey, opponentId, seriesOutcome } from "../utils";
 
 const renderRankings = (
   teamId: TeamId,
@@ -25,10 +33,6 @@ const renderRankings = (
     .map((id) => scheduleData.series[id].start)
     .filter((day) => day < today);
 
-  // const playedSchedule = schedule.filter(
-  //   (id) => scheduleData.series[id].start < today
-  // );
-
   const svg = d3
     .create("svg")
     .attr("width", CHART_WIDTH)
@@ -39,14 +43,25 @@ const renderRankings = (
   // const rankScale = d3.scaleSequential(d3.schemeRdGy[10]);
   const rankScale = d3.scaleSequential(d3.interpolateRdGy);
 
+  chart
+    .append("g")
+    .selectAll()
+    .data(schedule)
+    .join("line")
+    .attr("x1", (id: SeriesId) => xScale(scheduleData.series[id].start) + 5)
+    .attr("x2", (id: SeriesId) => xScale(scheduleData.series[id].start) + 5)
+    .attr("y1", 0)
+    .attr("y2", RANKINGS_HEIGHT)
+    .style("stroke", "#e0e0e0");
+
   // Middle of the pack line
   //
   chart
     .append("line")
     .attr("x1", 0)
     .attr("x2", CHART_WIDTH)
-    .attr("y1", yScale(15))
-    .attr("y2", yScale(15))
+    .attr("y1", yScale(15) + RANKINGS_PADDING)
+    .attr("y2", yScale(15) + RANKINGS_PADDING)
     .style("stroke-dasharray", "5,3")
     .style("stroke", "gray");
 
@@ -58,6 +73,36 @@ const renderRankings = (
     .attr("width", 2)
     .attr("height", RANKINGS_HEIGHT)
     .attr("fill", "rgba(200, 200, 200, 0.5)");
+
+  // rank
+  chart
+    .append("g")
+    .selectAll()
+    .data(schedule)
+    .join("line")
+    .attr("x1", (id: SeriesId) => xScale(scheduleData.series[id].start) + 5)
+    .attr("x2", (id: SeriesId) => xScale(scheduleData.series[id].start) + 5)
+    .attr("y1", (id: SeriesId) => {
+      const opponent = opponentId(teamId, scheduleData.series[id]);
+
+      const dateIndex = scheduleData.series[id].start
+        .toISOString()
+        .slice(0, 10);
+
+      const records = scheduleData.records[dateIndex][opponent];
+
+      return yScale(records[2]) + RANKINGS_PADDING / 2;
+    })
+    .attr("y2", (id: SeriesId) => {
+      const opponent = opponentId(teamId, scheduleData.series[id]);
+
+      const dateIndex = SEASON_END.toISOString().slice(0, 10);
+
+      const records = scheduleData.records[dateIndex][opponent];
+
+      return yScale(records[2]) + RANKINGS_PADDING / 2;
+    })
+    .style("stroke", "black");
 
   // rank
   chart
@@ -89,15 +134,10 @@ const renderRankings = (
 
       const y = yScale(records[2]);
 
-      return `translate(${x}, ${y + RANKINGS_PADDING / 2})`;
+      return `translate(${x + 2}, ${y + RANKINGS_PADDING / 2})`;
     })
-    .attr("height", 5)
-    .attr(
-      "width",
-      (id: SeriesId) =>
-        xScale(scheduleData.series[id].end) -
-        xScale(scheduleData.series[id].start)
-    );
+    .attr("height", 6)
+    .attr("width", 6);
 
   const rankingLineGenerator = d3
     .line<Date>()
