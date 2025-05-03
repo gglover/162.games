@@ -1,8 +1,7 @@
 node_modules
 dist
-scripts/data
-scripts/data_2024
-src/data*
+scripts/data_*
+public/data*
 .venv
 .vscode
 mlb

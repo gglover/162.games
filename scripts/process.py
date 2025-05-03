@@ -6,6 +6,7 @@ from itertools import groupby
 from math import ceil
 from pprint import pprint
 import random
+import sys
 
 # Records
 #
@@ -39,11 +40,19 @@ import random
 # }
 #
 
+if len(sys.argv) > 1:
+    print("Processing season:", sys.argv[1])
+else:
+    print("Error: Please provide the season's year.")
+    exit()
+
+year = sys.argv[1]
+
 all_records = {}
 all_series = {}
 all_teams = {}
 
-with open('scripts/data_2024/teams.json') as json_data:
+with open(f'scripts/data_{year}/teams.json') as json_data:
     teams = json.load(json_data)
 
     for team in teams:
@@ -60,7 +69,7 @@ for team_id in all_teams:
 
     processed_game_ids = set()
 
-    with open(f'scripts/data_2024/{team_id}.json') as json_data:
+    with open(f'scripts/data_{year}/{team_id}.json') as json_data:
         schedule = json.load(json_data)
         
         regular_season = [game for game in schedule if game['game_type'] == 'R']
@@ -134,21 +143,33 @@ for team_id in all_teams:
 
 # Fill in gaps in records
 #
-prev_date = None
+sorted_dates = sorted([datetime.strptime(date, '%Y-%m-%d') for date in all_records.keys()])
+# sorted_dates = sorted(all_records.keys(), key=lambda x: datetime.strptime(x, '%Y-%m-%d'))
 
-for date in sorted(all_records.keys(), key=lambda x: datetime.strptime(x, '%Y-%m-%d')):
-    # print(date)
-    for team, record in all_records[date].items():
+season_start = sorted_dates[0]
+season_end = sorted_dates[-1]
+
+current_date = season_start
+
+while current_date <= season_end:
+    prev_date_key = (current_date - timedelta(days = 1)).strftime("%Y-%m-%d")
+    date_key = current_date.strftime("%Y-%m-%d")
+
+    if not date_key in all_records:
+        all_records[date_key] = { key: None for key in all_teams }
+
+
+    for team, record in all_records[date_key].items():
 
         # If no record exists (ie. it's an off day) backfill from previous date or initialize.
         if record is None:
-            if not prev_date:
-                all_records[date][team] = [0, 0]
+            if not prev_date_key in all_records:
+                all_records[date_key][team] = [0, 0]
             
             else:
-                all_records[date][team] = all_records[prev_date][team].copy()
+                all_records[date_key][team] = all_records[prev_date_key][team].copy()
     
-    prev_date = date
+    current_date = current_date + timedelta(days=1)
 
 # Convert winning pct to integer so that comparison is stable.
 # 
@@ -183,11 +204,13 @@ for date, records in all_records.items():
 
 # Output results to file
 #
-with open('src/data.json', 'w', encoding='utf-8') as f:
+with open(f'public/data_{year}.json', 'w', encoding='utf-8') as f:
     schedule_data = {
         'teams': all_teams,
         'series': all_series,
-        'records': all_records
+        'records': all_records,
+        'start': season_start.strftime("%Y-%m-%d"),
+        'end': season_end.strftime("%Y-%m-%d"),
     }
 
     json.dump(schedule_data, f, ensure_ascii=False, indent=4)
@@ -197,3 +220,4 @@ with open('src/data.json', 'w', encoding='utf-8') as f:
 
 # pprint(all_records['2025-03-18'])
 # pprint(all_records['2025-03-19'])
+# pprint(all_records['2025-03-20'])

@@ -1,24 +1,10 @@
 import * as d3 from "d3";
-import {
-  ScheduleData,
-  SeriesId,
-  SeriesLocation,
-  TeamId,
-  TravelScheduleBlock,
-} from "../interfaces";
-import {
-  opponentId,
-  seriesOutcome,
-  seriesOutcomeColor,
-  teamLogoFromId,
-} from "../utils";
+import { ScheduleData, TeamId } from "../interfaces";
+import { teamLogoFromId } from "../utils";
 import {
   CHART_WIDTH,
   CHART_HEIGHT,
-  SEASON_START,
-  SEASON_END,
   WIN_INTERVAL_HEIGHT,
-  FIVE_HUNDRED_RECORD_Y,
   Y_AXIS_WIDTH,
   RANKINGS_HEIGHT,
   RANKINGS_PADDING,
@@ -64,7 +50,7 @@ const renderChart = (scheduleData: ScheduleData, teamId: TeamId) => {
   //
   const xScale = d3
     .scaleTime()
-    .domain([SEASON_START, SEASON_END])
+    .domain([scheduleData.start, scheduleData.end])
     .range([0, CHART_WIDTH]);
 
   const scheduleYScale = d3

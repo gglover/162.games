@@ -1,5 +1,3 @@
-export const SEASON_START = new Date(2024, 2, 28);
-export const SEASON_END = new Date(2024, 8, 30);
 export const CHART_HEIGHT = 400;
 export const CHART_WIDTH = 900;
 export const RANKINGS_HEIGHT = 150;

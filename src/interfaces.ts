@@ -21,7 +21,8 @@ export interface ScheduleData {
   teams: Record<TeamId, Team>;
   series: Record<SeriesId, Series>;
   records: Record<string, HistoricalRecord>;
-  daysWithGamesPlayed: Date[];
+  start: Date;
+  end: Date;
 }
 
 export type DayWithGames = keyof ScheduleData["records"];

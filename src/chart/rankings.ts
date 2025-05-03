@@ -1,20 +1,7 @@
 import * as d3 from "d3";
-import {
-  CHART_HEIGHT,
-  CHART_WIDTH,
-  RANKINGS_HEIGHT,
-  RANKINGS_PADDING,
-  SEASON_END,
-  SEASON_START,
-} from "./constants";
-import {
-  ScheduleData,
-  SeriesId,
-  SeriesLocation,
-  TeamId,
-  TravelScheduleBlock,
-} from "../interfaces";
-import { dateToRecordsKey, opponentId, seriesOutcome } from "../utils";
+import { CHART_WIDTH, RANKINGS_HEIGHT, RANKINGS_PADDING } from "./constants";
+import { ScheduleData, SeriesId, TeamId } from "../interfaces";
+import { dateToRecordsKey, opponentId } from "../utils";
 
 const renderRankings = (
   teamId: TeamId,
@@ -29,9 +16,13 @@ const renderRankings = (
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const daySamples = schedule
-    .map((id) => scheduleData.series[id].start)
-    .filter((day) => day < today);
+  let start = new Date();
+  start.setTime(scheduleData.start.getTime());
+
+  let end = new Date();
+  end.setTime(scheduleData.end.getTime());
+
+  const daySamples = d3.timeDays(start, today > end ? end : today);
 
   const svg = d3
     .create("svg")
@@ -74,6 +65,23 @@ const renderRankings = (
     .attr("height", RANKINGS_HEIGHT)
     .attr("fill", "rgba(200, 200, 200, 0.5)");
 
+  const rankingLineGenerator = d3
+    .line<Date>()
+    .x((day: Date) => xScale(day))
+    .y(
+      (day: Date) =>
+        yScale(scheduleData.records[dateToRecordsKey(day)][teamId][2]) +
+        RANKINGS_PADDING
+    )
+    .curve(d3.curveCatmullRom.alpha(0.3));
+
+  chart
+    .append("path")
+    .attr("d", rankingLineGenerator(daySamples))
+    .attr("fill", "none")
+    .attr("stroke", "#707070")
+    .attr("stroke-width", "1.5px");
+
   // rank
   chart
     .append("g")
@@ -96,13 +104,13 @@ const renderRankings = (
     .attr("y2", (id: SeriesId) => {
       const opponent = opponentId(teamId, scheduleData.series[id]);
 
-      const dateIndex = SEASON_END.toISOString().slice(0, 10);
+      const dateIndex = scheduleData.end.toISOString().slice(0, 10);
 
       const records = scheduleData.records[dateIndex][opponent];
 
       return yScale(records[2]) + RANKINGS_PADDING / 2;
     })
-    .style("stroke", "black");
+    .style("stroke", "gray");
 
   // rank
   chart
@@ -138,28 +146,6 @@ const renderRankings = (
     })
     .attr("height", 6)
     .attr("width", 6);
-
-  const rankingLineGenerator = d3
-    .line<Date>()
-    .x((day: Date) => xScale(day))
-    .y((day: Date) =>
-      yScale(scheduleData.records[dateToRecordsKey(day)][teamId][2])
-    )
-    .curve(d3.curveCatmullRom.alpha(0.3));
-
-  daySamples.shift();
-  daySamples.shift();
-  daySamples.shift();
-  daySamples.shift();
-  daySamples.shift();
-  daySamples.shift();
-
-  chart
-    .append("path")
-    .attr("d", rankingLineGenerator([SEASON_START, ...daySamples]))
-    .attr("fill", "none")
-    .attr("stroke", "rgba(0, 0, 0, 0.5)")
-    .attr("stroke-width", "1.5px");
 
   return svg;
 };
