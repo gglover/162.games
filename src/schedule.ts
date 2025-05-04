@@ -1,5 +1,6 @@
 // Core JSON data preprocessing (Global, one-time)
 
+import { QueryFunction } from "@tanstack/react-query";
 import { ScheduleData, Series } from "./interfaces";
 
 const parseScheduleData = (json: any): ScheduleData => {
@@ -21,7 +22,11 @@ const parseScheduleData = (json: any): ScheduleData => {
   return json as ScheduleData;
 };
 
-export const fetchScheduleData = async (year: string) => {
+export const fetchScheduleData: QueryFunction<ScheduleData> = async ({
+  queryKey,
+}) => {
+  const year = queryKey[1];
+
   try {
     const scheduleResponse = await fetch(`/data_${year}.json`);
     const scheduleJson = await scheduleResponse.json();

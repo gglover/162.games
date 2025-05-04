@@ -8,10 +8,12 @@ import {
   TravelScheduleBlock,
 } from "../interfaces";
 import {
+  dateToRecordsKey,
+  heatIndexIcon,
+  heatIndexSize,
   opponentId,
   seriesOutcome,
   seriesOutcomeColor,
-  teamLogoFromId,
 } from "../utils";
 import {
   CHART_HEIGHT,
@@ -23,8 +25,7 @@ import {
 const renderSchedule = (
   teamId: TeamId,
   scheduleData: ScheduleData,
-  xScale: d3.ScaleTime<number, number>,
-  yScale: d3.ScaleLinear<number, number>
+  xScale: d3.ScaleTime<number, number>
 ) => {
   const schedule = scheduleData.teams[teamId].schedule.filter(
     (id) => scheduleData.series[id]
@@ -184,37 +185,17 @@ const renderSchedule = (
     .attr("x", (id: SeriesId) => xScale(scheduleData.series[id].start))
     .text((id: SeriesId) => {
       const opponent = opponentId(teamId, scheduleData.series[id]);
+      const dateKey = dateToRecordsKey(scheduleData.series[id].start);
+      const records = scheduleData.records[dateKey][opponent];
 
-      const dateIndex = scheduleData.series[id].start
-        .toISOString()
-        .slice(0, 10);
-      const records = scheduleData.records[dateIndex][opponent];
-
-      if (records[3] >= 0.8) {
-        return "🔥";
-      } else if (records[3] <= 0.2) {
-        return "❄️";
-      }
-
-      return "";
+      return heatIndexIcon(records[3]);
     })
     .attr("font-size", (id: SeriesId) => {
       const opponent = opponentId(teamId, scheduleData.series[id]);
+      const dateKey = dateToRecordsKey(scheduleData.series[id].start);
+      const records = scheduleData.records[dateKey][opponent];
 
-      const dateIndex = scheduleData.series[id].start
-        .toISOString()
-        .slice(0, 10);
-      const records = scheduleData.records[dateIndex][opponent];
-
-      if (records[2] === 10 || records[2] === 0) {
-        return "20px";
-      } else if (records[2] === 9 || records[2] === 1) {
-        return "16px";
-      } else if (records[2] === 8 || records[2] === 2) {
-        return "12px";
-      }
-
-      return "7px";
+      return heatIndexSize(records[3]);
     })
     .attr("height", 12)
     .attr("width", 12)

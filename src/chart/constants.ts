@@ -8,3 +8,8 @@ export const FOOTER_HEIGHT = 50;
 export const FIVE_HUNDRED_RECORD_Y = CHART_HEIGHT / 2;
 export const WIN_INTERVAL_HEIGHT = 6;
 export const Y_AXIS_WIDTH = 30;
+
+export const SQUARE_SIZE = 400;
+export const SQUARE_PADDING = 30;
+
+export const SEASONS = ["2025", "2024", "2023"];

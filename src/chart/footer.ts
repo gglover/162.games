@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { ScheduleData, SeriesId, TeamId } from "../interfaces";
 import { CHART_WIDTH, FOOTER_HEIGHT } from "./constants";
+import { dateToRecordsKey, heatIndexIcon, heatIndexSize } from "../utils";
 
 const renderFooter = (
   teamId: TeamId,
@@ -26,8 +27,6 @@ const renderFooter = (
     .attr("class", "x-axis")
     .attr("transform", `translate(0, 25)`)
     .call(xAxis);
-  // .selectAll(".domain")
-  // .remove();
 
   // Hot or not
   footer
@@ -37,37 +36,15 @@ const renderFooter = (
     .join("text")
     .attr("x", (id: SeriesId) => xScale(scheduleData.series[id].start))
     .text((id: SeriesId) => {
-      const dateIndex = scheduleData.series[id].start
-        .toISOString()
-        .slice(0, 10);
+      const dateIndex = dateToRecordsKey(scheduleData.series[id].start);
       const records = scheduleData.records[dateIndex][teamId];
-
-      if (records[4] - records[5] >= 2) {
-        return "🔥";
-      } else if (records[4] - records[5] <= -2) {
-        return "❄️";
-      }
-
-      return "";
+      return heatIndexIcon(records[3]);
     })
     .attr("font-size", (id: SeriesId) => {
-      const dateIndex = scheduleData.series[id].start
-        .toISOString()
-        .slice(0, 10);
+      const dateIndex = dateToRecordsKey(scheduleData.series[id].start);
       const records = scheduleData.records[dateIndex][teamId];
-
-      if (records[2] === 10 || records[2] === 0) {
-        return "20px";
-      } else if (records[2] === 9 || records[2] === 1) {
-        return "16px";
-      } else if (records[2] === 8 || records[2] === 2) {
-        return "12px";
-      }
-
-      return "7px";
+      return heatIndexSize(records[3]);
     })
-    .attr("height", 12)
-    .attr("width", 12)
     .attr("y", 15);
 
   return svg;

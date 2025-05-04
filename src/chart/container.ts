@@ -91,12 +91,7 @@ const renderChart = (scheduleData: ScheduleData, teamId: TeamId) => {
   scheduleYAxisContainer.innerHTML = "";
   scheduleYAxisContainer.append(scheduleYAxisSvg.node()!);
 
-  const scheduleSvg = renderSchedule(
-    teamId,
-    scheduleData,
-    xScale,
-    scheduleYScale
-  );
+  const scheduleSvg = renderSchedule(teamId, scheduleData, xScale);
   const scheduleContainer = document.querySelector(".schedule")!;
   scheduleContainer.innerHTML = "";
   scheduleContainer.append(scheduleSvg.node()!);

@@ -1,0 +1,212 @@
+[
+  {
+    "id": "133",
+    "name": "Athletics",
+    "symbol": "ATH",
+    "league": "AL",
+    "division": "West"
+  },
+  {
+    "id": "134",
+    "name": "Pittsburgh Pirates",
+    "symbol": "PIT",
+    "league": "NL",
+    "division": "Central"
+  },
+  {
+    "id": "135",
+    "name": "San Diego Padres",
+    "symbol": "SD",
+    "league": "NL",
+    "division": "West"
+  },
+  {
+    "id": "136",
+    "name": "Seattle Mariners",
+    "symbol": "SEA",
+    "league": "AL",
+    "division": "West"
+  },
+  {
+    "id": "137",
+    "name": "San Francisco Giants",
+    "symbol": "SF",
+    "league": "NL",
+    "division": "West"
+  },
+  {
+    "id": "138",
+    "name": "St. Louis Cardinals",
+    "symbol": "STL",
+    "league": "NL",
+    "division": "Central"
+  },
+  {
+    "id": "139",
+    "name": "Tampa Bay Rays",
+    "symbol": "TB",
+    "league": "AL",
+    "division": "East"
+  },
+  {
+    "id": "140",
+    "name": "Texas Rangers",
+    "symbol": "TEX",
+    "league": "AL",
+    "division": "West"
+  },
+  {
+    "id": "141",
+    "name": "Toronto Blue Jays",
+    "symbol": "TOR",
+    "league": "AL",
+    "division": "East"
+  },
+  {
+    "id": "142",
+    "name": "Minnesota Twins",
+    "symbol": "MIN",
+    "league": "AL",
+    "division": "Central"
+  },
+  {
+    "id": "143",
+    "name": "Philadelphia Phillies",
+    "symbol": "PHI",
+    "league": "NL",
+    "division": "East"
+  },
+  {
+    "id": "144",
+    "name": "Atlanta Braves",
+    "symbol": "ATL",
+    "league": "NL",
+    "division": "East"
+  },
+  {
+    "id": "145",
+    "name": "Chicago White Sox",
+    "symbol": "CWS",
+    "league": "AL",
+    "division": "Central"
+  },
+  {
+    "id": "146",
+    "name": "Miami Marlins",
+    "symbol": "MIA",
+    "league": "NL",
+    "division": "East"
+  },
+  {
+    "id": "147",
+    "name": "New York Yankees",
+    "symbol": "NYY",
+    "league": "AL",
+    "division": "East"
+  },
+  {
+    "id": "158",
+    "name": "Milwaukee Brewers",
+    "symbol": "MIL",
+    "league": "NL",
+    "division": "Central"
+  },
+  {
+    "id": "108",
+    "name": "Los Angeles Angels",
+    "symbol": "LAA",
+    "league": "AL",
+    "division": "West"
+  },
+  {
+    "id": "109",
+    "name": "Arizona Diamondbacks",
+    "symbol": "ARI",
+    "league": "NL",
+    "division": "West"
+  },
+  {
+    "id": "110",
+    "name": "Baltimore Orioles",
+    "symbol": "BAL",
+    "league": "AL",
+    "division": "East"
+  },
+  {
+    "id": "111",
+    "name": "Boston Red Sox",
+    "symbol": "BOS",
+    "league": "AL",
+    "division": "East"
+  },
+  {
+    "id": "112",
+    "name": "Chicago Cubs",
+    "symbol": "CHC",
+    "league": "NL",
+    "division": "Central"
+  },
+  {
+    "id": "113",
+    "name": "Cincinnati Reds",
+    "symbol": "CIN",
+    "league": "NL",
+    "division": "Central"
+  },
+  {
+    "id": "114",
+    "name": "Cleveland Guardians",
+    "symbol": "CLE",
+    "league": "AL",
+    "division": "Central"
+  },
+  {
+    "id": "115",
+    "name": "Colorado Rockies",
+    "symbol": "COL",
+    "league": "NL",
+    "division": "West"
+  },
+  {
+    "id": "116",
+    "name": "Detroit Tigers",
+    "symbol": "DET",
+    "league": "AL",
+    "division": "Central"
+  },
+  {
+    "id": "117",
+    "name": "Houston Astros",
+    "symbol": "HOU",
+    "league": "AL",
+    "division": "West"
+  },
+  {
+    "id": "118",
+    "name": "Kansas City Royals",
+    "symbol": "KC",
+    "league": "AL",
+    "division": "Central"
+  },
+  {
+    "id": "119",
+    "name": "Los Angeles Dodgers",
+    "symbol": "LAD",
+    "league": "NL",
+    "division": "West"
+  },
+  {
+    "id": "120",
+    "name": "Washington Nationals",
+    "symbol": "WAS",
+    "league": "NL",
+    "division": "East"
+  },
+  {
+    "id": "121",
+    "name": "New York Mets",
+    "symbol": "NYM",
+    "league": "NL",
+    "division": "East"
+  }
+]

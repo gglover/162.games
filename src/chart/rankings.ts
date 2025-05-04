@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { CHART_WIDTH, RANKINGS_HEIGHT, RANKINGS_PADDING } from "./constants";
 import { ScheduleData, SeriesId, TeamId } from "../interfaces";
-import { dateToRecordsKey, opponentId } from "../utils";
+import { dateToRecordsKey, opponentId, lastDayPlayed } from "../utils";
 
 const renderRankings = (
   teamId: TeamId,
@@ -13,16 +13,12 @@ const renderRankings = (
     (id) => scheduleData.series[id]
   );
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
   let start = new Date();
   start.setTime(scheduleData.start.getTime());
 
-  let end = new Date();
-  end.setTime(scheduleData.end.getTime());
+  let end = lastDayPlayed(scheduleData.end);
 
-  const daySamples = d3.timeDays(start, today > end ? end : today);
+  const daySamples = d3.timeDays(start, end);
 
   const svg = d3
     .create("svg")
@@ -60,7 +56,7 @@ const renderRankings = (
   //
   chart
     .append("rect")
-    .attr("x", xScale(today))
+    .attr("x", xScale(end))
     .attr("width", 2)
     .attr("height", RANKINGS_HEIGHT)
     .attr("fill", "rgba(200, 200, 200, 0.5)");
@@ -92,21 +88,15 @@ const renderRankings = (
     .attr("x2", (id: SeriesId) => xScale(scheduleData.series[id].start) + 5)
     .attr("y1", (id: SeriesId) => {
       const opponent = opponentId(teamId, scheduleData.series[id]);
-
-      const dateIndex = scheduleData.series[id].start
-        .toISOString()
-        .slice(0, 10);
-
+      const dateIndex = dateToRecordsKey(scheduleData.series[id].start);
       const records = scheduleData.records[dateIndex][opponent];
 
       return yScale(records[2]) + RANKINGS_PADDING / 2;
     })
     .attr("y2", (id: SeriesId) => {
       const opponent = opponentId(teamId, scheduleData.series[id]);
-
-      const dateIndex = scheduleData.end.toISOString().slice(0, 10);
-
-      const records = scheduleData.records[dateIndex][opponent];
+      const records =
+        scheduleData.records[dateToRecordsKey(scheduleData.end)][opponent];
 
       return yScale(records[2]) + RANKINGS_PADDING / 2;
     })

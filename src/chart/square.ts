@@ -1,10 +1,7 @@
 import * as d3 from "d3";
 import { HistoricalRecord, TeamId } from "../interfaces";
-import { CHART_HEIGHT } from "./constants";
-import { opponentId, teamLogoFromId } from "../utils";
-
-const SQUARE_SIZE = 400;
-const SQUARE_PADDING = 30;
+import { SQUARE_PADDING, SQUARE_SIZE } from "./constants";
+import { teamLogoFromId } from "../utils";
 
 const renderSquare = (data: HistoricalRecord) => {
   const rankXScale = d3.scaleLinear().domain([30, 1]).range([0, SQUARE_SIZE]);

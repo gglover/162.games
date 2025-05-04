@@ -52,13 +52,11 @@ all_records = {}
 all_series = {}
 all_teams = {}
 
-with open(f'scripts/data_{year}/teams.json') as json_data:
+with open(f'src/teams.json') as json_data:
     teams = json.load(json_data)
 
     for team in teams:
         all_teams[team['id']] = {
-            'name': team['name'],
-            'code': team['teamCode'].upper(),
             'schedule': [],
             'record': [0, 0],
         }  

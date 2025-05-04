@@ -1,4 +1,4 @@
-import { Series, TeamId } from "./interfaces";
+import { HistoricalRecord, Series, TeamId } from "./interfaces";
 import { SVGS } from "./svgs";
 
 export const dateToRecordsKey = (date: Date) => date.toISOString().slice(0, 10);
@@ -7,6 +7,22 @@ export const teamLogoFromId = (id: TeamId): string => SVGS[`LOGO_${id}`];
 
 export const opponentId = (team: TeamId, series: Series): TeamId =>
   series.home === team ? series.away : series.home;
+
+export const lastDayPlayed = (seasonEnd: Date) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let end = new Date();
+  end.setTime(seasonEnd.getTime());
+
+  return today > end ? end : today;
+};
+
+export const daysBetween = (date1: Date, date2: Date) => {
+  const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+  const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+  return daysDiff;
+};
 
 export const seriesOutcome = (team: TeamId, series: Series) => {
   let outcome: [number, number] = [0, 0];
@@ -40,4 +56,26 @@ export const seriesOutcomeColor = (team: TeamId, series: Series) => {
   } else {
     return "oklch(0.704 0.191 22.216)";
   }
+};
+
+export const heatIndexIcon = (heatIndex: number) => {
+  if (heatIndex >= 0.8) {
+    return "🔥";
+  } else if (heatIndex <= 0.2) {
+    return "❄️";
+  }
+
+  return "";
+};
+
+export const heatIndexSize = (heatIndex: number) => {
+  if (heatIndex === 10 || heatIndex === 0) {
+    return "20px";
+  } else if (heatIndex === 9 || heatIndex === 1) {
+    return "16px";
+  } else if (heatIndex === 8 || heatIndex === 2) {
+    return "12px";
+  }
+
+  return "7px";
 };
