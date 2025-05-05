@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
-  {{> head }} {{#> page-layout }}
-  <main class="flex justify-center flex-col mt-8 w-lg mx-auto gap-4">
-    <div class="square flex justify-center"></div>
-    <input type="range" min="1" max="100" value="50" class="date-slider" />
-    <div class="date-slider-scale"></div>
-  </main>
-  <div id="root"></div>
-  {{/ page-layout }}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MLB Schedules</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

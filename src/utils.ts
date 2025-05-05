@@ -1,4 +1,4 @@
-import { HistoricalRecord, Series, TeamId } from "./interfaces";
+import { Series, TeamId } from "./interfaces";
 import { SVGS } from "./svgs";
 
 export const dateToRecordsKey = (date: Date) => date.toISOString().slice(0, 10);

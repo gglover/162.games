@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SeasonSelect } from "../components/SeasonSelect";
 import { SeasonDateSlider } from "../components/SeasonDateSlider";
 import { Square } from "../components/Square";
+import { ScheduleDataContext } from "../contexts";
 
 export const Route = createFileRoute("/")({
   component: HomePageComponent,
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/")({
 
 function HomePageComponent() {
   const [season, setSeason] = useState("2025");
+  const [date, setDate] = useState(new Date());
 
   const {
     error,
@@ -32,9 +34,11 @@ function HomePageComponent() {
 
   return (
     <main className="flex justify-center flex-col mt-8 w-lg mx-auto gap-4">
-      <Square />
-      <SeasonDateSlider start={scheduleData.start} end={scheduleData.end} />
-      <SeasonSelect onChange={setSeason} season={season} />
+      <ScheduleDataContext.Provider value={scheduleData}>
+        <Square date={date} />
+        <SeasonDateSlider date={date} onChange={setDate} />
+        <SeasonSelect season={season} onChange={setSeason} />
+      </ScheduleDataContext.Provider>
     </main>
   );
 }

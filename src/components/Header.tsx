@@ -12,7 +12,7 @@ export function Header() {
           <Link to="/about">About</Link>
         </div>
         <div className="team-links">
-          <a href="/teams#ATH">ATH</a>
+          <a href="/teams/ATH">ATH</a>
         </div>
       </div>
     </header>

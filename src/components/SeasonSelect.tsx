@@ -14,12 +14,11 @@ export function SeasonSelect({ season, onChange }: SeasonSelectProps) {
   return (
     <select
       onChange={handleSeasonChange}
+      value={season}
       className="bg-transparent placeholder:text-gray-400 text-gray-700 text-xs border border-gray-200 rounded pl-2 pr-5 py-1 transition duration-300 ease focus:outline-none focus:border-gray-400 hover:border-gray-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
     >
       {SEASONS.map((seasonOption) => (
-        <option selected={seasonOption === season}>
-          {seasonOption} Season
-        </option>
+        <option key={seasonOption}>{seasonOption} Season</option>
       ))}
     </select>
   );

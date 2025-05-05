@@ -1,11 +1,25 @@
+import * as d3 from "d3";
 import { SQUARE_PADDING, SQUARE_SIZE } from "../chart/constants";
+import { Axis, AxisOrientation } from "./Axis";
+import { TeamId } from "../interfaces";
+import { dateToRecordsKey, teamLogoFromId } from "../utils";
+import { useScheduleDataContext } from "../contexts";
+import { TeamLogo } from "./TeamLogo";
 
 const BACKGROUND_GRAY = "#f0f0f0";
 const AXIS_GRAY = "#d0d0d0";
 
-export interface SquareProps {}
+export interface SquareProps {
+  date: Date;
+}
 
-export function Square() {
+export function Square({ date }: SquareProps) {
+  const scheduleData = useScheduleDataContext();
+
+  const rankXScale = d3.scaleLinear().domain([30, 1]).range([0, SQUARE_SIZE]);
+  const heatYScale = d3.scaleLinear().domain([1.0, 0]).range([0, SQUARE_SIZE]);
+  const records = scheduleData.records[dateToRecordsKey(date)];
+
   return (
     <svg
       className="flex justify-center"
@@ -51,25 +65,26 @@ export function Square() {
         y2={SQUARE_PADDING}
         stroke={AXIS_GRAY}
       />
+
+      {Object.keys(records).map((id: TeamId) => (
+        <TeamLogo
+          key={id}
+          id={id}
+          size={25}
+          x={rankXScale(records[id][2])}
+          y={heatYScale(records[id][3])}
+        />
+      ))}
+
+      <Axis
+        scale={rankXScale}
+        x={SQUARE_PADDING}
+        y={SQUARE_SIZE + SQUARE_PADDING}
+        orientation={AxisOrientation.Horizontal}
+      />
     </svg>
   );
-
-  //   svg
-  //     .append("g")
-  //     .selectAll()
-  //     .data(Object.keys(data))
-  //     .join("image")
-  //     .attr("x", (id: TeamId) => rankXScale(data[id][2]) + 12)
-  //     .attr("y", (id: TeamId) => heatYScale(data[id][3]) + 12)
-  //     .attr("xlink:href", (id: TeamId) => teamLogoFromId(id))
-  //     .attr("height", 25)
-  //     .attr("width", 25);
 }
-
-// import * as d3 from "d3";
-// import { HistoricalRecord, TeamId } from "../interfaces";
-// import { SQUARE_PADDING, SQUARE_SIZE } from "./constants";
-// import { teamLogoFromId } from "../utils";
 
 // const renderSquare = (data: HistoricalRecord) => {
 //   const rankXScale = d3.scaleLinear().domain([30, 1]).range([0, SQUARE_SIZE]);

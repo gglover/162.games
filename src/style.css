@@ -14,11 +14,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.x-axis,
-.y-axis {
-  color: gray;
-}
-
 a {
   color: blue;
   font-size: 8px;
