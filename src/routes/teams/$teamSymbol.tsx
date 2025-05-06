@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchScheduleData } from "../../schedule";
 import { ScheduleDataContext } from "../../contexts";
 import { SeasonSelect } from "../../components/SeasonSelect";
-import { TEAMS } from "../../chart/constants";
+import { TEAMS } from "../../constants";
 
 export const Route = createFileRoute("/teams/$teamSymbol")({
   component: TeamsComponent,

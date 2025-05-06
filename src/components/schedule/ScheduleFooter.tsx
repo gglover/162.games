@@ -1,13 +1,8 @@
 import * as d3 from "d3";
-import {
-  CHART_HEIGHT,
-  CHART_WIDTH,
-  FOOTER_HEIGHT,
-} from "../../chart/constants";
+import { CHART_WIDTH, FOOTER_HEIGHT } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import { dateToRecordsKey, heatIndexIcon, heatIndexSize } from "../../utils";
-import { Axis, AxisOrientation } from "../Axis";
 import { useEffect, useRef } from "react";
 
 export interface ScheduleFooterProps {

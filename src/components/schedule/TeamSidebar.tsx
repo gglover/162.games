@@ -1,4 +1,4 @@
-import { TEAMS } from "../../chart/constants";
+import { TEAMS } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { TeamId } from "../../interfaces";
 import {

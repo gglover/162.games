@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { SQUARE_PADDING, SQUARE_SIZE } from "../chart/constants";
+import { SQUARE_PADDING, SQUARE_SIZE } from "../constants";
 import { Axis, AxisOrientation } from "./Axis";
 import { TeamId } from "../interfaces";
 import { dateToRecordsKey } from "../utils";

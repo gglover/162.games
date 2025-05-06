@@ -3,7 +3,7 @@ import {
   CHART_WIDTH,
   FIVE_HUNDRED_RECORD_Y,
   WIN_INTERVAL_HEIGHT,
-} from "../../chart/constants";
+} from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {

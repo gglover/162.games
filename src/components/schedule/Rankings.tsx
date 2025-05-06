@@ -3,7 +3,7 @@ import {
   CHART_WIDTH,
   RANKINGS_HEIGHT,
   RANKINGS_PADDING,
-} from "../../chart/constants";
+} from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import { dateToRecordsKey, lastDayPlayed, opponentId } from "../../utils";

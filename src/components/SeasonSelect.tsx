@@ -1,5 +1,5 @@
 import { ChangeEventHandler } from "react";
-import { SEASONS } from "../chart/constants";
+import { SEASONS } from "../constants";
 
 export interface SeasonSelectProps {
   season: string;

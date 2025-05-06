@@ -6,9 +6,8 @@ import {
   RANKINGS_PADDING,
   WIN_INTERVAL_HEIGHT,
   Y_AXIS_WIDTH,
-} from "../../chart/constants";
+} from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
-import { Axis, AxisOrientation } from "../Axis";
 import { TitleBadge } from "../TitleBadge";
 import { Rankings } from "./Rankings";
 import { TeamId } from "../../interfaces";
@@ -16,7 +15,6 @@ import { OpponentLogos } from "./OpponentLogos";
 import { NetRecord } from "./NetRecord";
 import { ScheduleFooter } from "./ScheduleFooter";
 import { useEffect, useRef } from "react";
-import { TeamLogo } from "../TeamLogo";
 import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
 
 export interface GraphContainerProps {

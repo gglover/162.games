@@ -1,4 +1,4 @@
-import { CHART_WIDTH, LOGOS_HEIGHT } from "../../chart/constants";
+import { CHART_WIDTH, LOGOS_HEIGHT } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import { opponentId } from "../../utils";

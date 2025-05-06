@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { TEAMS } from "../chart/constants";
+import { TEAMS } from "../constants";
 
 export function Header() {
   return (
