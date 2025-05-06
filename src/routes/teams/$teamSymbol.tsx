@@ -6,13 +6,19 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchScheduleData } from "../../schedule";
 import { ScheduleDataContext } from "../../contexts";
 import { SeasonSelect } from "../../components/SeasonSelect";
+import { TEAMS } from "../../chart/constants";
 
-export const Route = createFileRoute("/teams/$teamId")({
+export const Route = createFileRoute("/teams/$teamSymbol")({
   component: TeamsComponent,
 });
 
 function TeamsComponent() {
-  const [season, setSeason] = useState("2024");
+  const [season, setSeason] = useState("2025");
+  const { teamSymbol } = Route.useParams();
+
+  const teamId = Object.keys(TEAMS).find(
+    (teamId) => TEAMS[teamId].symbol === teamSymbol
+  );
 
   const {
     error,
@@ -35,8 +41,8 @@ function TeamsComponent() {
     <main>
       <div className="flex gap-4 justify-center">
         <ScheduleDataContext.Provider value={scheduleData}>
-          <TeamSidebar />
-          <GraphContainer teamId="136" />
+          <TeamSidebar teamId={teamId} />
+          <GraphContainer teamId={teamId} />
         </ScheduleDataContext.Provider>
       </div>
       <SeasonSelect season={season} onChange={setSeason} />

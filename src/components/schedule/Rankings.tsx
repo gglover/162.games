@@ -22,7 +22,7 @@ export interface RankingsProps {
 export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
   const scheduleData = useScheduleDataContext();
 
-  const schedule = scheduleData.teams[teamId].schedule.filter(
+  const schedule = scheduleData.schedules[teamId].filter(
     (id) => scheduleData.series[id]
   );
 
@@ -32,7 +32,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
   let end = lastDayPlayed(scheduleData.end);
 
   const daySamples = d3.timeDays(start, end);
-  const rankScale = d3.scaleSequential(d3.interpolateRdGy);
+  const rankColorScale = d3.scaleSequential(d3.interpolateRdGy);
 
   const rankingLineGenerator = d3
     .line<Date>()
@@ -102,7 +102,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
         {schedule.map((id: SeriesId) => (
           <rect
             key={id}
-            fill={rankScale(opponentRankFinal(id) / 30)}
+            fill={rankColorScale(opponentRankForSeries(id) / 30)}
             x={
               xScale(scheduleData.series[id].start) +
               RANKINGS_PADDING / 2 -

@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { TEAMS } from "../chart/constants";
 
 export function Header() {
   return (
@@ -12,7 +13,11 @@ export function Header() {
           <Link to="/about">About</Link>
         </div>
         <div className="team-links">
-          <a href="/teams/ATH">ATH</a>
+          {Object.values(TEAMS).map((team) => (
+            <Link key={team.id} to={`/teams/${team.symbol}`}>
+              {team.symbol}
+            </Link>
+          ))}
         </div>
       </div>
     </header>

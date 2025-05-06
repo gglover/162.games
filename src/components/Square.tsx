@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { SQUARE_PADDING, SQUARE_SIZE } from "../chart/constants";
 import { Axis, AxisOrientation } from "./Axis";
 import { TeamId } from "../interfaces";
-import { dateToRecordsKey, teamLogoFromId } from "../utils";
+import { dateToRecordsKey } from "../utils";
 import { useScheduleDataContext } from "../contexts";
 import { TeamLogo } from "./TeamLogo";
 

@@ -19,3 +19,17 @@ a {
   font-size: 8px;
   padding: 2px;
 }
+
+.axis text {
+  color: var(--color-gray-500);
+}
+
+.axis .domain,
+.axis line {
+  stroke: var(--color-gray-500);
+}
+
+.axis.no-domain line,
+.axis.no-domain .domain {
+  display: none;
+}

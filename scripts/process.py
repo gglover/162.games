@@ -50,22 +50,20 @@ year = sys.argv[1]
 
 all_records = {}
 all_series = {}
-all_teams = {}
+all_schedules = {}
 
-with open(f'src/teams.json') as json_data:
+with open(f'teams.json') as json_data:
     teams = json.load(json_data)
 
     for team in teams:
-        all_teams[team['id']] = {
-            'schedule': [],
-            'record': [0, 0],
-        }  
+        all_schedules[team['id']] = []
+    
+    json_data.close()
 
+processed_game_ids = set()
 
-for team_id in all_teams:
-    current_team = all_teams[team_id]
-
-    processed_game_ids = set()
+for team_id in all_schedules:
+    current_team = all_schedules[team_id]
 
     with open(f'scripts/data_{year}/{team_id}.json') as json_data:
         schedule = json.load(json_data)
@@ -78,7 +76,7 @@ for team_id in all_teams:
         current_series_id = None
 
         for game in regular_season:
-            is_home_team = game['home_id'] == team_id
+            is_home_team = str(game['home_id']) == team_id
             did_home_team_win = game['home_score'] > game['away_score']
             did_team_win = (did_home_team_win and is_home_team) or (not did_home_team_win and not is_home_team)
 
@@ -88,10 +86,10 @@ for team_id in all_teams:
                 else:
                     record[1] += 1
 
-            # Tally team's record for this day.
+            # Create a new entry in the records log if this is our first time processing this day.
             #
             if not game['game_date'] in all_records:
-                all_records[game['game_date']] = { key: None for key in all_teams }
+                all_records[game['game_date']] = { key: None for key in all_schedules }
 
             all_records[game['game_date']][team_id] = [
                 record[0],
@@ -99,11 +97,11 @@ for team_id in all_teams:
             ]
 
             # The series ID will reuse the ID of the first game in the series.
-            # Skip the rest of this loop if we've already processed this game via opponent.
+            # Skip this loop if we've already processed this game via opponent.
             #
             if game['game_id'] in processed_game_ids:
-                if game['game_id'] in all_series:
-                    current_team['schedule'].append(game['game_id'])
+                if game['game_id'] in all_series and game['game_id'] not in current_team:
+                    current_team.append(game['game_id'])
 
                 continue
 
@@ -124,18 +122,20 @@ for team_id in all_teams:
                     'end': None,
                 }
 
-                current_team['schedule'].append(current_series_id)
+                current_team.append(current_series_id)
             
             current_series['end'] = game['game_date']
 
-            current_series['scores'].extend([
-                int(game['home_score']),
-                int(game['away_score'])
-            ])
+            if game['status'] == 'Final':
+                current_series['scores'].extend([
+                    int(game['home_score']),
+                    int(game['away_score'])
+                ])
 
             processed_game_ids.add(game['game_id'])
         
-        all_series[current_series_id] = current_series
+        if current_series_id is not None:
+            all_series[current_series_id] = current_series
 
         json_data.close()
 
@@ -154,7 +154,7 @@ while current_date <= season_end:
     date_key = current_date.strftime("%Y-%m-%d")
 
     if not date_key in all_records:
-        all_records[date_key] = { key: None for key in all_teams }
+        all_records[date_key] = { key: None for key in all_schedules }
 
 
     for team, record in all_records[date_key].items():
@@ -204,7 +204,7 @@ for date, records in all_records.items():
 #
 with open(f'public/data_{year}.json', 'w', encoding='utf-8') as f:
     schedule_data = {
-        'teams': all_teams,
+        'schedules': all_schedules,
         'series': all_series,
         'records': all_records,
         'start': season_start.strftime("%Y-%m-%d"),

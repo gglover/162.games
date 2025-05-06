@@ -3,10 +3,11 @@ export type TeamId = string;
 export type SeasonId = string;
 
 export interface Team {
+  id: TeamId;
   name: string;
-  code: string;
-  schedule: SeriesId[];
-  record: [number, number];
+  symbol: string;
+  league: string;
+  division: string;
 }
 
 export interface Series {
@@ -18,26 +19,11 @@ export interface Series {
 }
 
 export interface ScheduleData {
-  teams: Record<TeamId, Team>;
+  schedules: Record<TeamId, SeriesId[]>;
   series: Record<SeriesId, Series>;
   records: Record<string, HistoricalRecord>;
   start: Date;
   end: Date;
-}
-
-export type DayWithGames = keyof ScheduleData["records"];
-
-export enum SeriesLocation {
-  Home = "Home",
-  Away = "Away",
-}
-
-export interface TravelScheduleBlock {
-  location: SeriesLocation;
-  start: Date;
-  end: Date;
-  series: SeriesId[];
-  outcome: [number, number];
 }
 
 // # {

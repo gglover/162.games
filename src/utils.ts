@@ -24,6 +24,9 @@ export const daysBetween = (date1: Date, date2: Date) => {
   return daysDiff;
 };
 
+export const earlierDate = (date1: Date, date2: Date) =>
+  date1 < date2 ? date1 : date2;
+
 export const seriesOutcome = (team: TeamId, series: Series) => {
   let outcome: [number, number] = [0, 0];
 
@@ -78,4 +81,10 @@ export const heatIndexSize = (heatIndex: number) => {
   }
 
   return "7px";
+};
+
+export const ordinalSuffixFormat = (n: number) => {
+  const s = ["th", "st", "nd", "rd"],
+    v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 };

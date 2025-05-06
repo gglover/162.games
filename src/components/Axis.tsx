@@ -10,18 +10,26 @@ export enum AxisOrientation {
 
 export interface AxisProps {
   scale: d3.ScaleLinear;
-  x: number;
-  y: number;
   orientation: AxisOrientation;
+  x?: number;
+  y?: number;
+  tickFormat?: (tick: string) => string;
 }
 
-export function Axis({ scale, x, y, orientation }: AxisProps) {
+export function Axis({
+  scale,
+  x = 0,
+  y = 0,
+  orientation,
+  tickFormat,
+}: AxisProps) {
+  const tickFormatFn = tickFormat ?? ((t: string) => t);
   const range = scale.range();
   const width = range[1] - range[0];
   const pixelsPerTick = 30;
   const numberOfTicksTarget = Math.max(1, Math.floor(width / pixelsPerTick));
   const ticks = scale.ticks(numberOfTicksTarget).map((value: string) => ({
-    value,
+    value: tickFormatFn(value),
     xOffset: scale(value),
   }));
 

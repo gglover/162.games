@@ -5,7 +5,7 @@ import time
 
 SVG_LOGO_PATH = 'https://www.mlbstatic.com/team-logos/team-cap-on-light/'
 
-with open('src/teams.json') as json_data:
+with open('teams.json') as json_data:
     teams = json.load(json_data)
 
     for team in teams:

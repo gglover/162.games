@@ -13,12 +13,19 @@ import { TitleBadge } from "../TitleBadge";
 import { Rankings } from "./Rankings";
 import { TeamId } from "../../interfaces";
 import { OpponentLogos } from "./OpponentLogos";
+import { NetRecord } from "./NetRecord";
+import { ScheduleFooter } from "./ScheduleFooter";
+import { useEffect, useRef } from "react";
+import { TeamLogo } from "../TeamLogo";
+import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
 
 export interface GraphContainerProps {
   teamId: TeamId;
 }
 
 export function GraphContainer({ teamId }: GraphContainerProps) {
+  const rankingsYAxisRef = useRef(null);
+  const netRecordYAxisRef = useRef(null);
   const scheduleData = useScheduleDataContext();
 
   const xScale = d3
@@ -39,20 +46,41 @@ export function GraphContainer({ teamId }: GraphContainerProps) {
     .domain([1, 30])
     .range([0, RANKINGS_HEIGHT - RANKINGS_PADDING]);
 
+  useEffect(() => {
+    const rankingsElement = d3.select(rankingsYAxisRef.current);
+    const rankingsAxisGenerator = d3
+      .axisLeft(rankingsYScale)
+      .tickValues([1, 10, 20, 30])
+      .tickFormat(ordinalSuffixFormat);
+    rankingsElement.append("g").call(rankingsAxisGenerator);
+
+    const plusMinusFormat = (d: number) => (d > 0 ? `+${d}` : `${d}`);
+
+    const netRecordsElement = d3.select(netRecordYAxisRef.current);
+    const netRecordsAxisGenerator = d3
+      .axisLeft(scheduleYScale)
+      .tickFormat(plusMinusFormat);
+    netRecordsElement.append("g").call(netRecordsAxisGenerator);
+  }, []);
+
   return (
-    <div className={`grid grid-cols-[${Y_AXIS_WIDTH}px_${CHART_WIDTH}px]`}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px`,
+      }}
+    >
       <div></div>
       <div className="flex">
         <TitleBadge>MLB Ranking</TitleBadge>
       </div>
 
       <svg width={Y_AXIS_WIDTH} height={RANKINGS_HEIGHT}>
-        <Axis
-          x={15}
-          y={RANKINGS_PADDING / 2}
-          orientation={AxisOrientation.Vertical}
-          scale={rankingsYScale}
-        />
+        <g
+          className="axis no-domain"
+          transform="translate(30, 5)"
+          ref={rankingsYAxisRef}
+        ></g>
       </svg>
       <div className="rankings border-y-1 border-gray-500">
         <Rankings teamId={teamId} xScale={xScale} yScale={rankingsYScale} />
@@ -62,24 +90,23 @@ export function GraphContainer({ teamId }: GraphContainerProps) {
       <OpponentLogos teamId={teamId} xScale={xScale} />
 
       <svg width={Y_AXIS_WIDTH} height={CHART_HEIGHT}>
-        <Axis
-          x={5}
-          y={0}
-          orientation={AxisOrientation.Vertical}
-          scale={scheduleYScale}
-        />
+        <g
+          className="axis no-domain"
+          transform="translate(30, 0)"
+          ref={netRecordYAxisRef}
+        ></g>
       </svg>
       <div className="border border-x-0 border-gray-500 relative">
         <div className="absolute top-0 left-0">
           <TitleBadge>Net Record</TitleBadge>
         </div>
-        <div className="schedule"></div>
+        <NetRecord teamId={teamId} xScale={xScale} />
       </div>
 
       <div>
-        <img className="team-logo object-contain w-5 h-5" />
+        <img className="w-4 h-4 m-1" src={teamLogoFromId(teamId)} />
       </div>
-      <div className="footer"></div>
+      <ScheduleFooter teamId={teamId} xScale={xScale} />
     </div>
   );
 }

@@ -15,7 +15,7 @@ else:
 
 year = sys.argv[1]
 
-with open('src/teams.json', 'r', encoding='utf-8') as file:
+with open('teams.json', 'r', encoding='utf-8') as file:
     team_json = json.load(file)
     team_ids = [team["id"] for team in team_json]
 

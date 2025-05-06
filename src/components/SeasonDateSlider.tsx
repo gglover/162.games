@@ -26,6 +26,7 @@ export function SeasonDateSlider({ date, onChange }: SeasonDateSliderProps) {
   return (
     <div>
       <input
+        className="w-1/1"
         type="range"
         min="0"
         max={range}

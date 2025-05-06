@@ -8,16 +8,14 @@ const parseScheduleData = (json: any): ScheduleData => {
   json.end = new Date(json.end);
 
   for (let value of Object.values(json.series as Series)) {
+    console.log(value);
     value.start = new Date(value.start);
 
     const end = new Date(value.end);
+
     end.setDate(end.getDate() + 1);
     value.end = end;
   }
-
-  json.daysWithGamesPlayed = Object.keys(json.records)
-    .map((isoDateKey) => new Date(isoDateKey))
-    .sort((a, b) => a.getTime() - b.getTime());
 
   return json as ScheduleData;
 };

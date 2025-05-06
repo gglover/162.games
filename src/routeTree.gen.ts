@@ -13,7 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
-import { Route as TeamsTeamIdImport } from './routes/teams/$teamId'
+import { Route as TeamsTeamSymbolImport } from './routes/teams/$teamSymbol'
 
 // Create/Update Routes
 
@@ -29,9 +29,9 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const TeamsTeamIdRoute = TeamsTeamIdImport.update({
-  id: '/teams/$teamId',
-  path: '/teams/$teamId',
+const TeamsTeamSymbolRoute = TeamsTeamSymbolImport.update({
+  id: '/teams/$teamSymbol',
+  path: '/teams/$teamSymbol',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,11 +53,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/teams/$teamId': {
-      id: '/teams/$teamId'
-      path: '/teams/$teamId'
-      fullPath: '/teams/$teamId'
-      preLoaderRoute: typeof TeamsTeamIdImport
+    '/teams/$teamSymbol': {
+      id: '/teams/$teamSymbol'
+      path: '/teams/$teamSymbol'
+      fullPath: '/teams/$teamSymbol'
+      preLoaderRoute: typeof TeamsTeamSymbolImport
       parentRoute: typeof rootRoute
     }
   }
@@ -68,41 +68,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/teams/$teamId': typeof TeamsTeamIdRoute
+  '/teams/$teamSymbol': typeof TeamsTeamSymbolRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/teams/$teamId': typeof TeamsTeamIdRoute
+  '/teams/$teamSymbol': typeof TeamsTeamSymbolRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/teams/$teamId': typeof TeamsTeamIdRoute
+  '/teams/$teamSymbol': typeof TeamsTeamSymbolRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/teams/$teamId'
+  fullPaths: '/' | '/about' | '/teams/$teamSymbol'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/teams/$teamId'
-  id: '__root__' | '/' | '/about' | '/teams/$teamId'
+  to: '/' | '/about' | '/teams/$teamSymbol'
+  id: '__root__' | '/' | '/about' | '/teams/$teamSymbol'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  TeamsTeamIdRoute: typeof TeamsTeamIdRoute
+  TeamsTeamSymbolRoute: typeof TeamsTeamSymbolRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  TeamsTeamIdRoute: TeamsTeamIdRoute,
+  TeamsTeamSymbolRoute: TeamsTeamSymbolRoute,
 }
 
 export const routeTree = rootRoute
@@ -117,7 +117,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/teams/$teamId"
+        "/teams/$teamSymbol"
       ]
     },
     "/": {
@@ -126,8 +126,8 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
-    "/teams/$teamId": {
-      "filePath": "teams/$teamId.tsx"
+    "/teams/$teamSymbol": {
+      "filePath": "teams/$teamSymbol.tsx"
     }
   }
 }
