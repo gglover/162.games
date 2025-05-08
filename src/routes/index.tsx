@@ -33,12 +33,12 @@ function HomePageComponent() {
   }
 
   return (
-    <main className="flex justify-center flex-col mt-8 w-lg mx-auto gap-4">
+    <div className="flex justify-center flex-col mt-8 w-lg mx-auto gap-4">
       <ScheduleDataContext.Provider value={scheduleData}>
         <Square date={date} />
         <SeasonDateSlider date={date} onChange={setDate} />
         <SeasonSelect season={season} onChange={setSeason} />
       </ScheduleDataContext.Provider>
-    </main>
+    </div>
   );
 }

@@ -14,7 +14,20 @@ export const Y_AXIS_WIDTH = 30;
 export const SQUARE_SIZE = 400;
 export const SQUARE_PADDING = 30;
 
-export const SEASONS = ["2025", "2024", "2023"];
+export const SERIES_HIGHLIGHT_PATTERN_DEF = "#series-highlight";
+
+export const SEASONS = ["2025", "2024", "2023", "2022"];
+
+export const PLAYOFF_INDEX = {
+  AL: 0,
+  NL: 1,
+  "AL East": 2,
+  "AL Central": 3,
+  "AL West": 4,
+  "NL East": 5,
+  "NL Central": 6,
+  "NL West": 7,
+};
 
 export const TEAMS = Object.fromEntries(
   teamsJson.map((team) => [team.id, team])

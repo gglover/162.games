@@ -53,12 +53,6 @@ export function ScheduleFooter({ teamId, xScale }: ScheduleFooterProps) {
       ))}
 
       <g ref={xAxisRef} className="axis" transform="translate(0, 20)"></g>
-      {/* <Axis
-        y={25}
-        scale={xScale}
-        orientation={AxisOrientation.Horizontal}
-        tickFormat={abbreviatedMonthTickFormatter}
-      /> */}
     </svg>
   );
 }

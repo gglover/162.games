@@ -10,20 +10,28 @@ import {
 import { useScheduleDataContext } from "../../contexts";
 import { TitleBadge } from "../TitleBadge";
 import { Rankings } from "./Rankings";
-import { TeamId } from "../../interfaces";
+import { SeriesId, TeamId } from "../../interfaces";
 import { OpponentLogos } from "./OpponentLogos";
 import { NetRecord } from "./NetRecord";
 import { ScheduleFooter } from "./ScheduleFooter";
 import { useEffect, useRef } from "react";
 import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
+import { SeasonSelect } from "../SeasonSelect";
 
 export interface GraphContainerProps {
   teamId: TeamId;
+  selectedSeriesId: SeriesId;
+  onSelectedSeriesIdChange: (id: SeriesId) => void;
 }
 
-export function GraphContainer({ teamId }: GraphContainerProps) {
+export function GraphContainer({
+  teamId,
+  selectedSeriesId,
+  onSelectedSeriesIdChange,
+}: GraphContainerProps) {
   const rankingsYAxisRef = useRef(null);
   const netRecordYAxisRef = useRef(null);
+
   const scheduleData = useScheduleDataContext();
 
   const xScale = d3
@@ -98,11 +106,31 @@ export function GraphContainer({ teamId }: GraphContainerProps) {
         <div className="absolute top-0 left-0">
           <TitleBadge>Net Record</TitleBadge>
         </div>
-        <NetRecord teamId={teamId} xScale={xScale} />
+        <NetRecord
+          teamId={teamId}
+          xScale={xScale}
+          selectedSeriesId={selectedSeriesId}
+          onSelectedSeriesIdChange={onSelectedSeriesIdChange}
+        />
       </div>
 
-      <div>
-        <img className="w-4 h-4 m-1" src={teamLogoFromId(teamId)} />
+      <div className="relative">
+        <img className="w-3 h-3 m-1" src={teamLogoFromId(teamId)} />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="black"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="absolute right-0 top-1"
+        >
+          <path d="m6 17 5-5-5-5" />
+          <path d="m13 17 5-5-5-5" />
+        </svg>
       </div>
       <ScheduleFooter teamId={teamId} xScale={xScale} />
     </div>

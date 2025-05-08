@@ -6,7 +6,12 @@ import {
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
-import { dateToRecordsKey, lastDayPlayed, opponentId } from "../../utils";
+import {
+  dateToRecordsKey,
+  earlierDate,
+  lastDayPlayed,
+  opponentId,
+} from "../../utils";
 
 const SERIES_LINE_COLOR = "#e0e0e0";
 const MIDDLE_LINE_COLOR = "#a0a0a0";
@@ -26,6 +31,9 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
     (id) => scheduleData.series[id]
   );
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   let start = new Date();
   start.setTime(scheduleData.start.getTime());
 
@@ -42,7 +50,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
         yScale(scheduleData.records[dateToRecordsKey(day)][teamId][2]) +
         RANKINGS_PADDING
     )
-    .curve(d3.curveCatmullRom.alpha(0.3));
+    .curve(d3.curveStepBefore);
 
   const opponentRankForSeries = (id: SeriesId) => {
     const opponent = opponentId(teamId, scheduleData.series[id]);
@@ -57,8 +65,20 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
   };
 
   return (
-    <svg width={CHART_WIDTH} height={RANKINGS_HEIGHT}>
+    <svg
+      width={CHART_WIDTH}
+      height={RANKINGS_HEIGHT}
+      className="border-x-1 border-gray-300"
+    >
       <g>
+        <line
+          x1={xScale(earlierDate(scheduleData.end, today))}
+          x2={xScale(earlierDate(scheduleData.end, today))}
+          y1={0}
+          y2={RANKINGS_HEIGHT}
+          stroke="#a0a0a0"
+        />
+
         {schedule.map((id: SeriesId) => (
           <line
             key={id}
@@ -85,7 +105,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
           d={rankingLineGenerator(daySamples)}
           fill="none"
           stroke={RANKING_LINE_COLOR}
-          strokeWidth="1.5px"
+          strokeWidth="1px"
         />
 
         {schedule.map((id: SeriesId) => (

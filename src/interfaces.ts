@@ -22,6 +22,10 @@ export interface ScheduleData {
   schedules: Record<TeamId, SeriesId[]>;
   series: Record<SeriesId, Series>;
   records: Record<string, HistoricalRecord>;
+  playoffs: Record<
+    string,
+    [TeamId, TeamId, TeamId, TeamId, TeamId, TeamId, TeamId, TeamId]
+  >;
   start: Date;
   end: Date;
 }

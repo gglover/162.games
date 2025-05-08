@@ -7,6 +7,7 @@ import { fetchScheduleData } from "../../schedule";
 import { ScheduleDataContext } from "../../contexts";
 import { SeasonSelect } from "../../components/SeasonSelect";
 import { TEAMS } from "../../constants";
+import { SeriesId } from "../../interfaces";
 
 export const Route = createFileRoute("/teams/$teamSymbol")({
   component: TeamsComponent,
@@ -14,11 +15,22 @@ export const Route = createFileRoute("/teams/$teamSymbol")({
 
 function TeamsComponent() {
   const [season, setSeason] = useState("2025");
+  const [selectedSeriesId, setSelectedSeriesId] = useState("");
+
   const { teamSymbol } = Route.useParams();
 
   const teamId = Object.keys(TEAMS).find(
     (teamId) => TEAMS[teamId].symbol === teamSymbol
   );
+
+  const handleSelectedSeriesIdChange = (id: SeriesId) => {
+    setSelectedSeriesId(id);
+  };
+
+  const handleSeasonChange = (season: string) => {
+    setSelectedSeriesId("");
+    setSeason(season);
+  };
 
   const {
     error,
@@ -33,19 +45,25 @@ function TeamsComponent() {
     return <div>Loading...</div>;
   }
 
-  if (error || !scheduleData) {
+  if (error || !scheduleData || !teamId) {
     return <div>Error</div>;
   }
 
   return (
-    <main>
-      <div className="flex gap-4 justify-center">
-        <ScheduleDataContext.Provider value={scheduleData}>
-          <TeamSidebar teamId={teamId} />
-          <GraphContainer teamId={teamId} />
-        </ScheduleDataContext.Provider>
-      </div>
-      <SeasonSelect season={season} onChange={setSeason} />
-    </main>
+    <div className="flex gap-4 justify-center mt-10">
+      <ScheduleDataContext.Provider value={scheduleData}>
+        <TeamSidebar
+          teamId={teamId}
+          selectedSeriesId={selectedSeriesId}
+          onSeasonChange={handleSeasonChange}
+          season={season}
+        />
+        <GraphContainer
+          teamId={teamId}
+          selectedSeriesId={selectedSeriesId}
+          onSelectedSeriesIdChange={handleSelectedSeriesIdChange}
+        />
+      </ScheduleDataContext.Provider>
+    </div>
   );
 }

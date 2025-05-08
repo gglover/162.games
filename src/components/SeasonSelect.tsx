@@ -15,7 +15,7 @@ export function SeasonSelect({ season, onChange }: SeasonSelectProps) {
     <select
       onChange={handleSeasonChange}
       value={season}
-      className="bg-transparent placeholder:text-gray-400 text-gray-700 text-xs border border-gray-200 rounded pl-2 pr-5 py-1 transition duration-300 ease focus:outline-none focus:border-gray-400 hover:border-gray-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
+      className="bg-transparent placeholder:text-gray-400 text-gray-700 text-xs border border-gray-200 rounded pl-2 pr-5 py-1 transition duration-300 ease focus:outline-none focus:border-gray-400 hover:border-gray-400 shadow-sm focus:shadow-md appearance-auto cursor-pointer w-1/1"
     >
       {SEASONS.map((seasonOption) => (
         <option value={seasonOption} key={seasonOption}>

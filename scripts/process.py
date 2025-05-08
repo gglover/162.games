@@ -1,7 +1,7 @@
 import itertools
 import json
-import collections
 from datetime import datetime, timedelta
+from collections import defaultdict
 from itertools import groupby
 from math import ceil
 from pprint import pprint
@@ -51,12 +51,15 @@ year = sys.argv[1]
 all_records = {}
 all_series = {}
 all_schedules = {}
+all_teams = {}
+playoffs = {}
 
 with open(f'teams.json') as json_data:
-    teams = json.load(json_data)
+    teams_json = json.load(json_data)
 
-    for team in teams:
+    for team in teams_json:
         all_schedules[team['id']] = []
+        all_teams[team['id']] = team
     
     json_data.close()
 
@@ -68,7 +71,7 @@ for team_id in all_schedules:
     with open(f'scripts/data_{year}/{team_id}.json') as json_data:
         schedule = json.load(json_data)
         
-        regular_season = [game for game in schedule if game['game_type'] == 'R']
+        regular_season = [game for game in schedule if game['game_type'] == 'R' and game['status'] != 'Postponed']
 
         record = [0, 0]
 
@@ -189,7 +192,7 @@ for date, records in all_records.items():
     # Resolve ties by grouping identical winning percentages and resolving to the median rank.
     #
     counted_teams = 0
-    for key, group in itertools.groupby(standings, lambda x: x[0]):
+    for key, group in itertools.groupby(standings, lambda tuple: tuple[0]):
         group = list(group)
 
         resolved_ranking = counted_teams + ceil(len(group) / 2)
@@ -199,6 +202,44 @@ for date, records in all_records.items():
             records[team].append(heat_index())
         
         counted_teams = counted_teams + len(group)
+    
+    # Division leaders
+    #
+    
+
+    divisions = defaultdict(list)
+    for tuple in standings:
+        division_key = all_teams[tuple[1]]['division']
+
+        divisions[division_key].append(tuple[1])
+    
+    divison_leaders = [divisions[key][0] for key in divisions]
+
+    al_standings = [tuple[1] for tuple in standings if all_teams[tuple[1]]['league'] == 'AL' and tuple[1] not in divison_leaders]
+    nl_standings = [tuple[1] for tuple in standings if all_teams[tuple[1]]['league'] == 'NL' and tuple[1] not in divison_leaders]
+
+    playoffs[date] = [
+        al_standings[2],
+        nl_standings[2],
+        divisions['AL East'][0],
+        divisions['AL Central'][0],
+        divisions['AL West'][0],
+        divisions['NL East'][0],
+        divisions['NL Central'][0],
+        divisions['NL West'][0],
+    ]
+
+    # Calculate last-in for playoffs
+    #
+    # division_leaders = ....
+
+    # last_wild_card = [AL, NL]
+
+    # filter standings AL / NL
+
+    # for each team in standings:
+    #    if not division leader [league] +1
+    #    if [league] === 3: push teamId
 
 # Output results to file
 #
@@ -207,6 +248,7 @@ with open(f'public/data_{year}.json', 'w', encoding='utf-8') as f:
         'schedules': all_schedules,
         'series': all_series,
         'records': all_records,
+        'playoffs': playoffs,
         'start': season_start.strftime("%Y-%m-%d"),
         'end': season_end.strftime("%Y-%m-%d"),
     }
