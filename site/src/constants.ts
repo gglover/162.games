@@ -1,4 +1,4 @@
-import teamsJson from "../teams.json";
+import teamsJson from "../../data/teams.json";
 
 export const CHART_HEIGHT = 400;
 export const CHART_WIDTH = 900;
@@ -17,6 +17,10 @@ export const SQUARE_PADDING = 30;
 export const SERIES_HIGHLIGHT_PATTERN_DEF = "#series-highlight";
 
 export const SEASONS = ["2025", "2024", "2023", "2022"];
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+export const TODAY = today;
 
 export const PLAYOFF_INDEX = {
   AL: 0,

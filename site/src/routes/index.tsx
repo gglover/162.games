@@ -6,6 +6,7 @@ import { SeasonSelect } from "../components/SeasonSelect";
 import { SeasonDateSlider } from "../components/SeasonDateSlider";
 import { Square } from "../components/Square";
 import { ScheduleDataContext } from "../contexts";
+import { HotAndCold } from "../components/HotAndCold";
 
 export const Route = createFileRoute("/")({
   component: HomePageComponent,
@@ -33,12 +34,15 @@ function HomePageComponent() {
   }
 
   return (
-    <div className="flex justify-center flex-col mt-8 w-lg mx-auto gap-4">
-      <ScheduleDataContext.Provider value={scheduleData}>
-        <Square date={date} />
-        <SeasonDateSlider date={date} onChange={setDate} />
-        <SeasonSelect season={season} onChange={setSeason} />
-      </ScheduleDataContext.Provider>
-    </div>
+    <ScheduleDataContext.Provider value={scheduleData}>
+      <div className="flex justify-center gap-6 mt-6">
+        <div>
+          <Square date={date} />
+          <SeasonDateSlider date={date} onChange={setDate} />
+          <SeasonSelect season={season} onChange={setSeason} />
+        </div>
+        <HotAndCold date={date} />
+      </div>
+    </ScheduleDataContext.Provider>
   );
 }

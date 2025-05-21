@@ -24,7 +24,7 @@ const parseScheduleData = (json: any): ScheduleData => {
       const record = json.records[dateKey][teamId];
 
       const date = new Date(dateKey);
-      date.setDate(date.getDate() - 10);
+      date.setDate(date.getDate() - 20);
       const compareKey = dateToRecordsKey(date);
 
       const compareRecord = json.records[compareKey]

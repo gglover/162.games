@@ -4,8 +4,10 @@ import json
 import time
 from pprint import pprint
 
-SEASON_START = '03/18'
-SEASON_END = '10/5'
+# Safe bounds for the offseason.
+# Unless MLB schedules a unprecedented early season series we should be safe with these.
+SEASON_START = '03/1'
+SEASON_END = '10/30'
 
 if len(sys.argv) > 1:
     print("Processing season:", sys.argv[1])

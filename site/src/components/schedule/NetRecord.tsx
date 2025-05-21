@@ -20,12 +20,12 @@ import {
   earlierDate,
 } from "../../utils";
 import { SeriesHighlightDefs } from "../SeriesHighlightDefs";
+import { SeriesResults } from "./SeriesResults";
 
 const HOME_BLOCK_COLOR = "#f0f0f0";
 const AWAY_BLOCK_COLOR = "#f7f7f7";
 const DIVISION_STROKE_COLOR = "#d0d0d0";
 const SUBDIVISION_STROKE_COLOR = "#e5e5e5";
-const OPPONENT_HEAT_INDEX_SIZE = 12;
 const DIVISION_MARKS = [60, 50, 40, 30, 20, 10, -10, -20, -30, -40, -50, -60];
 
 export interface NetRecordProps {
@@ -61,8 +61,8 @@ export function NetRecord({
     .line<Date>()
     .x((day: Date) => xScale(day))
     .y((day: Date) => {
-      const dayBeforeSeries = new Date(day);
-      dayBeforeSeries.setDate(day.getDate() - 1);
+      // const dayBeforeSeries = new Date(day);
+      // dayBeforeSeries.setDate(day.getDate() - 1);
 
       const dateKey = dateToRecordsKey(day);
       const lastInId =
@@ -74,16 +74,16 @@ export function NetRecord({
         FIVE_HUNDRED_RECORD_Y
       );
     })
-    .curve(d3.curveStepBefore);
+    .curve(d3.curveNatural);
 
   const divisionLineGenerator = d3
     .line<Date>()
     .x((day: Date) => xScale(day))
     .y((day: Date) => {
-      const dayBeforeSeries = new Date(day);
-      dayBeforeSeries.setDate(day.getDate() - 1);
+      // const dayBeforeSeries = new Date(day);
+      // dayBeforeSeries.setDate(day.getDate() - 1);
 
-      const dateKey = dateToRecordsKey(dayBeforeSeries);
+      const dateKey = dateToRecordsKey(day);
       const leader =
         scheduleData.playoffs[dateKey][PLAYOFF_INDEX[TEAMS[teamId].division]];
       const lastInRecord = scheduleData.records[dateKey][leader];
@@ -93,34 +93,7 @@ export function NetRecord({
         FIVE_HUNDRED_RECORD_Y
       );
     })
-    .curve(d3.curveStepBefore);
-
-  let rollingY = FIVE_HUNDRED_RECORD_Y;
-
-  const opponentRecordForSeries = (id: SeriesId) => {
-    const opponent = opponentId(teamId, scheduleData.series[id]);
-    const dateKey = dateToRecordsKey(scheduleData.series[id].start);
-    return scheduleData.records[dateKey][opponent];
-  };
-
-  const seriesOutcomeHeight = (id: SeriesId) => {
-    const outcome = seriesOutcome(teamId, scheduleData.series[id]);
-    const recordChange = outcome[1] - outcome[0];
-
-    return WIN_INTERVAL_HEIGHT * Math.abs(recordChange) || 1;
-  };
-
-  const seriesOutcomeY = (id: SeriesId) => {
-    const outcome = seriesOutcome(teamId, scheduleData.series[id]);
-    const recordChange = outcome[1] - outcome[0];
-
-    const current = rollingY;
-    rollingY += recordChange * WIN_INTERVAL_HEIGHT;
-
-    return (
-      current + (recordChange < 0 ? recordChange * WIN_INTERVAL_HEIGHT : 0)
-    );
-  };
+    .curve(d3.curveNatural);
 
   return (
     <svg
@@ -209,34 +182,14 @@ export function NetRecord({
         }}
       />
 
-      {playedSchedule.map((id: SeriesId) => (
-        <rect
-          key={id}
-          height={seriesOutcomeHeight(id)}
-          width={
-            xScale(earlierDate(scheduleData.series[id].end, today)) -
-            xScale(scheduleData.series[id].start)
-          }
-          fill={seriesOutcomeColor(teamId, scheduleData.series[id])}
-          x={xScale(scheduleData.series[id].start)}
-          y={seriesOutcomeY(id)}
+      <g transform={`translate(0, ${FIVE_HUNDRED_RECORD_Y})`}>
+        <SeriesResults
+          teamId={teamId}
+          start={scheduleData.start}
+          end={scheduleData.end}
+          xScale={xScale}
         />
-      ))}
-
-      {(rollingY = FIVE_HUNDRED_RECORD_Y)}
-
-      {playedSchedule.map((id: SeriesId) => (
-        <text
-          key={id}
-          x={xScale(scheduleData.series[id].start)}
-          fontSize={heatIndexSize(opponentRecordForSeries(id)[3])}
-          height={OPPONENT_HEAT_INDEX_SIZE}
-          width={OPPONENT_HEAT_INDEX_SIZE}
-          y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_SIZE / 2}
-        >
-          {heatIndexIcon(opponentRecordForSeries(id)[3])}
-        </text>
-      ))}
+      </g>
     </svg>
   );
 }

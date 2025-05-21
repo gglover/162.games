@@ -50,7 +50,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
         yScale(scheduleData.records[dateToRecordsKey(day)][teamId][2]) +
         RANKINGS_PADDING
     )
-    .curve(d3.curveStepBefore);
+    .curve(d3.curveNatural);
 
   const opponentRankForSeries = (id: SeriesId) => {
     const opponent = opponentId(teamId, scheduleData.series[id]);
