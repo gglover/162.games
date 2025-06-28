@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchScheduleData } from "../../schedule";
 import { ScheduleDataContext } from "../../contexts";
-import { SeasonSelect } from "../../components/SeasonSelect";
 import { TEAMS } from "../../constants";
 import { SeriesId } from "../../interfaces";
 
@@ -50,7 +49,7 @@ function TeamsComponent() {
   }
 
   return (
-    <div className="flex gap-4 justify-center mt-10">
+    <div className="flex gap-4 justify-center mt-10 max-w-1/1 mx-2">
       <ScheduleDataContext.Provider value={scheduleData}>
         <TeamSidebar
           teamId={teamId}

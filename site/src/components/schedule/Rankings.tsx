@@ -102,7 +102,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
         />
 
         <path
-          d={rankingLineGenerator(daySamples)}
+          d={rankingLineGenerator(daySamples)!}
           fill="none"
           stroke={RANKING_LINE_COLOR}
           strokeWidth="1px"

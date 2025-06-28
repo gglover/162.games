@@ -1,6 +1,6 @@
 import { TEAMS } from "../constants";
 import { useScheduleDataContext } from "../contexts";
-import { dateToRecordsKey, lastDayPlayed } from "../utils";
+import { dateToRecordsKey } from "../utils";
 import { HomeTable } from "./HomeTable";
 
 export interface HotAndColdProps {

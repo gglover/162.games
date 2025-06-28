@@ -9,12 +9,15 @@ export function Header() {
           <h1 className="flex-grow">
             <Link to="/">MLB HeatIDX</Link>
           </h1>
-          <Link to="/teams">Teams</Link>
           <Link to="/about">About</Link>
         </div>
         <div className="team-links">
           {Object.values(TEAMS).map((team) => (
-            <Link key={team.id} to={`/teams/${team.symbol}`}>
+            <Link
+              key={team.id}
+              to="/teams/$teamSymbol"
+              params={{ teamSymbol: team.symbol }}
+            >
               {team.symbol}
             </Link>
           ))}

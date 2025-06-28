@@ -12,7 +12,7 @@ export interface TeamLogoProps {
 
 export function TeamLogo({ id, size, x, y }: TeamLogoProps) {
   return (
-    <Link to={`/teams/${TEAMS[id].symbol}`}>
+    <Link to={`/teams/$teamSymbol`} params={{ teamSymbol: TEAMS[id].symbol }}>
       <image
         x={x}
         y={y}

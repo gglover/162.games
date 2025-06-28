@@ -26,6 +26,8 @@ export function SeriesResults({
 }: SeriesResultsProps) {
   const scheduleData = useScheduleDataContext();
 
+  console.log(teamId, seriesIds);
+
   const seriesOutcomeHeight = (id: SeriesId) => {
     const outcome = seriesOutcome(teamId, scheduleData.series[id]);
     const recordChange = outcome[1] - outcome[0];

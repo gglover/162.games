@@ -9,6 +9,7 @@ export enum AxisOrientation {
 }
 
 export interface AxisProps {
+  // @ts-ignore
   scale: d3.ScaleLinear;
   orientation: AxisOrientation;
   x?: number;

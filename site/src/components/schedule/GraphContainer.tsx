@@ -16,7 +16,6 @@ import { NetRecord } from "./NetRecord";
 import { ScheduleFooter } from "./ScheduleFooter";
 import { useEffect, useRef } from "react";
 import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
-import { SeasonSelect } from "../SeasonSelect";
 
 export interface GraphContainerProps {
   teamId: TeamId;
@@ -57,7 +56,9 @@ export function GraphContainer({
     const rankingsAxisGenerator = d3
       .axisLeft(rankingsYScale)
       .tickValues([1, 10, 20, 30])
+      // @ts-ignore
       .tickFormat(ordinalSuffixFormat);
+    // @ts-ignore
     rankingsElement.append("g").call(rankingsAxisGenerator);
 
     const plusMinusFormat = (d: number) => (d > 0 ? `+${d}` : `${d}`);
@@ -65,7 +66,9 @@ export function GraphContainer({
     const netRecordsElement = d3.select(netRecordYAxisRef.current);
     const netRecordsAxisGenerator = d3
       .axisLeft(scheduleYScale)
+      // @ts-ignore
       .tickFormat(plusMinusFormat);
+    // @ts-ignore
     netRecordsElement.append("g").call(netRecordsAxisGenerator);
   }, []);
 
@@ -75,6 +78,7 @@ export function GraphContainer({
         display: "grid",
         gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px`,
       }}
+      className="overflow-x-scroll"
     >
       <div></div>
       <div className="flex">

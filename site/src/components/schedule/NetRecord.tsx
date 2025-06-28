@@ -10,15 +10,7 @@ import {
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
-import {
-  dateToRecordsKey,
-  opponentId,
-  seriesOutcome,
-  seriesOutcomeColor,
-  heatIndexIcon,
-  heatIndexSize,
-  earlierDate,
-} from "../../utils";
+import { dateToRecordsKey, earlierDate } from "../../utils";
 import { SeriesHighlightDefs } from "../SeriesHighlightDefs";
 import { SeriesResults } from "./SeriesResults";
 
@@ -126,14 +118,14 @@ export function NetRecord({
       </g>
 
       <path
-        d={playoffLineGenerator(daySamples)}
+        d={playoffLineGenerator(daySamples)!}
         fill="none"
         stroke="#ddd"
         strokeWidth="1.5px"
       />
 
       <path
-        d={divisionLineGenerator(daySamples)}
+        d={divisionLineGenerator(daySamples)!}
         fill="none"
         stroke="#dd5"
         strokeWidth="1.5px"
@@ -183,12 +175,7 @@ export function NetRecord({
       />
 
       <g transform={`translate(0, ${FIVE_HUNDRED_RECORD_Y})`}>
-        <SeriesResults
-          teamId={teamId}
-          start={scheduleData.start}
-          end={scheduleData.end}
-          xScale={xScale}
-        />
+        <SeriesResults teamId={teamId} seriesIds={schedule} xScale={xScale} />
       </g>
     </svg>
   );

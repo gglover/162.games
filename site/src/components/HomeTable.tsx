@@ -1,6 +1,5 @@
 import * as d3 from "d3";
-import { TODAY } from "../constants";
-import { SeriesId, TeamId } from "../interfaces";
+import { TeamId } from "../interfaces";
 import { playedSchedule, seriesBounds, teamLogoFromId } from "../utils";
 import { SeriesResults } from "./schedule/SeriesResults";
 import { useScheduleDataContext } from "../contexts";

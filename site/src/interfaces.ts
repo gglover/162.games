@@ -6,8 +6,8 @@ export interface Team {
   id: TeamId;
   name: string;
   symbol: string;
-  league: string;
-  division: string;
+  league: League;
+  division: Division;
 }
 
 export interface Series {
@@ -39,3 +39,12 @@ export interface ScheduleData {
 export interface HistoricalRecord {
   [teamId: TeamId]: [number, number, number, number];
 }
+
+export type League = "AL" | "NL";
+export type Division =
+  | "AL West"
+  | "NL West"
+  | "AL Central"
+  | "NL Central"
+  | "AL East"
+  | "NL East";

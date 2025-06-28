@@ -15,7 +15,9 @@ export function ScheduleFooter({ teamId, xScale }: ScheduleFooterProps) {
 
   useEffect(() => {
     const element = d3.select(xAxisRef.current);
+    // @ts-ignore
     const axisGenerator = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b"));
+    // @ts-ignore
     element.append("g").call(axisGenerator);
   }, []);
 

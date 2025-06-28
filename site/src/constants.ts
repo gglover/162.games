@@ -1,4 +1,5 @@
 import teamsJson from "../../data/teams.json";
+import { Division, League, Team } from "./interfaces";
 
 export const CHART_HEIGHT = 400;
 export const CHART_WIDTH = 900;
@@ -22,7 +23,7 @@ const today = new Date();
 today.setHours(0, 0, 0, 0);
 export const TODAY = today;
 
-export const PLAYOFF_INDEX = {
+export const PLAYOFF_INDEX: Record<League | Division, number> = {
   AL: 0,
   NL: 1,
   "AL East": 2,
@@ -34,5 +35,5 @@ export const PLAYOFF_INDEX = {
 };
 
 export const TEAMS = Object.fromEntries(
-  teamsJson.map((team) => [team.id, team])
+  teamsJson.map((team) => [team.id, team as Team])
 );

@@ -54,7 +54,7 @@ all_schedules = {}
 all_teams = {}
 playoffs = {}
 
-with open(f'teams.json') as json_data:
+with open(f'data/teams.json') as json_data:
     teams_json = json.load(json_data)
 
     for team in teams_json:
@@ -243,7 +243,7 @@ for date, records in all_records.items():
 
 # Output results to file
 #
-with open(f'public/data_{year}.json', 'w', encoding='utf-8') as f:
+with open(f'scripts/data_{year}.json', 'w', encoding='utf-8') as f:
     schedule_data = {
         'schedules': all_schedules,
         'series': all_series,
