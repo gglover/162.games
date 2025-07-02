@@ -1,0 +1,2 @@
+MLB-StatsAPI==1.8.1
+boto3==1.39.2

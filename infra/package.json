@@ -13,6 +13,7 @@
   "devDependencies": {
     "@types/node": "22.7.9",
     "aws-cdk": "2.1014.0",
+    "@aws-cdk/aws-lambda-python-alpha": "2.194.0-alpha.0",
     "ts-node": "^10.9.2"
   },
   "dependencies": {

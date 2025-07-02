@@ -24,9 +24,9 @@ export class StaticSite extends Construct {
   constructor(parent: Stack, name: string, props: StaticSiteProps) {
     super(parent, name);
 
-    const zone = route53.HostedZone.fromLookup(this, "Zone", {
-      domainName: props.domainName,
-    });
+    // const zone = route53.HostedZone.fromLookup(this, "Zone", {
+    //   domainName: props.domainName,
+    // });
 
     const siteDomain = props.siteSubDomain + "." + props.domainName;
 
@@ -66,7 +66,7 @@ export class StaticSite extends Construct {
     const distribution = new cloudfront.Distribution(this, "SiteDistribution", {
       // certificate: certificate,
       defaultRootObject: "index.html",
-      domainNames: [siteDomain],
+      // domainNames: [siteDomain],
       minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
       errorResponses: [
         {
@@ -90,17 +90,20 @@ export class StaticSite extends Construct {
     });
 
     // Route53 alias record for the CloudFront distribution
-    new route53.ARecord(this, "SiteAliasRecord", {
-      recordName: siteDomain,
-      target: route53.RecordTarget.fromAlias(
-        new targets.CloudFrontTarget(distribution)
-      ),
-      zone,
-    });
+    // new route53.ARecord(this, "SiteAliasRecord", {
+    //   recordName: siteDomain,
+    //   target: route53.RecordTarget.fromAlias(
+    //     new targets.CloudFrontTarget(distribution)
+    //   ),
+    //   zone,
+    // });
 
     // Deploy site contents to S3 bucket
     new s3deploy.BucketDeployment(this, "DeployWithInvalidation", {
-      sources: [s3deploy.Source.asset(path.join(__dirname, "../../site/dist"))],
+      sources: [
+        s3deploy.Source.asset(path.join(__dirname, "../../site/dist")),
+        s3deploy.Source.asset(path.join(__dirname, "../../data")),
+      ],
       destinationBucket: siteBucket,
       distribution,
       distributionPaths: ["/*"],
