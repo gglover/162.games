@@ -3,6 +3,7 @@
 import { QueryFunction } from "@tanstack/react-query";
 import { ScheduleData, Series } from "./interfaces";
 import { dateToRecordsKey } from "./utils";
+import { ASSETS_BASE_PATH } from "./constants";
 
 const parseScheduleData = (json: any): ScheduleData => {
   json.start = new Date(json.start);
@@ -49,7 +50,9 @@ export const fetchScheduleData: QueryFunction<ScheduleData> = async ({
   const year = queryKey[1];
 
   try {
-    const scheduleResponse = await fetch(`/data_${year}.json`);
+    const scheduleResponse = await fetch(
+      `${ASSETS_BASE_PATH}/data_${year}.json`
+    );
     const scheduleJson = await scheduleResponse.json();
 
     return parseScheduleData(scheduleJson);

@@ -1,6 +1,8 @@
 import teamsJson from "../../data/teams.json";
 import { Division, League, Team } from "./interfaces";
 
+export const ASSETS_BASE_PATH = "https://d48vmuz4fbfgs.cloudfront.net";
+
 export const CHART_HEIGHT = 400;
 export const CHART_WIDTH = 900;
 export const RANKINGS_HEIGHT = 150;

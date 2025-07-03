@@ -8,11 +8,13 @@ export class CdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    new StaticSite(this, "site", {
+    const staticSite = new StaticSite(this, "site", {
       siteSubDomain: "www",
       domainName: "baseball.com",
     });
 
-    new StatsLambda(this, "stats-lambda", {});
+    new StatsLambda(this, "stats-lambda", {
+      publicBucket: staticSite.publicBucket,
+    });
   }
 }

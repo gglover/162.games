@@ -21,6 +21,8 @@ export interface StaticSiteProps {
  * Route53 alias record, and ACM certificate.
  */
 export class StaticSite extends Construct {
+  public readonly publicBucket: s3.Bucket;
+
   constructor(parent: Stack, name: string, props: StaticSiteProps) {
     super(parent, name);
 
@@ -52,6 +54,7 @@ export class StaticSite extends Construct {
       autoDeleteObjects: true, // NOT recommended for production code
     });
 
+    this.publicBucket = siteBucket;
     new CfnOutput(this, "Bucket", { value: siteBucket.bucketName });
 
     // TLS certificate
@@ -100,10 +103,7 @@ export class StaticSite extends Construct {
 
     // Deploy site contents to S3 bucket
     new s3deploy.BucketDeployment(this, "DeployWithInvalidation", {
-      sources: [
-        s3deploy.Source.asset(path.join(__dirname, "../../site/dist")),
-        s3deploy.Source.asset(path.join(__dirname, "../../data")),
-      ],
+      sources: [s3deploy.Source.asset(path.join(__dirname, "../../site/dist"))],
       destinationBucket: siteBucket,
       distribution,
       distributionPaths: ["/*"],

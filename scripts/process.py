@@ -1,12 +1,12 @@
-import itertools
 import json
+import boto3
+import os
 from datetime import datetime, timedelta
 from collections import defaultdict
 from itertools import groupby
 from math import ceil
 from pprint import pprint
 import random
-import sys
 
 # Records
 #
@@ -40,37 +40,35 @@ import sys
 # }
 #
 
-if len(sys.argv) > 1:
-    print("Processing season:", sys.argv[1])
-else:
-    print("Error: Please provide the season's year.")
-    exit()
+s3_client = boto3.client('s3')
 
-year = sys.argv[1]
+def process(teams_json, year):
+    """
+    """
+    all_records = {}
+    all_series = {}
+    all_schedules = {}
+    all_teams = {}
+    playoffs = {}
+    processed_game_ids = set()
 
-all_records = {}
-all_series = {}
-all_schedules = {}
-all_teams = {}
-playoffs = {}
-
-with open(f'data/teams.json') as json_data:
-    teams_json = json.load(json_data)
+    schedule_bucket_name = os.environ.get('SCHEDULE_DATA_BUCKET')
 
     for team in teams_json:
         all_schedules[team['id']] = []
         all_teams[team['id']] = team
-    
-    json_data.close()
 
-processed_game_ids = set()
+    for team_id in all_schedules:
+        current_team = all_schedules[team_id]
 
-for team_id in all_schedules:
-    current_team = all_schedules[team_id]
+        response = s3_client.get_object(
+            Bucket=schedule_bucket_name,
+            Key=f'{year}/{team_id}'
+        )
 
-    with open(f'scripts/data_{year}/{team_id}.json') as json_data:
-        schedule = json.load(json_data)
-        
+        # Read the body and decode it
+        body = response['Body'].read().decode('utf-8')
+        schedule = json.loads(body)
         regular_season = [game for game in schedule if game['game_type'] == 'R' and game['status'] != 'Postponed']
 
         record = [0, 0]
@@ -140,124 +138,117 @@ for team_id in all_schedules:
         if current_series_id is not None:
             all_series[current_series_id] = current_series
 
-        json_data.close()
-
-# Fill in gaps in records
-#
-sorted_dates = sorted([datetime.strptime(date, '%Y-%m-%d') for date in all_records.keys()])
-# sorted_dates = sorted(all_records.keys(), key=lambda x: datetime.strptime(x, '%Y-%m-%d'))
-
-season_start = sorted_dates[0]
-season_end = sorted_dates[-1]
-
-current_date = season_start
-
-while current_date <= season_end:
-    prev_date_key = (current_date - timedelta(days = 1)).strftime("%Y-%m-%d")
-    date_key = current_date.strftime("%Y-%m-%d")
-
-    if not date_key in all_records:
-        all_records[date_key] = { key: None for key in all_schedules }
-
-
-    for team, record in all_records[date_key].items():
-
-        # If no record exists (ie. it's an off day) backfill from previous date or initialize.
-        if record is None:
-            if not prev_date_key in all_records:
-                all_records[date_key][team] = [0, 0]
-            
-            else:
-                all_records[date_key][team] = all_records[prev_date_key][team].copy()
-    
-    current_date = current_date + timedelta(days=1)
-
-# Convert winning pct to integer so that comparison is stable.
-# 
-def winning_pct(wins, losses):
-    if losses == 0 and wins == 0:
-        return 5000
-    else:
-        return int(round(wins / (wins + losses), 4) * (10 ** 4))
-    
-# Calculate heat index (placeholder)
-#
-def heat_index():
-    return random.random()
-    
-for date, records in all_records.items():
-    standings = [(winning_pct(data[0], data[1]), team) for team, data in records.items()]
-    standings.sort(reverse=True)
-
-    # Resolve ties by grouping identical winning percentages and resolving to the median rank.
+    # Fill in gaps in records
     #
-    counted_teams = 0
-    for key, group in itertools.groupby(standings, lambda tuple: tuple[0]):
-        group = list(group)
+    sorted_dates = sorted([datetime.strptime(date, '%Y-%m-%d') for date in all_records.keys()])
+    # sorted_dates = sorted(all_records.keys(), key=lambda x: datetime.strptime(x, '%Y-%m-%d'))
 
-        resolved_ranking = counted_teams + ceil(len(group) / 2)
+    season_start = sorted_dates[0]
+    season_end = sorted_dates[-1]
 
-        for pct, team in group:
-            records[team].append(resolved_ranking)
-            records[team].append(heat_index())
+    current_date = season_start
+
+    while current_date <= season_end:
+        prev_date_key = (current_date - timedelta(days = 1)).strftime("%Y-%m-%d")
+        date_key = current_date.strftime("%Y-%m-%d")
+
+        if not date_key in all_records:
+            all_records[date_key] = { key: None for key in all_schedules }
+
+
+        for team, record in all_records[date_key].items():
+
+            # If no record exists (ie. it's an off day) backfill from previous date or initialize.
+            if record is None:
+                if not prev_date_key in all_records:
+                    all_records[date_key][team] = [0, 0]
+                
+                else:
+                    all_records[date_key][team] = all_records[prev_date_key][team].copy()
         
-        counted_teams = counted_teams + len(group)
-    
-    # Division leaders
+        current_date = current_date + timedelta(days=1)
+
+    # Convert winning pct to integer so that comparison is stable.
+    # 
+    def winning_pct(wins, losses):
+        if losses == 0 and wins == 0:
+            return 5000
+        else:
+            return int(round(wins / (wins + losses), 4) * (10 ** 4))
+        
+    # Calculate heat index (placeholder)
     #
-    
+    def heat_index():
+        return random.random()
+        
+    for date, records in all_records.items():
+        standings = [(winning_pct(data[0], data[1]), team) for team, data in records.items()]
+        standings.sort(reverse=True)
 
-    divisions = defaultdict(list)
-    for tuple in standings:
-        division_key = all_teams[tuple[1]]['division']
+        # Resolve ties by grouping identical winning percentages and resolving to the median rank.
+        #
+        counted_teams = 0
+        for key, group in groupby(standings, lambda tuple: tuple[0]):
+            group = list(group)
 
-        divisions[division_key].append(tuple[1])
-    
-    divison_leaders = [divisions[key][0] for key in divisions]
+            resolved_ranking = counted_teams + ceil(len(group) / 2)
 
-    al_standings = [tuple[1] for tuple in standings if all_teams[tuple[1]]['league'] == 'AL' and tuple[1] not in divison_leaders]
-    nl_standings = [tuple[1] for tuple in standings if all_teams[tuple[1]]['league'] == 'NL' and tuple[1] not in divison_leaders]
+            for pct, team in group:
+                records[team].append(resolved_ranking)
+                records[team].append(heat_index())
+            
+            counted_teams = counted_teams + len(group)
+        
+        # Division leaders
+        #
+        divisions = defaultdict(list)
+        for tuple in standings:
+            division_key = all_teams[tuple[1]]['division']
 
-    playoffs[date] = [
-        al_standings[2],
-        nl_standings[2],
-        divisions['AL East'][0],
-        divisions['AL Central'][0],
-        divisions['AL West'][0],
-        divisions['NL East'][0],
-        divisions['NL Central'][0],
-        divisions['NL West'][0],
-    ]
+            divisions[division_key].append(tuple[1])
+        
+        divison_leaders = [divisions[key][0] for key in divisions]
 
-    # Calculate last-in for playoffs
-    #
-    # division_leaders = ....
+        al_standings = [tuple[1] for tuple in standings if all_teams[tuple[1]]['league'] == 'AL' and tuple[1] not in divison_leaders]
+        nl_standings = [tuple[1] for tuple in standings if all_teams[tuple[1]]['league'] == 'NL' and tuple[1] not in divison_leaders]
 
-    # last_wild_card = [AL, NL]
+        playoffs[date] = [
+            al_standings[2],
+            nl_standings[2],
+            divisions['AL East'][0],
+            divisions['AL Central'][0],
+            divisions['AL West'][0],
+            divisions['NL East'][0],
+            divisions['NL Central'][0],
+            divisions['NL West'][0],
+        ]
 
-    # filter standings AL / NL
+        # Calculate last-in for playoffs
+        #
+        # division_leaders = ....
 
-    # for each team in standings:
-    #    if not division leader [league] +1
-    #    if [league] === 3: push teamId
+        # last_wild_card = [AL, NL]
 
-# Output results to file
-#
-with open(f'scripts/data_{year}.json', 'w', encoding='utf-8') as f:
-    schedule_data = {
-        'schedules': all_schedules,
-        'series': all_series,
-        'records': all_records,
-        'playoffs': playoffs,
-        'start': season_start.strftime("%Y-%m-%d"),
-        'end': season_end.strftime("%Y-%m-%d"),
-    }
+        # filter standings AL / NL
 
-    json.dump(schedule_data, f, ensure_ascii=False, indent=4)
+        # for each team in standings:
+        #    if not division leader [league] +1
+        #    if [league] === 3: push teamId
 
-# pprint(len(all_series))
-# pprint(all_records)
+        return {
+            'schedules': all_schedules,
+            'series': all_series,
+            'records': all_records,
+            'playoffs': playoffs,
+            'start': season_start.strftime("%Y-%m-%d"),
+            'end': season_end.strftime("%Y-%m-%d"),
+        }
 
-# pprint(all_records['2025-03-18'])
-# pprint(all_records['2025-03-19'])
-# pprint(all_records['2025-03-20'])
+        # json.dump(schedule_data, f, ensure_ascii=False, indent=4)
+
+        # pprint(len(all_series))
+        # pprint(all_records)
+
+        # pprint(all_records['2025-03-18'])
+        # pprint(all_records['2025-03-19'])
+        # pprint(all_records['2025-03-20'])

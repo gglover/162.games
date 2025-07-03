@@ -26,14 +26,3 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
-
-// if (window.location.pathname.includes("teams")) {
-//   renderTeamsPage();
-// } else if (window.location.pathname.includes("about")) {
-//   // no-op
-// } else {
-//   renderHomePage();
-// }
-
-// renderTeamChart(DEFAULT_TEAM_ID);
-// const todayKey = dateToRecordsKey(new Date());

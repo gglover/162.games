@@ -9,8 +9,12 @@ import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
 import path from "path";
 import fs from "fs";
 
+export interface StatsLambdaProps {
+  publicBucket: s3.Bucket;
+}
+
 export class StatsLambda extends Construct {
-  constructor(parent: Stack, name: string, props?: StackProps) {
+  constructor(parent: Stack, name: string, props: StatsLambdaProps) {
     super(parent, name);
 
     const scheduleDataBucket = new s3.Bucket(this, "ScheduleDataBucket", {
@@ -42,6 +46,7 @@ export class StatsLambda extends Construct {
       handler: "lambda_handler",
       environment: {
         SCHEDULE_DATA_BUCKET: scheduleDataBucket.bucketName,
+        PUBLIC_BUCKET: props.publicBucket.bucketName,
       },
       timeout: Duration.minutes(10),
     });
@@ -59,6 +64,8 @@ export class StatsLambda extends Construct {
     });
 
     rule.addTarget(new targets.LambdaFunction(dailyLambda));
+
     scheduleDataBucket.grantReadWrite(dailyLambda);
+    props.publicBucket.grantReadWrite(dailyLambda);
   }
 }
