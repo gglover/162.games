@@ -1,13 +1,31 @@
-# Welcome to your CDK TypeScript project
+# MLB Season Timeline (working title)
 
-This is a blank project for CDK development with TypeScript.
+This project is an effort to visualize an MLB season as series-by-series outcomes. This is conceptually what
+many fans already do. There's a lot of noise with 162 individual results.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Monorepo setup for https://d48vmuz4fbfgs.cloudfront.net/ (DNS TBD).
 
-## Useful commands
+### `site/`
 
-- `npm run build` compile typescript to js
-- `npm run watch` watch for changes and compile
-- `npx cdk deploy` deploy this stack to your default AWS account/region
-- `npx cdk diff` compare deployed stack with current state
-- `npx cdk synth` emits the synthesized CloudFormation template
+Frontend code and bundler.
+
+- React + Tanstack router SPA.
+- D3 for charts.
+
+### `infra/`
+
+CDK configuration for running the site's backend.
+
+- Static site with DNS to serve the SPA.
+- Lambda to process/sync schedules. Runs nightly during the MLB season.
+
+### `scripts/`
+
+Logic schedule for lambda.
+
+- Pulls from the [MLB stats API](https://statsapi.mlb.com/docs/) using [python bindings](https://github.com/toddrob99/MLB-StatsAPI).
+
+## Inspiration
+
+- [https://gregstoll.com/baseballdivisionraces/]
+- [https://www.baseball-reference.com/teams/SEA/2025.shtml] See game results section.
