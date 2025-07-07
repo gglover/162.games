@@ -60,22 +60,20 @@ def lambda_handler(event, context):
 
         if not skip_fetch:
             for team_id in team_ids:
-                games = statsapi.schedule(start_date=f'{SEASON_START}/{year}', end_date=f'{SEASON_END}/{year}', team=team_id)
-                time.sleep(10)
+                try:
+                    games = statsapi.schedule(start_date=f'{SEASON_START}/{year}', end_date=f'{SEASON_END}/{year}', team=team_id)
+                    time.sleep(10)
 
-                logger.info(team_id)
+                    s3_client.put_object(
+                        Bucket=schedule_bucket_name,
+                        Key=f'{year}/{team_id}.json',
+                        Body=json.dumps(games),
+                        ContentType='application/json'
+                    )
 
-            try:
-                s3_client.put_object(
-                    Bucket=schedule_bucket_name,
-                    Key=f'{year}/{team_id}.json',
-                    Body=json.dumps(games),
-                    ContentType='application/json'
-                )
-
-            except Exception as e:
-                logger.error(f"Failed to upload schedule data to S3: {str(e)}")
-                raise
+                except Exception as e:
+                    logger.error(f"Failed to get schedule data from stats api: {str(e)}")
+                    raise
         
         condensed_season = process(teams_json, year)
 

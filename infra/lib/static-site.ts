@@ -37,21 +37,16 @@ export class StaticSite extends Construct {
     // Content bucket
     const siteBucket = new s3.Bucket(this, "SiteBucket", {
       bucketName: siteDomain,
-      publicReadAccess: false,
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      cors: [
+        {
+          allowedOrigins: ["*"],
+          allowedHeaders: ["*"],
+          allowedMethods: [s3.HttpMethods.GET],
+          exposedHeaders: ["ETag"],
+        },
+      ],
 
-      /**
-       * The default removal policy is RETAIN, which means that cdk destroy will not attempt to delete
-       * the new bucket, and it will remain in your account until manually deleted. By setting the policy to
-       * DESTROY, cdk destroy will attempt to delete the bucket, but will error if the bucket is not empty.
-       */
-      removalPolicy: RemovalPolicy.DESTROY, // NOT recommended for production code
-
-      /**
-       * For sample purposes only, if you create an S3 bucket then populate it, stack destruction fails.  This
-       * setting will enable full cleanup of the demo.
-       */
-      autoDeleteObjects: true, // NOT recommended for production code
+      removalPolicy: RemovalPolicy.DESTROY,
     });
 
     this.publicBucket = siteBucket;
@@ -64,6 +59,20 @@ export class StaticSite extends Construct {
     // });
 
     // new CfnOutput(this, "Certificate", { value: certificate.certificateArn });
+
+    const allowAllOriginCachePolicy = new cloudfront.CachePolicy(
+      this,
+      "AllowAllOriginCachePolicy",
+      {
+        cachePolicyName: "AllowAllOriginCachePolicy",
+        headerBehavior: cloudfront.CacheHeaderBehavior.allowList("Origin"),
+        defaultTtl: Duration.days(1),
+        minTtl: Duration.hours(1),
+        maxTtl: Duration.days(2),
+        enableAcceptEncodingGzip: true,
+        enableAcceptEncodingBrotli: true,
+      }
+    );
 
     // CloudFront distribution
     const distribution = new cloudfront.Distribution(this, "SiteDistribution", {
@@ -84,6 +93,9 @@ export class StaticSite extends Construct {
           cloudfront_origins.S3BucketOrigin.withOriginAccessControl(siteBucket),
         compress: true,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+        cachePolicy: allowAllOriginCachePolicy,
+        responseHeadersPolicy:
+          cloudfront.ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
     });

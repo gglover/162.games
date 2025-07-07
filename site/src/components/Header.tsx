@@ -10,6 +10,7 @@ export function Header() {
             <Link to="/">MLB HeatIDX</Link>
           </h1>
           <Link to="/about">About</Link>
+          <Link to="https://github.com/gglover/mlb-season-data-vis">gh</Link>
         </div>
         <div className="team-links">
           {Object.values(TEAMS).map((team) => (

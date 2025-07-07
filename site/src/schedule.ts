@@ -19,7 +19,6 @@ const parseScheduleData = (json: any): ScheduleData => {
   }
 
   // Temp: model heat as L10 Record
-
   for (let teamId in json.schedules) {
     for (let dateKey in json.records) {
       const record = json.records[dateKey][teamId];

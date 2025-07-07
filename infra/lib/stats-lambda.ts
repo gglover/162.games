@@ -49,6 +49,7 @@ export class StatsLambda extends Construct {
         PUBLIC_BUCKET: props.publicBucket.bucketName,
       },
       timeout: Duration.minutes(10),
+      memorySize: 256,
     });
 
     new CfnOutput(this, "Lambda", { value: dailyLambda.functionName });

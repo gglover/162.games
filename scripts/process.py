@@ -63,7 +63,7 @@ def process(teams_json, year):
 
         response = s3_client.get_object(
             Bucket=schedule_bucket_name,
-            Key=f'{year}/{team_id}'
+            Key=f'{year}/{team_id}.json'
         )
 
         # Read the body and decode it
@@ -206,7 +206,7 @@ def process(teams_json, year):
             division_key = all_teams[tuple[1]]['division']
 
             divisions[division_key].append(tuple[1])
-        
+
         divison_leaders = [divisions[key][0] for key in divisions]
 
         al_standings = [tuple[1] for tuple in standings if all_teams[tuple[1]]['league'] == 'AL' and tuple[1] not in divison_leaders]
@@ -223,32 +223,32 @@ def process(teams_json, year):
             divisions['NL West'][0],
         ]
 
-        # Calculate last-in for playoffs
-        #
-        # division_leaders = ....
+    # Calculate last-in for playoffs
+    #
+    # division_leaders = ....
 
-        # last_wild_card = [AL, NL]
+    # last_wild_card = [AL, NL]
 
-        # filter standings AL / NL
+    # filter standings AL / NL
 
-        # for each team in standings:
-        #    if not division leader [league] +1
-        #    if [league] === 3: push teamId
+    # for each team in standings:
+    #    if not division leader [league] +1
+    #    if [league] === 3: push teamId
 
-        return {
-            'schedules': all_schedules,
-            'series': all_series,
-            'records': all_records,
-            'playoffs': playoffs,
-            'start': season_start.strftime("%Y-%m-%d"),
-            'end': season_end.strftime("%Y-%m-%d"),
-        }
+    return {
+        'schedules': all_schedules,
+        'series': all_series,
+        'records': all_records,
+        'playoffs': playoffs,
+        'start': season_start.strftime("%Y-%m-%d"),
+        'end': season_end.strftime("%Y-%m-%d"),
+    }
 
-        # json.dump(schedule_data, f, ensure_ascii=False, indent=4)
+    # json.dump(schedule_data, f, ensure_ascii=False, indent=4)
 
-        # pprint(len(all_series))
-        # pprint(all_records)
+    # pprint(len(all_series))
+    # pprint(all_records)
 
-        # pprint(all_records['2025-03-18'])
-        # pprint(all_records['2025-03-19'])
-        # pprint(all_records['2025-03-20'])
+    # pprint(all_records['2025-03-18'])
+    # pprint(all_records['2025-03-19'])
+    # pprint(all_records['2025-03-20'])
