@@ -2,10 +2,12 @@ import * as d3 from "d3";
 import {
   CHART_HEIGHT,
   CHART_WIDTH,
+  DIVISION_LEADER_COLOR,
   FIVE_HUNDRED_RECORD_Y,
   PLAYOFF_INDEX,
   SERIES_HIGHLIGHT_PATTERN_DEF,
   TEAMS,
+  WC3_COLOR,
   WIN_INTERVAL_HEIGHT,
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
@@ -17,6 +19,7 @@ import { SeriesResults } from "./SeriesResults";
 const HOME_BLOCK_COLOR = "#f0f0f0";
 const AWAY_BLOCK_COLOR = "#f7f7f7";
 const DIVISION_STROKE_COLOR = "#d0d0d0";
+const FIVE_HUNDRED_STROKE_COLOR = "#a0a0a0";
 const SUBDIVISION_STROKE_COLOR = "#e5e5e5";
 const DIVISION_MARKS = [60, 50, 40, 30, 20, 10, -10, -20, -30, -40, -50, -60];
 
@@ -117,20 +120,6 @@ export function NetRecord({
         ))}
       </g>
 
-      <path
-        d={playoffLineGenerator(daySamples)!}
-        fill="none"
-        stroke="#ddd"
-        strokeWidth="1.5px"
-      />
-
-      <path
-        d={divisionLineGenerator(daySamples)!}
-        fill="none"
-        stroke="#dd5"
-        strokeWidth="1.5px"
-      />
-
       {DIVISION_MARKS.map((y) => (
         <line
           x1="0"
@@ -138,6 +127,7 @@ export function NetRecord({
           y1={WIN_INTERVAL_HEIGHT * y + FIVE_HUNDRED_RECORD_Y}
           y2={WIN_INTERVAL_HEIGHT * y + FIVE_HUNDRED_RECORD_Y}
           stroke={SUBDIVISION_STROKE_COLOR}
+          key={y}
         />
       ))}
 
@@ -147,6 +137,20 @@ export function NetRecord({
         y1={0}
         y2={CHART_HEIGHT}
         stroke="#a0a0a0"
+      />
+
+      <path
+        d={playoffLineGenerator(daySamples)!}
+        fill="none"
+        stroke={WC3_COLOR}
+        strokeWidth="1.5px"
+      />
+
+      <path
+        d={divisionLineGenerator(daySamples)!}
+        fill="none"
+        stroke={DIVISION_LEADER_COLOR}
+        strokeWidth="1.5px"
       />
 
       {selectedSeriesId && (
@@ -170,7 +174,7 @@ export function NetRecord({
         y2={FIVE_HUNDRED_RECORD_Y}
         style={{
           strokeDasharray: "5,3",
-          stroke: DIVISION_STROKE_COLOR,
+          stroke: FIVE_HUNDRED_STROKE_COLOR,
         }}
       />
 

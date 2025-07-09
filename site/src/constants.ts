@@ -17,6 +17,9 @@ export const Y_AXIS_WIDTH = 30;
 export const SQUARE_SIZE = 400;
 export const SQUARE_PADDING = 30;
 
+export const WC3_COLOR = "#d0d0d0";
+export const DIVISION_LEADER_COLOR = "#d0d050";
+
 export const SERIES_HIGHLIGHT_PATTERN_DEF = "#series-highlight";
 
 export const SEASONS = ["2025", "2024", "2023", "2022"];

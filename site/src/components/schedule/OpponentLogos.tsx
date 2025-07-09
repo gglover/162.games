@@ -20,7 +20,10 @@ export function OpponentLogos({ teamId, xScale }: OpponentLogosProps) {
 
   return (
     <svg width={CHART_WIDTH} height={LOGOS_HEIGHT}>
-      <g transform={`translate(${LOGO_SIZE / -2}, 0)`}>
+      <g
+        transform={`translate(${LOGO_SIZE / -2}, 0)`}
+        style={{ cursor: "pointer" }}
+      >
         {schedule.map((id: SeriesId) => (
           <TeamLogo
             key={id}

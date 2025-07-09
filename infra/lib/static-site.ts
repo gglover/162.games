@@ -83,9 +83,13 @@ export class StaticSite extends Construct {
       errorResponses: [
         {
           httpStatus: 403,
-          responseHttpStatus: 403,
-          responsePagePath: "/error.html",
-          ttl: Duration.minutes(30),
+          responseHttpStatus: 200,
+          responsePagePath: "/index.html",
+        },
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: "/index.html",
         },
       ],
       defaultBehavior: {

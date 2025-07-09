@@ -16,6 +16,7 @@ import { NetRecord } from "./NetRecord";
 import { ScheduleFooter } from "./ScheduleFooter";
 import { useEffect, useRef } from "react";
 import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
+import { ScheduleKey } from "./ScheduleKey";
 
 export interface GraphContainerProps {
   teamId: TeamId;
@@ -76,7 +77,7 @@ export function GraphContainer({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px`,
+        gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px 60px`,
       }}
       className="overflow-x-scroll"
     >
@@ -84,6 +85,7 @@ export function GraphContainer({
       <div className="flex">
         <TitleBadge>MLB Ranking</TitleBadge>
       </div>
+      <div></div>
 
       <svg width={Y_AXIS_WIDTH} height={RANKINGS_HEIGHT}>
         <g
@@ -95,9 +97,11 @@ export function GraphContainer({
       <div className="rankings border-y-1 border-gray-500">
         <Rankings teamId={teamId} xScale={xScale} yScale={rankingsYScale} />
       </div>
+      <div></div>
 
       <div></div>
       <OpponentLogos teamId={teamId} xScale={xScale} />
+      <div></div>
 
       <svg width={Y_AXIS_WIDTH} height={CHART_HEIGHT}>
         <g
@@ -117,6 +121,7 @@ export function GraphContainer({
           onSelectedSeriesIdChange={onSelectedSeriesIdChange}
         />
       </div>
+      <ScheduleKey />
 
       <div className="relative">
         <img className="w-3 h-3 m-1" src={teamLogoFromId(teamId)} />

@@ -26,8 +26,6 @@ export function SeriesResults({
 }: SeriesResultsProps) {
   const scheduleData = useScheduleDataContext();
 
-  console.log(teamId, seriesIds);
-
   const seriesOutcomeHeight = (id: SeriesId) => {
     const outcome = seriesOutcome(teamId, scheduleData.series[id]);
     const recordChange = outcome[1] - outcome[0];
@@ -93,7 +91,7 @@ export function SeriesResults({
           fontSize={heatIndexSize(opponentRecordForSeries(id)[3])}
           height={OPPONENT_HEAT_INDEX_SIZE}
           width={OPPONENT_HEAT_INDEX_SIZE}
-          y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_SIZE / 2}
+          y={-190 + OPPONENT_HEAT_INDEX_SIZE / 2}
         >
           {heatIndexIcon(opponentRecordForSeries(id)[3])}
         </text>

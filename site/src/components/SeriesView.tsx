@@ -25,16 +25,21 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
 
   for (let i = 0; i < length; i++) {
     const homeWon = series.scores[i * 2] > series.scores[i * 2 + 1];
+    const gameDate = new Date(series.start);
+    gameDate.setDate(series.start.getDate() + i);
 
     results.push(
-      <div className="flex justify-between items-center text-gray-600">
+      <div
+        key={gameDate.toISOString()}
+        className="flex justify-between items-center text-gray-600"
+      >
         <span
           className={clsx("w-8 text-sm text-center", { "font-bold": homeWon })}
         >
           {series.scores[i * 2] ?? "-"}
         </span>
         <span className="text-[10px]">
-          {new Date().toLocaleDateString("en-US", {
+          {gameDate.toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
           })}
