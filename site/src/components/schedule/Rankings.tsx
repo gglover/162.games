@@ -40,7 +40,10 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
   let end = lastDayPlayed(scheduleData.end);
 
   const daySamples = d3.timeDays(start, end);
-  const rankColorScale = d3.scaleSequential(d3.interpolateRdGy);
+  const rankColorScale = d3
+    .scaleLinear()
+    .domain([0.0, 0.4, 0.6, 1.0])
+    .range(["darkgreen", "white", "white", "darkred"]);
 
   const rankingLineGenerator = d3
     .line<Date>()
@@ -116,6 +119,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
             y1={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
             y2={yScale(opponentRankFinal(id)) + RANKINGS_PADDING / 2}
             stroke={RANKING_LINE_COLOR}
+            strokeWidth={"1px"}
           />
         ))}
 

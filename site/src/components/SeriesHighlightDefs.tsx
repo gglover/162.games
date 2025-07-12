@@ -12,7 +12,7 @@ export function SeriesHighlightDefs() {
         patternUnits="userSpaceOnUse"
         patternTransform="rotate(45)"
       >
-        <line x1="0" y1="0" x2="100" y2="0" stroke="#111" />
+        <line x1="0" y1="0" x2="100" y2="0" stroke="#888" />
       </pattern>
     </defs>
   );

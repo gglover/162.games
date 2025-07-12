@@ -7,10 +7,10 @@ export function Header() {
       <div className="w-xl m-auto py-2">
         <div className="flex justify-end align-middle">
           <h1 className="flex-grow">
-            <Link to="/">MLB HeatIDX</Link>
+            <Link to="/">[ ]</Link>
           </h1>
           <Link to="/about">About</Link>
-          <Link to="https://github.com/gglover/mlb-season-data-vis">gh</Link>
+          <a href="https://github.com/gglover/mlb-season-data-vis">gh</a>
         </div>
         <div className="team-links">
           {Object.values(TEAMS).map((team) => (

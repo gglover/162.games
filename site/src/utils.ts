@@ -63,9 +63,9 @@ export const seriesOutcomeColor = (team: TeamId, series: Series) => {
 };
 
 export const heatIndexIcon = (heatIndex: number) => {
-  if (heatIndex >= 0.7) {
+  if (heatIndex >= 0.5) {
     return "🔥";
-  } else if (heatIndex <= 0.3) {
+  } else if (heatIndex <= -0.5) {
     return "❄️";
   }
 
@@ -73,13 +73,14 @@ export const heatIndexIcon = (heatIndex: number) => {
 };
 
 export const heatIndexSize = (heatIndex: number) => {
-  if (heatIndex >= 0.9 || heatIndex <= 0.1) {
-    return "16px";
-  } else if (heatIndex >= 0.8 || heatIndex <= 0.2) {
+  heatIndex = Math.abs(heatIndex);
+  if (heatIndex >= 0.8 || heatIndex <= 0.2) {
+    return "18px";
+  } else if (heatIndex >= 0.8 || heatIndex <= 0.6) {
     return "10px";
   }
 
-  return "7px";
+  return "10px";
 };
 
 export const ordinalSuffixFormat = (n: number) => {

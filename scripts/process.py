@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timedelta
 from collections import defaultdict
 from itertools import groupby
+from queue import Queue
 from math import ceil
 from pprint import pprint
 import random
@@ -42,6 +43,19 @@ import random
 
 s3_client = boto3.client('s3')
 
+def heat_index(last_10_results_queue):
+    heat_index = 0.0
+    divisor = 2
+    results = list(last_10_results_queue.queue)
+    results.reverse()
+
+    for result in results:
+        heat_index += (1 if result else -1) / divisor
+        divisor += 1
+    
+    heat_index /= 1.9289                # Normalize with max value (all wins or all losses)
+    return max(-1, min(1, heat_index))  # Clamp
+
 def process(teams_json, year):
     """
     """
@@ -76,6 +90,8 @@ def process(teams_json, year):
         current_series = None
         current_series_id = None
 
+        last_10_games = Queue(maxsize=10)
+
         for game in regular_season:
             is_home_team = str(game['home_id']) == team_id
             did_home_team_win = game['home_score'] > game['away_score']
@@ -92,9 +108,16 @@ def process(teams_json, year):
             if not game['game_date'] in all_records:
                 all_records[game['game_date']] = { key: None for key in all_schedules }
 
+            while last_10_games.full():
+                last_10_games.get_nowait()
+
+            last_10_games.put(did_team_win)
+
             all_records[game['game_date']][team_id] = [
                 record[0],
-                record[1]
+                record[1],
+                0,
+                heat_index(last_10_games)
             ]
 
             # The series ID will reuse the ID of the first game in the series.
@@ -161,7 +184,7 @@ def process(teams_json, year):
             # If no record exists (ie. it's an off day) backfill from previous date or initialize.
             if record is None:
                 if not prev_date_key in all_records:
-                    all_records[date_key][team] = [0, 0]
+                    all_records[date_key][team] = [0, 0, 0, 0]
                 
                 else:
                     all_records[date_key][team] = all_records[prev_date_key][team].copy()
@@ -176,11 +199,6 @@ def process(teams_json, year):
         else:
             return int(round(wins / (wins + losses), 4) * (10 ** 4))
         
-    # Calculate heat index (placeholder)
-    #
-    def heat_index():
-        return random.random()
-        
     for date, records in all_records.items():
         standings = [(winning_pct(data[0], data[1]), team) for team, data in records.items()]
         standings.sort(reverse=True)
@@ -194,8 +212,7 @@ def process(teams_json, year):
             resolved_ranking = counted_teams + ceil(len(group) / 2)
 
             for pct, team in group:
-                records[team].append(resolved_ranking)
-                records[team].append(heat_index())
+                records[team][2] = resolved_ranking
             
             counted_teams = counted_teams + len(group)
         

@@ -26,6 +26,13 @@ export function SeriesResults({
 }: SeriesResultsProps) {
   const scheduleData = useScheduleDataContext();
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const playedSchedule = seriesIds.filter(
+    (id) => scheduleData.series[id].start <= today
+  );
+
   const seriesOutcomeHeight = (id: SeriesId) => {
     const outcome = seriesOutcome(teamId, scheduleData.series[id]);
     const recordChange = outcome[1] - outcome[0];
@@ -70,7 +77,7 @@ export function SeriesResults({
 
   return (
     <g>
-      {seriesIds.map((id: SeriesId) => (
+      {playedSchedule.map((id: SeriesId) => (
         <rect
           key={id}
           height={seriesOutcomeHeight(id)}
@@ -84,14 +91,14 @@ export function SeriesResults({
         />
       ))}
 
-      {seriesIds.map((id: SeriesId) => (
+      {playedSchedule.map((id: SeriesId) => (
         <text
           key={id}
           x={xScale(scheduleData.series[id].start)}
           fontSize={heatIndexSize(opponentRecordForSeries(id)[3])}
           height={OPPONENT_HEAT_INDEX_SIZE}
           width={OPPONENT_HEAT_INDEX_SIZE}
-          y={-190 + OPPONENT_HEAT_INDEX_SIZE / 2}
+          y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_SIZE / 2}
         >
           {heatIndexIcon(opponentRecordForSeries(id)[3])}
         </text>

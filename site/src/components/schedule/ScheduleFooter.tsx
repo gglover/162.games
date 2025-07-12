@@ -12,6 +12,7 @@ export interface ScheduleFooterProps {
 
 export function ScheduleFooter({ teamId, xScale }: ScheduleFooterProps) {
   const xAxisRef = useRef(null);
+  const scheduleData = useScheduleDataContext();
 
   useEffect(() => {
     const element = d3.select(xAxisRef.current);
@@ -21,8 +22,6 @@ export function ScheduleFooter({ teamId, xScale }: ScheduleFooterProps) {
     element.append("g").call(axisGenerator);
   }, []);
 
-  const scheduleData = useScheduleDataContext();
-
   const schedule = scheduleData.schedules[teamId].filter(
     (id) => scheduleData.series[id]
   );
@@ -30,12 +29,29 @@ export function ScheduleFooter({ teamId, xScale }: ScheduleFooterProps) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const playedSchedule = schedule.filter(
-    (id) => scheduleData.series[id].start < today
-  );
+  // const playedSchedule = schedule.filter(
+  //   (id) => scheduleData.series[id].start <= today
+  // );
 
-  const opponentHeatIndex = (id: SeriesId) => {
-    const dateIndex = dateToRecordsKey(scheduleData.series[id].start);
+  const dateList = [];
+  const startDate = scheduleData.start;
+  let currentDate = new Date(startDate);
+
+  while (currentDate <= today) {
+    // Format as YYYY-MM-DD (optional)
+    dateList.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 2);
+  }
+
+  // const rankColorScale = d3.scaleSequential(d3.interpolateSpectral);
+
+  const rankColorScale = d3
+    .scaleLinear()
+    .domain([0.0, 0.333, 0.666, 1.0])
+    .range(["darkgreen", "white", "white", "darkred"]);
+
+  const heatIndex = (date: Date) => {
+    const dateIndex = dateToRecordsKey(date);
     const records = scheduleData.records[dateIndex][teamId];
 
     return records[3];
@@ -43,18 +59,30 @@ export function ScheduleFooter({ teamId, xScale }: ScheduleFooterProps) {
 
   return (
     <svg width={CHART_WIDTH} height={FOOTER_HEIGHT}>
-      {playedSchedule.map((id: SeriesId) => (
+      {/* {playedSchedule.map((id: SeriesId) => (
         <text
           key={id}
-          x={xScale(scheduleData.series[id].start)}
+          x={xScale(scheduleData.series[id].start) - 20}
           y={15}
-          fontSize={heatIndexSize(opponentHeatIndex(id))}
+          fontSize={heatIndexSize(heatIndex(scheduleData.series[id].start))}
         >
-          {heatIndexIcon(opponentHeatIndex(id))}
+          {heatIndexIcon(heatIndex(scheduleData.series[id].start))}
         </text>
+      ))} */}
+      {dateList.map((date: Date) => (
+        // <text x={xScale(date)} y={15} fontSize={heatIndexSize(heatIndex(date))}>
+        //   {heatIndexIcon(heatIndex(date))}
+        // </text>
+        <rect
+          x={xScale(date)}
+          y={0}
+          width={10}
+          height={10}
+          fill={rankColorScale(1 - (heatIndex(date) + 1) / 2)}
+        ></rect>
       ))}
 
-      <g ref={xAxisRef} className="axis" transform="translate(0, 20)"></g>
+      <g ref={xAxisRef} className="axis" transform="translate(0, 10)"></g>
     </svg>
   );
 }

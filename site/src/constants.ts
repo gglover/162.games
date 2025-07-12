@@ -8,7 +8,7 @@ export const CHART_WIDTH = 900;
 export const RANKINGS_HEIGHT = 150;
 export const RANKINGS_PADDING = 10;
 export const LOGOS_HEIGHT = 25;
-export const FOOTER_HEIGHT = 50;
+export const FOOTER_HEIGHT = 30;
 
 export const FIVE_HUNDRED_RECORD_Y = CHART_HEIGHT / 2;
 export const WIN_INTERVAL_HEIGHT = 6;

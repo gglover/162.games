@@ -23,20 +23,20 @@ const parseScheduleData = (json: any): ScheduleData => {
     for (let dateKey in json.records) {
       const record = json.records[dateKey][teamId];
 
-      const date = new Date(dateKey);
-      date.setDate(date.getDate() - 20);
-      const compareKey = dateToRecordsKey(date);
+      // const date = new Date(dateKey);
+      // date.setDate(date.getDate() - 20);
+      // const compareKey = dateToRecordsKey(date);
 
-      const compareRecord = json.records[compareKey]
-        ? json.records[compareKey][teamId]
-        : [0, 0];
+      // const compareRecord = json.records[compareKey]
+      //   ? json.records[compareKey][teamId]
+      //   : [0, 0];
 
-      const last10 = [
-        record[0] - compareRecord[0],
-        record[1] - compareRecord[1],
-      ];
+      // const last10 = [
+      //   record[0] - compareRecord[0],
+      //   record[1] - compareRecord[1],
+      // ];
 
-      record[3] = last10[0] / (last10[1] + last10[0]);
+      // record[3] /= 3.25;
     }
   }
 

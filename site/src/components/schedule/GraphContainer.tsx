@@ -123,7 +123,7 @@ export function GraphContainer({
       </div>
       <ScheduleKey />
 
-      <div className="relative">
+      <div className="relative mt-[-5px]">
         <img className="w-3 h-3 m-1" src={teamLogoFromId(teamId)} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
