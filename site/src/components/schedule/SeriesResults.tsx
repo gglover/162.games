@@ -69,10 +69,14 @@ export function SeriesResults({
     );
   };
 
-  const opponentRecordForSeries = (id: SeriesId) => {
+  const opponentHeatIndexBeforeSeries = (id: SeriesId) => {
     const opponent = opponentId(teamId, scheduleData.series[id]);
-    const dateKey = dateToRecordsKey(scheduleData.series[id].start);
-    return scheduleData.records[dateKey][opponent];
+
+    const dayBeforeSeries = new Date(scheduleData.series[id].start);
+    dayBeforeSeries.setDate(scheduleData.series[id].start.getDate() - 1);
+    const dateKey = dateToRecordsKey(dayBeforeSeries);
+
+    return scheduleData.records[dateKey]?.[opponent][3] ?? 0;
   };
 
   return (
@@ -95,12 +99,12 @@ export function SeriesResults({
         <text
           key={id}
           x={xScale(scheduleData.series[id].start)}
-          fontSize={heatIndexSize(opponentRecordForSeries(id)[3])}
+          fontSize={heatIndexSize(opponentHeatIndexBeforeSeries(id))}
           height={OPPONENT_HEAT_INDEX_SIZE}
           width={OPPONENT_HEAT_INDEX_SIZE}
           y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_SIZE / 2}
         >
-          {heatIndexIcon(opponentRecordForSeries(id)[3])}
+          {heatIndexIcon(opponentHeatIndexBeforeSeries(id))}
         </text>
       ))}
     </g>

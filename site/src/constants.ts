@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import teamsJson from "../../data/teams.json";
 import { Division, League, Team } from "./interfaces";
 
@@ -27,6 +28,12 @@ export const SEASONS = ["2025", "2024", "2023", "2022"];
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 export const TODAY = today;
+
+export const GOOD_BAD_COLOR_SCALE = d3
+  .scaleLinear()
+  .domain([0.0, 0.333, 0.666, 1.0])
+  // @ts-ignore
+  .range(["#2ea80c", "white", "white", "#d10a0a"]);
 
 export const PLAYOFF_INDEX: Record<League | Division, number> = {
   AL: 0,

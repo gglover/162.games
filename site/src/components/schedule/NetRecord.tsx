@@ -18,14 +18,13 @@ import { SeriesResults } from "./SeriesResults";
 
 const HOME_BLOCK_COLOR = "#f0f0f0";
 const AWAY_BLOCK_COLOR = "#f7f7f7";
-const DIVISION_STROKE_COLOR = "#d0d0d0";
 const FIVE_HUNDRED_STROKE_COLOR = "#a0a0a0";
 const SUBDIVISION_STROKE_COLOR = "#e5e5e5";
 const DIVISION_MARKS = [60, 50, 40, 30, 20, 10, -10, -20, -30, -40, -50, -60];
 
 export interface NetRecordProps {
   teamId: TeamId;
-  selectedSeriesId: SeriesId;
+  selectedSeriesId: SeriesId | null;
   onSelectedSeriesIdChange: (id: SeriesId) => void;
   xScale: d3.ScaleTime<number, number>;
 }
@@ -34,7 +33,6 @@ export function NetRecord({
   teamId,
   xScale,
   selectedSeriesId,
-  onSelectedSeriesIdChange,
 }: NetRecordProps) {
   const scheduleData = useScheduleDataContext();
 
@@ -94,7 +92,6 @@ export function NetRecord({
     <svg
       width={CHART_WIDTH}
       height={CHART_HEIGHT}
-      onMouseLeave={() => onSelectedSeriesIdChange("")}
       className="border-x-1 border-gray-300"
     >
       <SeriesHighlightDefs />
@@ -115,7 +112,6 @@ export function NetRecord({
             }
             x={xScale(scheduleData.series[id].start)}
             y="0"
-            onMouseEnter={() => onSelectedSeriesIdChange(id)}
           />
         ))}
       </g>

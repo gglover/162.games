@@ -12,7 +12,7 @@ import { SeriesView } from "../SeriesView";
 
 export interface TeamSidebarProps {
   teamId: TeamId;
-  selectedSeriesId: SeriesId;
+  selectedSeriesId: SeriesId | null;
   season: string;
   onSeasonChange: (season: string) => void;
 }

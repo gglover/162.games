@@ -3,12 +3,14 @@ import {
   CHART_WIDTH,
   RANKINGS_HEIGHT,
   RANKINGS_PADDING,
+  SERIES_HIGHLIGHT_PATTERN_DEF,
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
   dateToRecordsKey,
   earlierDate,
+  goodBadColorScale,
   lastDayPlayed,
   opponentId,
 } from "../../utils";
@@ -22,9 +24,15 @@ export interface RankingsProps {
   teamId: TeamId;
   xScale: d3.ScaleTime<number, number>;
   yScale: d3.ScaleLinear<number, number>;
+  selectedSeriesId: SeriesId | null;
 }
 
-export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
+export function Rankings({
+  teamId,
+  xScale,
+  yScale,
+  selectedSeriesId,
+}: RankingsProps) {
   const scheduleData = useScheduleDataContext();
 
   const schedule = scheduleData.schedules[teamId].filter(
@@ -40,10 +48,6 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
   let end = lastDayPlayed(scheduleData.end);
 
   const daySamples = d3.timeDays(start, end);
-  const rankColorScale = d3
-    .scaleLinear()
-    .domain([0.0, 0.4, 0.6, 1.0])
-    .range(["darkgreen", "white", "white", "darkred"]);
 
   const rankingLineGenerator = d3
     .line<Date>()
@@ -93,6 +97,20 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
           />
         ))}
 
+        {selectedSeriesId && (
+          <rect
+            height={RANKINGS_HEIGHT}
+            width={
+              xScale(scheduleData.series[selectedSeriesId].end) -
+              xScale(scheduleData.series[selectedSeriesId].start)
+            }
+            x={xScale(scheduleData.series[selectedSeriesId].start)}
+            y="0"
+            className="gradient-repeating-lines"
+            fill={`url(#${SERIES_HIGHLIGHT_PATTERN_DEF})`}
+          />
+        )}
+
         <line
           x1="0"
           x2={CHART_WIDTH}
@@ -126,7 +144,8 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
         {schedule.map((id: SeriesId) => (
           <rect
             key={id}
-            fill={rankColorScale(opponentRankForSeries(id) / 30)}
+            // @ts-ignore
+            fill={goodBadColorScale(opponentRankForSeries(id) / 30)}
             x={
               xScale(scheduleData.series[id].start) +
               RANKINGS_PADDING / 2 -
@@ -135,7 +154,7 @@ export function Rankings({ teamId, xScale, yScale }: RankingsProps) {
             y={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
             width={RANKING_POINT_SIZE}
             height={RANKING_POINT_SIZE}
-            stroke={RANKING_LINE_COLOR}
+            stroke={"#000000"}
           />
         ))}
       </g>

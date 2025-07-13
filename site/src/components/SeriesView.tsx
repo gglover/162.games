@@ -16,8 +16,8 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
   dayBeforeSeries.setDate(series.start.getDate() - 1);
 
   const dateKey = dateToRecordsKey(dayBeforeSeries);
-  const homeRecord = scheduleData.records[dateKey][series.home];
-  const awayRecord = scheduleData.records[dateKey][series.away];
+  const homeRecord = scheduleData.records[dateKey]?.[series.home] ?? 0;
+  const awayRecord = scheduleData.records[dateKey]?.[series.away] ?? 0;
 
   const results = [];
 
@@ -25,8 +25,9 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
 
   for (let i = 0; i < length; i++) {
     const homeWon = series.scores[i * 2] > series.scores[i * 2 + 1];
+
     const gameDate = new Date(series.start);
-    gameDate.setDate(series.start.getDate() + i);
+    gameDate.setDate(series.start.getDate() + i + 1);
 
     results.push(
       <div

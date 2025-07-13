@@ -14,14 +14,14 @@ import { SeriesId, TeamId } from "../../interfaces";
 import { OpponentLogos } from "./OpponentLogos";
 import { NetRecord } from "./NetRecord";
 import { ScheduleFooter } from "./ScheduleFooter";
-import { useEffect, useRef } from "react";
+import { MouseEventHandler, useEffect, useRef } from "react";
 import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
 import { ScheduleKey } from "./ScheduleKey";
 
 export interface GraphContainerProps {
   teamId: TeamId;
-  selectedSeriesId: SeriesId;
-  onSelectedSeriesIdChange: (id: SeriesId) => void;
+  selectedSeriesId: SeriesId | null;
+  onSelectedSeriesIdChange: (id: SeriesId | null) => void;
 }
 
 export function GraphContainer({
@@ -31,6 +31,7 @@ export function GraphContainer({
 }: GraphContainerProps) {
   const rankingsYAxisRef = useRef(null);
   const netRecordYAxisRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const scheduleData = useScheduleDataContext();
 
@@ -73,12 +74,34 @@ export function GraphContainer({
     netRecordsElement.append("g").call(netRecordsAxisGenerator);
   }, []);
 
+  const handleScrubPositionChange: MouseEventHandler = (event) => {
+    if (!containerRef.current) {
+      return;
+    }
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const position = event.clientX - rect.left - Y_AXIS_WIDTH;
+
+    const date = xScale.invert(position);
+
+    const series = scheduleData.schedules[teamId].find(
+      (seriesId) =>
+        scheduleData.series[seriesId].start < date &&
+        scheduleData.series[seriesId].end > date
+    );
+
+    series && onSelectedSeriesIdChange(series);
+  };
+
   return (
     <div
       style={{
         display: "grid",
         gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px 60px`,
       }}
+      onMouseMove={handleScrubPositionChange}
+      onMouseLeave={() => onSelectedSeriesIdChange(null)}
+      ref={containerRef}
       className="overflow-x-scroll"
     >
       <div></div>
@@ -95,7 +118,12 @@ export function GraphContainer({
         ></g>
       </svg>
       <div className="rankings border-y-1 border-gray-500">
-        <Rankings teamId={teamId} xScale={xScale} yScale={rankingsYScale} />
+        <Rankings
+          teamId={teamId}
+          xScale={xScale}
+          yScale={rankingsYScale}
+          selectedSeriesId={selectedSeriesId}
+        />
       </div>
       <div></div>
 

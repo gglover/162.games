@@ -14,7 +14,11 @@ export const Route = createFileRoute("/teams/$teamSymbol")({
 
 function TeamsComponent() {
   const [season, setSeason] = useState("2025");
-  const [selectedSeriesId, setSelectedSeriesId] = useState("");
+
+  const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
+  // const [highlightedSeriesId, setHighlightedSeriesId] = useState<
+  //   string | null
+  // >();
 
   const { teamSymbol } = Route.useParams();
 
@@ -22,7 +26,7 @@ function TeamsComponent() {
     (teamId) => TEAMS[teamId].symbol === teamSymbol
   );
 
-  const handleSelectedSeriesIdChange = (id: SeriesId) => {
+  const handleSelectedSeriesIdChange = (id: SeriesId | null) => {
     setSelectedSeriesId(id);
   };
 

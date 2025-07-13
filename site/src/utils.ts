@@ -1,4 +1,4 @@
-import { TODAY, WIN_INTERVAL_HEIGHT } from "./constants";
+import { GOOD_BAD_COLOR_SCALE, TODAY, WIN_INTERVAL_HEIGHT } from "./constants";
 import { ScheduleData, Series, SeriesId, TeamId } from "./interfaces";
 import { SVGS } from "./svgs";
 
@@ -46,19 +46,23 @@ export const seriesOutcome = (team: TeamId, series: Series) => {
   return outcome;
 };
 
-export const seriesOutcomeColor = (team: TeamId, series: Series) => {
+export const goodBadColorScale = (interpolation: number): string =>
+  // @ts-ignore
+  GOOD_BAD_COLOR_SCALE(interpolation);
+
+export const seriesOutcomeColor = (team: TeamId, series: Series): string => {
   const outcome = seriesOutcome(team, series);
 
   if (outcome[1] === 0) {
-    return "oklch(0.532 0.157 131.589)";
+    return goodBadColorScale(0);
   } else if (outcome[0] > outcome[1]) {
-    return "oklch(0.768 0.233 130.85)";
+    return goodBadColorScale(0.15);
   } else if (outcome[0] === outcome[1]) {
-    return "oklch(0.6 0 0)";
+    return "oklch(0.5 0 0)";
   } else if (outcome[0] === 0) {
-    return "oklch(0.505 0.213 27.518)";
+    return goodBadColorScale(1);
   } else {
-    return "oklch(0.704 0.191 22.216)";
+    return goodBadColorScale(0.85);
   }
 };
 
