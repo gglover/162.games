@@ -84,15 +84,16 @@ export const heatIndexIcon = (heatIndex: number) => {
   return "";
 };
 
+// Returns pixel values
 export const heatIndexSize = (heatIndex: number) => {
   heatIndex = Math.abs(heatIndex);
-  if (heatIndex >= 0.8 || heatIndex <= 0.2) {
-    return "18px";
-  } else if (heatIndex >= 0.8 || heatIndex <= 0.6) {
-    return "10px";
+  if (heatIndex >= 0.8) {
+    return 18;
+  } else if (heatIndex >= 0.6) {
+    return 12;
   }
 
-  return "10px";
+  return 10;
 };
 
 export const ordinalSuffixFormat = (n: number) => {

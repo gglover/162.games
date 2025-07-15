@@ -1,9 +1,7 @@
 import * as d3 from "d3";
 import {
-  CHART_HEIGHT,
   CHART_WIDTH,
   DIVISION_LEADER_COLOR,
-  FIVE_HUNDRED_RECORD_Y,
   PLAYOFF_INDEX,
   SERIES_HIGHLIGHT_PATTERN_DEF,
   TEAMS,
@@ -25,13 +23,17 @@ const DIVISION_MARKS = [60, 50, 40, 30, 20, 10, -10, -20, -30, -40, -50, -60];
 export interface NetRecordProps {
   teamId: TeamId;
   selectedSeriesId: SeriesId | null;
+  height: number;
   onSelectedSeriesIdChange: (id: SeriesId) => void;
   xScale: d3.ScaleTime<number, number>;
+  yScale: d3.ScaleLinear<number, number>;
 }
 
 export function NetRecord({
   teamId,
   xScale,
+  yScale,
+  height,
   selectedSeriesId,
 }: NetRecordProps) {
   const scheduleData = useScheduleDataContext();
@@ -62,10 +64,7 @@ export function NetRecord({
         scheduleData.playoffs[dateKey][PLAYOFF_INDEX[TEAMS[teamId].league]];
       const lastInRecord = scheduleData.records[dateKey][lastInId];
 
-      return (
-        -(lastInRecord[0] - lastInRecord[1]) * WIN_INTERVAL_HEIGHT +
-        FIVE_HUNDRED_RECORD_Y
-      );
+      return yScale(lastInRecord[0] - lastInRecord[1]);
     })
     .curve(d3.curveNatural);
 
@@ -81,17 +80,14 @@ export function NetRecord({
         scheduleData.playoffs[dateKey][PLAYOFF_INDEX[TEAMS[teamId].division]];
       const lastInRecord = scheduleData.records[dateKey][leader];
 
-      return (
-        -(lastInRecord[0] - lastInRecord[1]) * WIN_INTERVAL_HEIGHT +
-        FIVE_HUNDRED_RECORD_Y
-      );
+      return yScale(lastInRecord[0] - lastInRecord[1]);
     })
     .curve(d3.curveNatural);
 
   return (
     <svg
       width={CHART_WIDTH}
-      height={CHART_HEIGHT}
+      height={height}
       className="border-x-1 border-gray-300"
     >
       <SeriesHighlightDefs />
@@ -104,7 +100,7 @@ export function NetRecord({
               xScale(scheduleData.series[id].end) -
               xScale(scheduleData.series[id].start)
             }
-            height={CHART_HEIGHT}
+            height={height}
             fill={
               scheduleData.series[id].home === teamId
                 ? HOME_BLOCK_COLOR
@@ -120,8 +116,8 @@ export function NetRecord({
         <line
           x1="0"
           x2={CHART_WIDTH}
-          y1={WIN_INTERVAL_HEIGHT * y + FIVE_HUNDRED_RECORD_Y}
-          y2={WIN_INTERVAL_HEIGHT * y + FIVE_HUNDRED_RECORD_Y}
+          y1={yScale(y)}
+          y2={yScale(y)}
           stroke={SUBDIVISION_STROKE_COLOR}
           key={y}
         />
@@ -131,7 +127,7 @@ export function NetRecord({
         x1={xScale(earlierDate(scheduleData.end, today))}
         x2={xScale(earlierDate(scheduleData.end, today))}
         y1={0}
-        y2={CHART_HEIGHT}
+        y2={height}
         stroke="#a0a0a0"
       />
 
@@ -151,7 +147,7 @@ export function NetRecord({
 
       {selectedSeriesId && (
         <rect
-          height={CHART_HEIGHT}
+          height={height}
           width={
             xScale(scheduleData.series[selectedSeriesId].end) -
             xScale(scheduleData.series[selectedSeriesId].start)
@@ -165,18 +161,21 @@ export function NetRecord({
 
       <line
         x1="0"
-        y1={FIVE_HUNDRED_RECORD_Y}
+        y1={yScale(0)}
         x2={CHART_WIDTH}
-        y2={FIVE_HUNDRED_RECORD_Y}
+        y2={yScale(0)}
         style={{
           strokeDasharray: "5,3",
           stroke: FIVE_HUNDRED_STROKE_COLOR,
         }}
       />
 
-      <g transform={`translate(0, ${FIVE_HUNDRED_RECORD_Y})`}>
-        <SeriesResults teamId={teamId} seriesIds={schedule} xScale={xScale} />
-      </g>
+      <SeriesResults
+        teamId={teamId}
+        seriesIds={schedule}
+        xScale={xScale}
+        yScale={yScale}
+      />
     </svg>
   );
 }

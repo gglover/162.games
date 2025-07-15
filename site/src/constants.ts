@@ -4,14 +4,12 @@ import { Division, League, Team } from "./interfaces";
 
 export const ASSETS_BASE_PATH = "https://d48vmuz4fbfgs.cloudfront.net";
 
-export const CHART_HEIGHT = 400;
 export const CHART_WIDTH = 900;
 export const RANKINGS_HEIGHT = 150;
 export const RANKINGS_PADDING = 10;
 export const LOGOS_HEIGHT = 25;
 export const FOOTER_HEIGHT = 30;
 
-export const FIVE_HUNDRED_RECORD_Y = CHART_HEIGHT / 2;
 export const WIN_INTERVAL_HEIGHT = 6;
 export const Y_AXIS_WIDTH = 30;
 
@@ -34,7 +32,7 @@ export const GOOD_BAD_COLOR_SCALE = d3
   .scaleLinear()
   .domain([0.0, 0.333, 0.666, 1.0])
   // @ts-ignore
-  .range(["#2ea80c", "white", "white", "#d10a0a"]);
+  .range(["#09b52e", "white", "white", "#b50909"]);
 
 export const PLAYOFF_INDEX: Record<League | Division, number> = {
   AL: 0,

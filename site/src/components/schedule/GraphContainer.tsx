@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import {
-  CHART_HEIGHT,
   CHART_WIDTH,
   RANKINGS_HEIGHT,
   RANKINGS_PADDING,
@@ -17,6 +16,9 @@ import { ScheduleFooter } from "./ScheduleFooter";
 import { MouseEventHandler, useEffect, useRef } from "react";
 import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
 import { ScheduleKey } from "./ScheduleKey";
+
+// Games over / under .500
+const DEFAULT_NET_RECORD_BOUNDS = 32;
 
 export interface GraphContainerProps {
   teamId: TeamId;
@@ -40,13 +42,21 @@ export function GraphContainer({
     .domain([scheduleData.start, scheduleData.end])
     .range([0, CHART_WIDTH]);
 
+  let recordBounds = [DEFAULT_NET_RECORD_BOUNDS, -DEFAULT_NET_RECORD_BOUNDS];
+  for (let day in scheduleData.records) {
+    const diff =
+      scheduleData.records[day][teamId][0] -
+      scheduleData.records[day][teamId][1];
+    recordBounds[0] = Math.max(diff + 2, recordBounds[0]);
+    recordBounds[1] = Math.min(diff - 2, recordBounds[1]);
+  }
+
+  const chartHeight = WIN_INTERVAL_HEIGHT * (recordBounds[0] - recordBounds[1]);
+
   const scheduleYScale = d3
     .scaleLinear()
-    .domain([
-      CHART_HEIGHT / WIN_INTERVAL_HEIGHT / 2,
-      CHART_HEIGHT / WIN_INTERVAL_HEIGHT / -2,
-    ])
-    .range([0, CHART_HEIGHT]);
+    .domain(recordBounds)
+    .range([0, chartHeight]);
 
   const rankingsYScale = d3
     .scaleLinear()
@@ -131,7 +141,7 @@ export function GraphContainer({
       <OpponentLogos teamId={teamId} xScale={xScale} />
       <div></div>
 
-      <svg width={Y_AXIS_WIDTH} height={CHART_HEIGHT}>
+      <svg width={Y_AXIS_WIDTH} height={chartHeight}>
         <g
           className="axis no-domain"
           transform="translate(30, 0)"
@@ -144,7 +154,9 @@ export function GraphContainer({
         </div>
         <NetRecord
           teamId={teamId}
+          height={chartHeight}
           xScale={xScale}
+          yScale={scheduleYScale}
           selectedSeriesId={selectedSeriesId}
           onSelectedSeriesIdChange={onSelectedSeriesIdChange}
         />

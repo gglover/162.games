@@ -17,12 +17,14 @@ export interface SeriesResultsProps {
   teamId: TeamId;
   seriesIds: SeriesId[];
   xScale: d3.ScaleTime<number, number>;
+  yScale: d3.ScaleLinear<number, number>;
 }
 
 export function SeriesResults({
   teamId,
   seriesIds,
   xScale,
+  yScale,
 }: SeriesResultsProps) {
   const scheduleData = useScheduleDataContext();
 
@@ -62,7 +64,8 @@ export function SeriesResults({
     const recordChange = outcome[1] - outcome[0];
 
     const record = recordBeforeSeries(id, teamId);
-    let initialY = (record[0] - record[1]) * -WIN_INTERVAL_HEIGHT;
+    // let initialY = (record[0] - record[1]) * -WIN_INTERVAL_HEIGHT;
+    let initialY = yScale(record[0] - record[1]);
 
     if (recordChange === 0) {
       return initialY - 1;
@@ -103,7 +106,7 @@ export function SeriesResults({
         <text
           key={id}
           x={xScale(scheduleData.series[id].start)}
-          fontSize={heatIndexSize(opponentHeatIndexBeforeSeries(id))}
+          fontSize={`${heatIndexSize(opponentHeatIndexBeforeSeries(id))}px`}
           height={OPPONENT_HEAT_INDEX_SIZE}
           width={OPPONENT_HEAT_INDEX_SIZE}
           y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_SIZE / 2}

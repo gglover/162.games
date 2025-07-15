@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { TEAMS } from "../constants";
+import { Link, useParams } from "@tanstack/react-router";
+import { CURRENT_SEASON, TEAMS } from "../constants";
 import { TeamId } from "../interfaces";
 import { teamLogoFromId } from "../utils";
 
@@ -11,8 +11,15 @@ export interface TeamLogoProps {
 }
 
 export function TeamLogo({ id, size, x, y }: TeamLogoProps) {
+  let { season } = useParams({ strict: false });
+  season ??= CURRENT_SEASON;
+
   return (
-    <Link to={`/teams/$teamSymbol`} params={{ teamSymbol: TEAMS[id].symbol }}>
+    <Link
+      to={`/teams/$teamSymbol/$season`}
+      params={{ teamSymbol: TEAMS[id].symbol, season }}
+      replace
+    >
       <image
         x={x}
         y={y}

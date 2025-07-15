@@ -1,8 +1,10 @@
-import { TEAMS } from "../../constants";
+import { TEAMS, TODAY } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
   dateToRecordsKey,
+  heatIndexIcon,
+  heatIndexSize,
   lastDayPlayed,
   ordinalSuffixFormat,
   teamLogoFromId,
@@ -28,6 +30,23 @@ export function TeamSidebar({
   const records = scheduleData.records[dateToRecordsKey(seasonEnd)][teamId];
   const team = TEAMS[teamId];
 
+  const heatIndex = scheduleData.records[dateToRecordsKey(TODAY)]?.[teamId][3];
+
+  const divisionTeams = [];
+  for (let teamId in TEAMS) {
+    TEAMS[teamId].division === team.division && divisionTeams.push(teamId);
+  }
+  divisionTeams.sort(
+    (a, b) =>
+      scheduleData.records[dateToRecordsKey(seasonEnd)][a][2] -
+      scheduleData.records[dateToRecordsKey(seasonEnd)][b][2]
+  );
+
+  const divisionRanking = ordinalSuffixFormat(
+    divisionTeams.indexOf(teamId) + 1
+  );
+  const mlbRanking = ordinalSuffixFormat(records[2]);
+
   return (
     <div className="flex flex-col gap-2 team-overview w-38 mt-12">
       <div className="h-[150px] flex items-center mb-5">
@@ -36,9 +55,13 @@ export function TeamSidebar({
             className="object-contain w-1/1 h-1/1"
             src={teamLogoFromId(teamId)}
           />
-          <div className="absolute rounded-full border-b-gray-100 border border-gray-200 bg-white w-7 h-7 text-center bottom-0 right-0">
-            🔥
-          </div>
+          {heatIndexIcon(heatIndex) && (
+            <div className="absolute rounded-full border-b-gray-100 border border-gray-200 bg-white w-7 h-7 text-center bottom-0 right-0">
+              <span style={{ fontSize: `${heatIndexSize(heatIndex)}px` }}>
+                {heatIndexIcon(heatIndex)}
+              </span>
+            </div>
+          )}
         </div>
       </div>
       <h1 className="text-lg text-gray-800 team-name">{team.name}</h1>
@@ -47,18 +70,18 @@ export function TeamSidebar({
       </p>
       <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center  justify-between">
         {team.division}
-        <span className="font-bold ">1st</span>
+        <span className="font-bold ">{divisionRanking}</span>
       </p>
       <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center justify-between">
         MLB
-        <span className="font-bold">{ordinalSuffixFormat(records[2])}</span>
+        <span className="font-bold">{mlbRanking}</span>
       </p>
 
-      {/* <p className="text-black text-xs mb-2">Strength of Schedule</p>
-      <p className="text-black text-xs mb-2">Strength of Remaining Schedule</p> */}
+      <div className="flex-grow"></div>
+
       {selectedSeriesId && <SeriesView seriesId={selectedSeriesId} />}
 
-      <div className="flex-grow content-end mb-7">
+      <div className="content-end my-3">
         <SeasonSelect onChange={onSeasonChange} season={season} />
       </div>
     </div>
