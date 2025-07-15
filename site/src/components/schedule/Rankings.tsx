@@ -154,7 +154,7 @@ export function Rankings({
             y={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
             width={RANKING_POINT_SIZE}
             height={RANKING_POINT_SIZE}
-            stroke={"#000000"}
+            stroke={"#666"}
           />
         ))}
       </g>

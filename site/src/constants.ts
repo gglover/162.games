@@ -24,6 +24,7 @@ export const DIVISION_LEADER_COLOR = "#d0d050";
 export const SERIES_HIGHLIGHT_PATTERN_DEF = "#series-highlight";
 
 export const SEASONS = ["2025", "2024", "2023", "2022"];
+export const CURRENT_SEASON = SEASONS[0];
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);

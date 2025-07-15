@@ -37,7 +37,7 @@ export function SeriesResults({
     const outcome = seriesOutcome(teamId, scheduleData.series[id]);
     const recordChange = outcome[1] - outcome[0];
 
-    return WIN_INTERVAL_HEIGHT * Math.abs(recordChange) || 1;
+    return WIN_INTERVAL_HEIGHT * Math.abs(recordChange) || 2;
   };
 
   const recordBeforeSeries = (seriesId: SeriesId, teamId: TeamId) => {
@@ -64,9 +64,13 @@ export function SeriesResults({
     const record = recordBeforeSeries(id, teamId);
     let initialY = (record[0] - record[1]) * -WIN_INTERVAL_HEIGHT;
 
-    return (
-      initialY + (recordChange < 0 ? recordChange * WIN_INTERVAL_HEIGHT : 0)
-    );
+    if (recordChange === 0) {
+      return initialY - 1;
+    } else if (recordChange < 0) {
+      return initialY + recordChange * WIN_INTERVAL_HEIGHT;
+    } else {
+      return initialY;
+    }
   };
 
   const opponentHeatIndexBeforeSeries = (id: SeriesId) => {

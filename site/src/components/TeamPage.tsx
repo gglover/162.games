@@ -1,38 +1,35 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { TeamSidebar } from "../../components/schedule/TeamSidebar";
-import { GraphContainer } from "../../components/schedule/GraphContainer";
 import { useState } from "react";
+import { SeriesId, TeamId } from "../interfaces";
 import { useQuery } from "@tanstack/react-query";
-import { fetchScheduleData } from "../../schedule";
-import { ScheduleDataContext } from "../../contexts";
-import { TEAMS } from "../../constants";
-import { SeriesId } from "../../interfaces";
+import { fetchScheduleData } from "../schedule";
+import { ScheduleDataContext } from "../contexts";
+import { TeamSidebar } from "./schedule/TeamSidebar";
+import { GraphContainer } from "./schedule/GraphContainer";
+import { useNavigate, useRouter } from "@tanstack/react-router";
+import { TEAMS } from "../constants";
 
-export const Route = createFileRoute("/teams/$teamSymbol")({
-  component: TeamsComponent,
-});
+export interface TeamPageProps {
+  season: string;
+  teamId: TeamId;
+}
 
-function TeamsComponent() {
-  const [season, setSeason] = useState("2025");
+export function TeamPage({ season, teamId }: TeamPageProps) {
+  const navigate = useNavigate();
 
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
   // const [highlightedSeriesId, setHighlightedSeriesId] = useState<
   //   string | null
   // >();
 
-  const { teamSymbol } = Route.useParams();
-
-  const teamId = Object.keys(TEAMS).find(
-    (teamId) => TEAMS[teamId].symbol === teamSymbol
-  );
-
   const handleSelectedSeriesIdChange = (id: SeriesId | null) => {
     setSelectedSeriesId(id);
   };
 
   const handleSeasonChange = (season: string) => {
-    setSelectedSeriesId("");
-    setSeason(season);
+    navigate({
+      to: "/teams/$teamSymbol/$season",
+      params: { season, teamSymbol: TEAMS[teamId].symbol },
+    });
   };
 
   const {

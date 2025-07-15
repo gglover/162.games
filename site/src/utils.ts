@@ -1,10 +1,18 @@
-import { GOOD_BAD_COLOR_SCALE, TODAY, WIN_INTERVAL_HEIGHT } from "./constants";
+import {
+  GOOD_BAD_COLOR_SCALE,
+  TEAMS,
+  TODAY,
+  WIN_INTERVAL_HEIGHT,
+} from "./constants";
 import { ScheduleData, Series, SeriesId, TeamId } from "./interfaces";
 import { SVGS } from "./svgs";
 
 export const dateToRecordsKey = (date: Date) => date.toISOString().slice(0, 10);
 
 export const teamLogoFromId = (id: TeamId): string => SVGS[`LOGO_${id}`];
+
+export const teamIdFromTeamSymbol = (symbol: string): TeamId | undefined =>
+  Object.keys(TEAMS).find((teamId) => TEAMS[teamId].symbol === symbol);
 
 export const opponentId = (team: TeamId, series: Series): TeamId =>
   series.home === team ? series.away : series.home;
@@ -58,7 +66,7 @@ export const seriesOutcomeColor = (team: TeamId, series: Series): string => {
   } else if (outcome[0] > outcome[1]) {
     return goodBadColorScale(0.15);
   } else if (outcome[0] === outcome[1]) {
-    return "oklch(0.5 0 0)";
+    return "oklch(0.7 0 0)";
   } else if (outcome[0] === 0) {
     return goodBadColorScale(1);
   } else {
