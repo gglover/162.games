@@ -5,7 +5,7 @@ import { fetchScheduleData } from "../schedule";
 import { ScheduleDataContext } from "../contexts";
 import { TeamSidebar } from "./schedule/TeamSidebar";
 import { GraphContainer } from "./schedule/GraphContainer";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { TEAMS } from "../constants";
 
 export interface TeamPageProps {
@@ -46,7 +46,8 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   }
 
   if (error || !scheduleData || !teamId) {
-    return <div>Error</div>;
+    console.log(error);
+    return <div>error.</div>;
   }
 
   return (

@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { CURRENT_SEASON, SEASONS, TEAMS } from "../../../constants";
+import { CURRENT_SEASON, SEASONS } from "../../../constants";
 import { TeamPage } from "../../../components/TeamPage";
 import { teamIdFromTeamSymbol } from "../../../utils";
 

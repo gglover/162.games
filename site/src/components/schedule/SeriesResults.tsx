@@ -7,11 +7,12 @@ import {
   heatIndexIcon,
   heatIndexSize,
   opponentId,
+  seriesHalfwayPoint,
   seriesOutcome,
   seriesOutcomeColor,
 } from "../../utils";
 
-const OPPONENT_HEAT_INDEX_SIZE = 12;
+const OPPONENT_HEAT_INDEX_OFFSET = 12;
 
 export interface SeriesResultsProps {
   teamId: TeamId;
@@ -103,16 +104,22 @@ export function SeriesResults({
       ))}
 
       {playedSchedule.map((id: SeriesId) => (
-        <text
-          key={id}
-          x={xScale(scheduleData.series[id].start)}
-          fontSize={`${heatIndexSize(opponentHeatIndexBeforeSeries(id))}px`}
-          height={OPPONENT_HEAT_INDEX_SIZE}
-          width={OPPONENT_HEAT_INDEX_SIZE}
-          y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_SIZE / 2}
-        >
-          {heatIndexIcon(opponentHeatIndexBeforeSeries(id))}
-        </text>
+        <g transform={`translate(-100%, 0)`}>
+          <text
+            key={id}
+            text-anchor="middle"
+            x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
+            fontSize={`${heatIndexSize(opponentHeatIndexBeforeSeries(id))}px`}
+            height={OPPONENT_HEAT_INDEX_OFFSET}
+            width={
+              xScale(scheduleData.series[id].end) -
+              xScale(scheduleData.series[id].start)
+            }
+            y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_OFFSET / 2}
+          >
+            {heatIndexIcon(opponentHeatIndexBeforeSeries(id))}
+          </text>
+        </g>
       ))}
     </g>
   );

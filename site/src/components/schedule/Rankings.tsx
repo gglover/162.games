@@ -13,6 +13,7 @@ import {
   goodBadColorScale,
   lastDayPlayed,
   opponentId,
+  seriesHalfwayPoint,
 } from "../../utils";
 
 const SERIES_LINE_COLOR = "#e0e0e0";
@@ -89,8 +90,8 @@ export function Rankings({
         {schedule.map((id: SeriesId) => (
           <line
             key={id}
-            x1={xScale(scheduleData.series[id].start) + RANKINGS_PADDING / 2}
-            x2={xScale(scheduleData.series[id].start) + RANKINGS_PADDING / 2}
+            x1={seriesHalfwayPoint(scheduleData.series[id], xScale)}
+            x2={seriesHalfwayPoint(scheduleData.series[id], xScale)}
             y1="0"
             y2={RANKINGS_HEIGHT}
             stroke={SERIES_LINE_COLOR}
@@ -132,8 +133,8 @@ export function Rankings({
         {schedule.map((id: SeriesId) => (
           <line
             key={id}
-            x1={xScale(scheduleData.series[id].start) + RANKINGS_PADDING / 2}
-            x2={xScale(scheduleData.series[id].start) + RANKINGS_PADDING / 2}
+            x1={seriesHalfwayPoint(scheduleData.series[id], xScale)}
+            x2={seriesHalfwayPoint(scheduleData.series[id], xScale)}
             y1={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
             y2={yScale(opponentRankFinal(id)) + RANKINGS_PADDING / 2}
             stroke={RANKING_LINE_COLOR}
@@ -147,8 +148,7 @@ export function Rankings({
             // @ts-ignore
             fill={goodBadColorScale(opponentRankForSeries(id) / 30)}
             x={
-              xScale(scheduleData.series[id].start) +
-              RANKINGS_PADDING / 2 -
+              seriesHalfwayPoint(scheduleData.series[id], xScale) -
               RANKING_POINT_SIZE / 2
             }
             y={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}

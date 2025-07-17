@@ -6,7 +6,6 @@ import {
   SERIES_HIGHLIGHT_PATTERN_DEF,
   TEAMS,
   WC3_COLOR,
-  WIN_INTERVAL_HEIGHT,
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
@@ -88,7 +87,7 @@ export function NetRecord({
     <svg
       width={CHART_WIDTH}
       height={height}
-      className="border-x-1 border-gray-300"
+      className="border-x-1 border-gray-300 border-box"
     >
       <SeriesHighlightDefs />
 

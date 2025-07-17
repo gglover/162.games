@@ -54,6 +54,13 @@ export const seriesOutcome = (team: TeamId, series: Series) => {
   return outcome;
 };
 
+export const seriesHalfwayPoint = (
+  series: Series,
+  xScale: d3.ScaleTime<number, number>
+): number => {
+  return xScale(series.start) + (xScale(series.end) - xScale(series.start)) / 2;
+};
+
 export const goodBadColorScale = (interpolation: number): string =>
   // @ts-ignore
   GOOD_BAD_COLOR_SCALE(interpolation);
