@@ -17,72 +17,95 @@ export function Square({ date }: SquareProps) {
   const scheduleData = useScheduleDataContext();
 
   const rankXScale = d3.scaleLinear().domain([30, 1]).range([0, SQUARE_SIZE]);
-  const heatYScale = d3.scaleLinear().domain([1.0, 0]).range([0, SQUARE_SIZE]);
+  const heatYScale = d3
+    .scaleLinear()
+    .domain([1.0, -1.0])
+    .range([0, SQUARE_SIZE]);
   const records = scheduleData.records[dateToRecordsKey(date)];
 
   return (
-    <svg
-      className="flex justify-center"
-      width={SQUARE_SIZE + SQUARE_PADDING * 2}
-      height={SQUARE_SIZE + SQUARE_PADDING * 2}
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: `30px ${SQUARE_SIZE}px 30px`,
+      }}
     >
-      <rect
-        x={SQUARE_PADDING}
-        y={SQUARE_PADDING}
-        width={SQUARE_SIZE / 2}
-        height={SQUARE_SIZE / 2}
-        fill={BACKGROUND_GRAY}
-      />
-
-      <rect
-        x={SQUARE_PADDING + SQUARE_SIZE / 2}
-        y={SQUARE_PADDING + SQUARE_SIZE / 2}
-        width={SQUARE_SIZE / 2}
-        height={SQUARE_SIZE / 2}
-        fill={BACKGROUND_GRAY}
-      />
-
-      <line
-        x1="0"
-        y1={SQUARE_SIZE + SQUARE_PADDING * 2}
-        x2={SQUARE_SIZE + SQUARE_PADDING * 2}
-        y2="0"
-        stroke={AXIS_GRAY}
-      />
-
-      <line
-        x1={SQUARE_SIZE + SQUARE_PADDING}
-        y1={SQUARE_PADDING - 10}
-        x2={SQUARE_SIZE + SQUARE_PADDING}
-        y2={SQUARE_PADDING + SQUARE_SIZE}
-        stroke={AXIS_GRAY}
-      />
-
-      <line
-        x1={SQUARE_PADDING}
-        y1={SQUARE_PADDING}
-        x2={SQUARE_SIZE + SQUARE_PADDING + 10}
-        y2={SQUARE_PADDING}
-        stroke={AXIS_GRAY}
-      />
-
-      {Object.keys(records).map((id: TeamId) => (
-        <TeamLogo
-          key={id}
-          id={id}
-          size={25}
-          x={rankXScale(records[id][2])}
-          y={heatYScale(records[id][3])}
+      <div className="flex flex-col justify-between">
+        <span className="text-xl">🔥</span>
+        <div className="text-xs text-gray-700 transform -rotate-90">
+          Recent performance
+        </div>
+        <span className="text-xl">❄️</span>
+      </div>
+      <svg
+        className="flex justify-center"
+        width={SQUARE_SIZE + SQUARE_PADDING * 2}
+        height={SQUARE_SIZE + SQUARE_PADDING * 2}
+      >
+        <rect
+          x={SQUARE_PADDING}
+          y={SQUARE_PADDING}
+          width={SQUARE_SIZE / 2}
+          height={SQUARE_SIZE / 2}
+          fill={BACKGROUND_GRAY}
         />
-      ))}
 
-      <Axis
-        scale={rankXScale}
-        x={SQUARE_PADDING}
-        y={SQUARE_SIZE + SQUARE_PADDING}
-        orientation={AxisOrientation.Horizontal}
-      />
-    </svg>
+        <rect
+          x={SQUARE_PADDING + SQUARE_SIZE / 2}
+          y={SQUARE_PADDING + SQUARE_SIZE / 2}
+          width={SQUARE_SIZE / 2}
+          height={SQUARE_SIZE / 2}
+          fill={BACKGROUND_GRAY}
+        />
+
+        <line
+          x1="0"
+          y1={SQUARE_SIZE + SQUARE_PADDING * 2}
+          x2={SQUARE_SIZE + SQUARE_PADDING * 2}
+          y2="0"
+          stroke={AXIS_GRAY}
+        />
+
+        <line
+          x1={SQUARE_SIZE + SQUARE_PADDING}
+          y1={SQUARE_PADDING - 10}
+          x2={SQUARE_SIZE + SQUARE_PADDING}
+          y2={SQUARE_PADDING + SQUARE_SIZE}
+          stroke={AXIS_GRAY}
+        />
+
+        <line
+          x1={SQUARE_PADDING}
+          y1={SQUARE_PADDING}
+          x2={SQUARE_SIZE + SQUARE_PADDING + 10}
+          y2={SQUARE_PADDING}
+          stroke={AXIS_GRAY}
+        />
+
+        {Object.keys(records).map((id: TeamId) => (
+          <g transform="translate(-12 -12)" key={id}>
+            <TeamLogo
+              id={id}
+              size={25}
+              x={rankXScale(records[id][2])}
+              y={heatYScale(records[id][3])}
+            />
+          </g>
+        ))}
+      </svg>
+      <div></div>
+
+      <div></div>
+      <svg width={SQUARE_SIZE + SQUARE_PADDING * 2}>
+        <Axis
+          scale={rankXScale}
+          x={SQUARE_PADDING}
+          y={0}
+          orientation={AxisOrientation.Horizontal}
+        />
+      </svg>
+      <div></div>
+    </div>
   );
 }
 

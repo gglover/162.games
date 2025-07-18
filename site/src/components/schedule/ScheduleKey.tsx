@@ -4,10 +4,11 @@ export function ScheduleKey() {
   return (
     <div className="m-2 flex flex-col justify-end text-gray-600 text-[10px] ">
       <div className="pb-1">
-        <span className="text-sm">🔥</span> Streaking Opponent
+        <span className="text-sm">🔥</span> <br /> Streaking Opponent
       </div>
       <div className="pb-1">
-        <span className="text-sm">❄️</span> Slumping Opponent
+        <span className="text-sm">❄️</span> <br />
+        Slumping Opponent
       </div>
       <div className="flex-grow"></div>
       <div

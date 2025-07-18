@@ -14,7 +14,7 @@ export const WIN_INTERVAL_HEIGHT = 6;
 export const Y_AXIS_WIDTH = 30;
 
 export const SQUARE_SIZE = 400;
-export const SQUARE_PADDING = 30;
+export const SQUARE_PADDING = 10;
 
 export const WC3_COLOR = "#d0d0d0";
 export const DIVISION_LEADER_COLOR = "#d0d050";
@@ -22,6 +22,13 @@ export const DIVISION_LEADER_COLOR = "#d0d050";
 export const SERIES_HIGHLIGHT_PATTERN_DEF = "#series-highlight";
 
 export const SEASONS = ["2025", "2024", "2023", "2022"];
+export const ALL_STAR_GAMES: Record<string, Date> = {
+  2025: new Date("2025-07-15"),
+  2024: new Date("2024-07-16"),
+  2023: new Date("2023-07-11"),
+  2022: new Date("2022-07-19"),
+};
+
 export const CURRENT_SEASON = SEASONS[0];
 
 const today = new Date();

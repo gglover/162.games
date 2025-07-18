@@ -55,7 +55,7 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
   }
 
   return (
-    <div className="shadow-md rounded-sm p-3 flex flex-col h-[175px] bg-gray-50">
+    <div className="shadow-md rounded-sm p-3 flex flex-col h-[175px] bg-white">
       <div className="flex justify-between items-center mb-2">
         <div className="text-center">
           <div className="bg-gray-300 rounded-full p-2 w-8 m-auto">

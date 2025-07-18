@@ -16,6 +16,7 @@ import { ScheduleFooter } from "./ScheduleFooter";
 import { MouseEventHandler, useEffect, useRef } from "react";
 import { ordinalSuffixFormat, teamLogoFromId } from "../../utils";
 import { ScheduleKey } from "./ScheduleKey";
+import { RankingsKey } from "./RankingsKey";
 
 // Games over / under .500
 const DEFAULT_NET_RECORD_BOUNDS = 32;
@@ -107,7 +108,7 @@ export function GraphContainer({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px 60px`,
+        gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px 100px`,
       }}
       onMouseMove={handleScrubPositionChange}
       onMouseLeave={() => onSelectedSeriesIdChange(null)}
@@ -135,7 +136,9 @@ export function GraphContainer({
           selectedSeriesId={selectedSeriesId}
         />
       </div>
-      <div></div>
+      <div>
+        <RankingsKey />
+      </div>
 
       <div></div>
       <OpponentLogos teamId={teamId} xScale={xScale} />

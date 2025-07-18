@@ -17,5 +17,3 @@ Bugs
 - Team-specific issues:
 
 Visual
-
-- Center the team logo and rankings

@@ -50,7 +50,7 @@ export function TeamSidebar({
   return (
     <div className="flex flex-col gap-2 team-overview w-38 mt-12">
       <div className="h-[150px] flex items-center mb-5">
-        <div className="w-30 h-30 mx-auto bg-gray-300 p-7 rounded-full relative">
+        <div className="w-30 h-30 mx-auto bg-gray-300 p-7 rounded-full relative shadow-sm">
           <img
             className="object-contain w-1/1 h-1/1"
             src={teamLogoFromId(teamId)}

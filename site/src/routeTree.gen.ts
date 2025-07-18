@@ -11,18 +11,11 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as TeamsTeamSymbolIndexImport } from './routes/teams/$teamSymbol/index'
 import { Route as TeamsTeamSymbolSeasonImport } from './routes/teams/$teamSymbol/$season'
 
 // Create/Update Routes
-
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -53,13 +46,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
     '/teams/$teamSymbol/$season': {
       id: '/teams/$teamSymbol/$season'
       path: '/teams/$teamSymbol/$season'
@@ -81,14 +67,12 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/teams/$teamSymbol/$season': typeof TeamsTeamSymbolSeasonRoute
   '/teams/$teamSymbol': typeof TeamsTeamSymbolIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/teams/$teamSymbol/$season': typeof TeamsTeamSymbolSeasonRoute
   '/teams/$teamSymbol': typeof TeamsTeamSymbolIndexRoute
 }
@@ -96,39 +80,27 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/teams/$teamSymbol/$season': typeof TeamsTeamSymbolSeasonRoute
   '/teams/$teamSymbol/': typeof TeamsTeamSymbolIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/about'
-    | '/teams/$teamSymbol/$season'
-    | '/teams/$teamSymbol'
+  fullPaths: '/' | '/teams/$teamSymbol/$season' | '/teams/$teamSymbol'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/teams/$teamSymbol/$season' | '/teams/$teamSymbol'
-  id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/teams/$teamSymbol/$season'
-    | '/teams/$teamSymbol/'
+  to: '/' | '/teams/$teamSymbol/$season' | '/teams/$teamSymbol'
+  id: '__root__' | '/' | '/teams/$teamSymbol/$season' | '/teams/$teamSymbol/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   TeamsTeamSymbolSeasonRoute: typeof TeamsTeamSymbolSeasonRoute
   TeamsTeamSymbolIndexRoute: typeof TeamsTeamSymbolIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   TeamsTeamSymbolSeasonRoute: TeamsTeamSymbolSeasonRoute,
   TeamsTeamSymbolIndexRoute: TeamsTeamSymbolIndexRoute,
 }
@@ -144,16 +116,12 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
         "/teams/$teamSymbol/$season",
         "/teams/$teamSymbol/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/about": {
-      "filePath": "about.tsx"
     },
     "/teams/$teamSymbol/$season": {
       "filePath": "teams/$teamSymbol/$season.tsx"

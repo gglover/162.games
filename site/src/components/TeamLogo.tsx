@@ -27,6 +27,7 @@ export function TeamLogo({ id, size, x, y }: TeamLogoProps) {
         width={size}
         xlinkHref={teamLogoFromId(id)}
         style={{
+          transition: "all 0.2s linear",
           transformOrigin: "center",
           transformBox: "fill-box",
           transform: "translate(50%, 50%)",

@@ -87,7 +87,7 @@ export function NetRecord({
     <svg
       width={CHART_WIDTH}
       height={height}
-      className="border-x-1 border-gray-300 border-box"
+      className="border-x-1 border-gray-300 bg-white"
     >
       <SeriesHighlightDefs />
 
@@ -168,7 +168,6 @@ export function NetRecord({
           stroke: FIVE_HUNDRED_STROKE_COLOR,
         }}
       />
-
       <SeriesResults
         teamId={teamId}
         seriesIds={schedule}

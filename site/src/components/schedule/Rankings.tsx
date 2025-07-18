@@ -15,11 +15,11 @@ import {
   opponentId,
   seriesHalfwayPoint,
 } from "../../utils";
+import { RankingPoint } from "./RankingPoint";
 
 const SERIES_LINE_COLOR = "#e0e0e0";
 const MIDDLE_LINE_COLOR = "#a0a0a0";
 const RANKING_LINE_COLOR = "#707070";
-const RANKING_POINT_SIZE = 6;
 
 export interface RankingsProps {
   teamId: TeamId;
@@ -76,7 +76,7 @@ export function Rankings({
     <svg
       width={CHART_WIDTH}
       height={RANKINGS_HEIGHT}
-      className="border-x-1 border-gray-300"
+      className="border-x-1 border-gray-300 bg-white"
     >
       <g>
         <line
@@ -131,30 +131,12 @@ export function Rankings({
         />
 
         {schedule.map((id: SeriesId) => (
-          <line
-            key={id}
-            x1={seriesHalfwayPoint(scheduleData.series[id], xScale)}
-            x2={seriesHalfwayPoint(scheduleData.series[id], xScale)}
-            y1={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
-            y2={yScale(opponentRankFinal(id)) + RANKINGS_PADDING / 2}
-            stroke={RANKING_LINE_COLOR}
-            strokeWidth={"1px"}
-          />
-        ))}
-
-        {schedule.map((id: SeriesId) => (
-          <rect
-            key={id}
-            // @ts-ignore
-            fill={goodBadColorScale(opponentRankForSeries(id) / 30)}
-            x={
-              seriesHalfwayPoint(scheduleData.series[id], xScale) -
-              RANKING_POINT_SIZE / 2
-            }
-            y={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
-            width={RANKING_POINT_SIZE}
-            height={RANKING_POINT_SIZE}
-            stroke={"#666"}
+          <RankingPoint
+            x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
+            yStart={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
+            yEnd={yScale(opponentRankFinal(id)) + RANKINGS_PADDING / 2}
+            color={goodBadColorScale(opponentRankForSeries(id) / 30)}
+            seriesId={id}
           />
         ))}
       </g>
