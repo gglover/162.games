@@ -6,24 +6,38 @@ export function Header() {
     a.symbol.localeCompare(b.symbol)
   );
 
+  // Group teams by division
+  const teamsByDivision = teamLinks.reduce(
+    (acc, team) => {
+      acc[team.division] ??= [];
+      acc[team.division].push(team);
+      return acc;
+    },
+    {} as Record<string, typeof teamLinks>
+  );
+
+  // Get division order (optional: you can define a specific order if needed)
+  const divisionOrder = Object.keys(teamsByDivision).sort();
+
   return (
-    <header className="text-black bg-gray-200">
-      <div className="w-xl m-auto py-4">
-        <div className="flex justify-end align-middle">
-          <h1 className="flex-grow">
-            <Link to="/">⚾</Link>
-          </h1>
-          <div className="team-links">
-            {teamLinks.map((team) => (
-              <Link
-                key={team.id}
-                to="/teams/$teamSymbol"
-                params={{ teamSymbol: team.symbol }}
-              >
-                {team.symbol}
-              </Link>
-            ))}
-          </div>
+    <header className="text-black bg-gray-100 border-y-2 border-gray-200 shadow-md">
+      <div className="w-2xl m-auto py-4">
+        {/* <img className="w-12 h-12" src="/logo.png" /> */}
+        <div className="flex justify-center gap-2">
+          {divisionOrder.map((division) => (
+            <div key={division} className="flex gap-2 text-[10px] items-center">
+              {teamsByDivision[division].map((team) => (
+                <Link
+                  key={team.id}
+                  to="/teams/$teamSymbol"
+                  params={{ teamSymbol: team.symbol }}
+                >
+                  {team.symbol}
+                </Link>
+              ))}
+              <div className="mx-2" />
+            </div>
+          ))}
         </div>
       </div>
     </header>

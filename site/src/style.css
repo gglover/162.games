@@ -14,10 +14,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: blue;
-  font-size: 8px;
-  padding: 2px;
+a.active {
+  background-color: white;
+  border-bottom: 2px solid black;
 }
 
 .axis text {
