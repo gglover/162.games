@@ -51,7 +51,7 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   }
 
   return (
-    <div className="flex gap-4 justify-center mt-15 max-w-1/1 mx-2 pb-8">
+    <div className="flex gap-4 justify-center mt-10 max-w-1/1 mx-2 pb-8">
       <ScheduleDataContext.Provider value={scheduleData}>
         <TeamSidebar
           teamId={teamId}
