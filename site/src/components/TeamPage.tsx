@@ -17,9 +17,6 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   const navigate = useNavigate();
 
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
-  // const [highlightedSeriesId, setHighlightedSeriesId] = useState<
-  //   string | null
-  // >();
 
   const handleSelectedSeriesIdChange = (id: SeriesId | null) => {
     setSelectedSeriesId(id);
@@ -51,7 +48,7 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   }
 
   return (
-    <div className="flex gap-4 justify-center mt-10 max-w-1/1 mx-2 pb-8">
+    <div className="flex gap-4 justify-center mt-15 max-w-1/1 mx-2 pb-8">
       <ScheduleDataContext.Provider value={scheduleData}>
         <TeamSidebar
           teamId={teamId}
