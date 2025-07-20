@@ -3,14 +3,17 @@ import {
   CHART_WIDTH,
   DIVISION_LEADER_COLOR,
   PLAYOFF_INDEX,
-  SERIES_HIGHLIGHT_PATTERN_DEF,
   TEAMS,
   WC3_COLOR,
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import { dateToRecordsKey, earlierDate } from "../../utils";
-import { SeriesHighlightDefs } from "../SeriesHighlightDefs";
+import {
+  SeriesHashing,
+  SeriesHighlightDefs,
+  SeriesYellowHighlighter,
+} from "../SeriesHighlightDefs";
 import { SeriesResults } from "./SeriesResults";
 
 const HOME_BLOCK_COLOR = "#f0f0f0";
@@ -21,11 +24,11 @@ const DIVISION_MARKS = [60, 50, 40, 30, 20, 10, -10, -20, -30, -40, -50, -60];
 
 export interface NetRecordProps {
   teamId: TeamId;
-  selectedSeriesId: SeriesId | null;
-  height: number;
-  onSelectedSeriesIdChange: (id: SeriesId) => void;
   xScale: d3.ScaleTime<number, number>;
   yScale: d3.ScaleLinear<number, number>;
+  height: number;
+  selectedSeriesId: SeriesId | null;
+  highlightedSeriesId: SeriesId | null;
 }
 
 export function NetRecord({
@@ -34,6 +37,7 @@ export function NetRecord({
   yScale,
   height,
   selectedSeriesId,
+  highlightedSeriesId,
 }: NetRecordProps) {
   const scheduleData = useScheduleDataContext();
 
@@ -144,18 +148,27 @@ export function NetRecord({
         strokeWidth="1.5px"
       />
 
-      {selectedSeriesId && (
-        <rect
+      {highlightedSeriesId && (
+        <SeriesHashing
+          series={scheduleData.series[highlightedSeriesId]}
+          xScale={xScale}
           height={height}
-          width={
-            xScale(scheduleData.series[selectedSeriesId].end) -
-            xScale(scheduleData.series[selectedSeriesId].start)
-          }
-          x={xScale(scheduleData.series[selectedSeriesId].start)}
-          y="0"
-          className="gradient-repeating-lines"
-          fill={`url(#${SERIES_HIGHLIGHT_PATTERN_DEF})`}
         />
+      )}
+
+      {selectedSeriesId && (
+        <>
+          <SeriesHashing
+            series={scheduleData.series[selectedSeriesId]}
+            xScale={xScale}
+            height={height}
+          />
+          <SeriesYellowHighlighter
+            series={scheduleData.series[selectedSeriesId]}
+            xScale={xScale}
+            height={height}
+          />
+        </>
       )}
 
       <line

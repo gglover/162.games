@@ -40,10 +40,15 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
           {series.scores[i * 2] ?? "-"}
         </span>
         <span className="text-[10px]">
-          {gameDate.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          })}
+          <a
+            href={`https://www.mlb.com/scores/${dateToRecordsKey(gameDate)}`}
+            target="_blank"
+          >
+            {gameDate.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            })}
+          </a>
         </span>
         <span
           className={clsx("w-8 text-sm text-center", { "font-bold": !homeWon })}

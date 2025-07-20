@@ -20,6 +20,7 @@ function TeamsRouteComponent() {
 
   return (
     <TeamPage
+      key={teamSymbol}
       teamId={teamIdFromTeamSymbol(teamSymbol)!}
       season={CURRENT_SEASON}
     />

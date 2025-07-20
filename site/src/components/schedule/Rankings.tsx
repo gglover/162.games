@@ -3,7 +3,6 @@ import {
   CHART_WIDTH,
   RANKINGS_HEIGHT,
   RANKINGS_PADDING,
-  SERIES_HIGHLIGHT_PATTERN_DEF,
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
@@ -16,6 +15,7 @@ import {
   seriesHalfwayPoint,
 } from "../../utils";
 import { RankingPoint } from "./RankingPoint";
+import { SeriesHashing, SeriesYellowHighlighter } from "../SeriesHighlightDefs";
 
 const SERIES_LINE_COLOR = "#e0e0e0";
 const MIDDLE_LINE_COLOR = "#a0a0a0";
@@ -26,6 +26,7 @@ export interface RankingsProps {
   xScale: d3.ScaleTime<number, number>;
   yScale: d3.ScaleLinear<number, number>;
   selectedSeriesId: SeriesId | null;
+  highlightedSeriesId: SeriesId | null;
 }
 
 export function Rankings({
@@ -33,6 +34,7 @@ export function Rankings({
   xScale,
   yScale,
   selectedSeriesId,
+  highlightedSeriesId,
 }: RankingsProps) {
   const scheduleData = useScheduleDataContext();
 
@@ -98,18 +100,27 @@ export function Rankings({
           />
         ))}
 
-        {selectedSeriesId && (
-          <rect
+        {highlightedSeriesId && (
+          <SeriesHashing
+            series={scheduleData.series[highlightedSeriesId]}
+            xScale={xScale}
             height={RANKINGS_HEIGHT}
-            width={
-              xScale(scheduleData.series[selectedSeriesId].end) -
-              xScale(scheduleData.series[selectedSeriesId].start)
-            }
-            x={xScale(scheduleData.series[selectedSeriesId].start)}
-            y="0"
-            className="gradient-repeating-lines"
-            fill={`url(#${SERIES_HIGHLIGHT_PATTERN_DEF})`}
           />
+        )}
+
+        {selectedSeriesId && (
+          <>
+            <SeriesHashing
+              series={scheduleData.series[selectedSeriesId]}
+              xScale={xScale}
+              height={RANKINGS_HEIGHT}
+            />
+            <SeriesYellowHighlighter
+              series={scheduleData.series[selectedSeriesId]}
+              xScale={xScale}
+              height={RANKINGS_HEIGHT}
+            />
+          </>
         )}
 
         <line

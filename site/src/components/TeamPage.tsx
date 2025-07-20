@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SeriesId, TeamId } from "../interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { fetchScheduleData } from "../schedule";
@@ -7,6 +7,7 @@ import { TeamSidebar } from "./schedule/TeamSidebar";
 import { GraphContainer } from "./schedule/GraphContainer";
 import { useNavigate } from "@tanstack/react-router";
 import { TEAMS } from "../constants";
+import { useClickOutside } from "../hooks";
 
 export interface TeamPageProps {
   season: string;
@@ -14,9 +15,21 @@ export interface TeamPageProps {
 }
 
 export function TeamPage({ season, teamId }: TeamPageProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
+  const [highlightedSeriesId, setHighlightedSeriesId] = useState<string | null>(
+    null
+  );
+
+  useClickOutside(contentRef, () => {
+    setSelectedSeriesId(null);
+  });
+
+  const handleHighlightedSeriesIdChange = (id: SeriesId | null) => {
+    setHighlightedSeriesId(id);
+  };
 
   const handleSelectedSeriesIdChange = (id: SeriesId | null) => {
     setSelectedSeriesId(id);
@@ -48,16 +61,21 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   }
 
   return (
-    <div className="flex gap-4 justify-center mt-15 max-w-1/1 mx-2 pb-8">
+    <div
+      ref={contentRef}
+      className="flex gap-4 justify-center mt-15 max-w-1/1 mx-2 pb-8"
+    >
       <ScheduleDataContext.Provider value={scheduleData}>
         <TeamSidebar
           teamId={teamId}
-          selectedSeriesId={selectedSeriesId}
+          selectedSeriesId={selectedSeriesId || highlightedSeriesId}
           onSeasonChange={handleSeasonChange}
           season={season}
         />
         <GraphContainer
           teamId={teamId}
+          highlightedSeriesId={highlightedSeriesId}
+          onHighlightedSeriesIdChange={handleHighlightedSeriesIdChange}
           selectedSeriesId={selectedSeriesId}
           onSelectedSeriesIdChange={handleSelectedSeriesIdChange}
         />

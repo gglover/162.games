@@ -1,4 +1,5 @@
 import { SERIES_HIGHLIGHT_PATTERN_DEF } from "../constants";
+import { Series } from "../interfaces";
 
 export function SeriesHighlightDefs() {
   return (
@@ -15,5 +16,45 @@ export function SeriesHighlightDefs() {
         <line x1="0" y1="0" x2="100" y2="0" stroke="#888" />
       </pattern>
     </defs>
+  );
+}
+
+export interface SeriesHighlightProps {
+  series: Series;
+  height: number;
+  xScale: d3.ScaleTime<number, number>;
+}
+
+export function SeriesYellowHighlighter({
+  series,
+  height,
+  xScale,
+}: SeriesHighlightProps) {
+  return (
+    <rect
+      height={height}
+      width={xScale(series.end) - xScale(series.start)}
+      x={xScale(series.start)}
+      y="0"
+      fill="yellow"
+      opacity={0.1}
+    />
+  );
+}
+
+export function SeriesHashing({
+  series,
+  height,
+  xScale,
+}: SeriesHighlightProps) {
+  return (
+    <rect
+      height={height}
+      width={xScale(series.end) - xScale(series.start)}
+      x={xScale(series.start)}
+      y="0"
+      className="gradient-repeating-lines"
+      fill={`url(#${SERIES_HIGHLIGHT_PATTERN_DEF})`}
+    />
   );
 }

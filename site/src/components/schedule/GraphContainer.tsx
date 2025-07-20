@@ -23,12 +23,16 @@ const DEFAULT_NET_RECORD_BOUNDS = 32;
 
 export interface GraphContainerProps {
   teamId: TeamId;
+  highlightedSeriesId: SeriesId | null;
+  onHighlightedSeriesIdChange: (id: SeriesId | null) => void;
   selectedSeriesId: SeriesId | null;
   onSelectedSeriesIdChange: (id: SeriesId | null) => void;
 }
 
 export function GraphContainer({
   teamId,
+  highlightedSeriesId,
+  onHighlightedSeriesIdChange,
   selectedSeriesId,
   onSelectedSeriesIdChange,
 }: GraphContainerProps) {
@@ -85,13 +89,13 @@ export function GraphContainer({
     netRecordsElement.append("g").call(netRecordsAxisGenerator);
   }, []);
 
-  const handleScrubPositionChange: MouseEventHandler = (event) => {
+  const resolveSeriesFromMousePosition = (x: number): string | undefined => {
     if (!containerRef.current) {
       return;
     }
 
     const rect = containerRef.current.getBoundingClientRect();
-    const position = event.clientX - rect.left - Y_AXIS_WIDTH;
+    const position = x - rect.left - Y_AXIS_WIDTH;
 
     const date = xScale.invert(position);
 
@@ -101,6 +105,16 @@ export function GraphContainer({
         scheduleData.series[seriesId].end > date
     );
 
+    return series;
+  };
+
+  const handleScrubPositionChange: MouseEventHandler = (event) => {
+    const series = resolveSeriesFromMousePosition(event.clientX);
+    series && onHighlightedSeriesIdChange(series);
+  };
+
+  const handleClick: MouseEventHandler = (event) => {
+    const series = resolveSeriesFromMousePosition(event.clientX);
     series && onSelectedSeriesIdChange(series);
   };
 
@@ -111,7 +125,8 @@ export function GraphContainer({
         gridTemplateColumns: `${Y_AXIS_WIDTH}px ${CHART_WIDTH}px 100px`,
       }}
       onMouseMove={handleScrubPositionChange}
-      onMouseLeave={() => onSelectedSeriesIdChange(null)}
+      onMouseLeave={() => onHighlightedSeriesIdChange(null)}
+      onClick={handleClick}
       ref={containerRef}
       className="overflow-x-scroll"
     >
@@ -134,6 +149,7 @@ export function GraphContainer({
           xScale={xScale}
           yScale={rankingsYScale}
           selectedSeriesId={selectedSeriesId}
+          highlightedSeriesId={highlightedSeriesId}
         />
       </div>
       <div>
@@ -161,7 +177,7 @@ export function GraphContainer({
           xScale={xScale}
           yScale={scheduleYScale}
           selectedSeriesId={selectedSeriesId}
-          onSelectedSeriesIdChange={onSelectedSeriesIdChange}
+          highlightedSeriesId={highlightedSeriesId}
         />
       </div>
       <ScheduleKey />
