@@ -83,7 +83,16 @@ def process(teams_json, year):
         # Read the body and decode it
         body = response['Body'].read().decode('utf-8')
         schedule = json.loads(body)
-        regular_season = [game for game in schedule if game['game_type'] == 'R' and game['status'] != 'Postponed']
+        
+        regular_season = []
+        schedule_set = set()
+
+        # MLB will index games that get rained out and continued the next day *twice* with no flags to indicate this.
+        # We need to only pick up the last instance of each game.
+        for game in reversed(schedule):
+            if game['game_id'] not in schedule_set and game['game_type'] == 'R' and game['status'] != 'Postponed':
+                schedule_set.add(game['game_id'])
+                regular_season.insert(0, game)
 
         record = [0, 0]
 
@@ -92,16 +101,20 @@ def process(teams_json, year):
 
         last_10_games = Queue(maxsize=10)
 
+        # There's was and edge scenario where the last two teams by "id" play two home/away series separated by a large chunk of games
+        # and it was treated as one large series spanning months as all other games had already been processed.
+        # Skipped games is detecting this case.
+        skipped_games = 0
+
         for game in regular_season:
             is_home_team = str(game['home_id']) == team_id
             did_home_team_win = game['home_score'] > game['away_score']
             did_team_win = (did_home_team_win and is_home_team) or (not did_home_team_win and not is_home_team)
 
-            if game['status'] == 'Final':
-                if did_team_win:
-                    record[0] += 1 
-                else:
-                    record[1] += 1
+            if did_team_win:
+                record[0] += 1 
+            else:
+                record[1] += 1
 
             # Create a new entry in the records log if this is our first time processing this day.
             #
@@ -127,12 +140,13 @@ def process(teams_json, year):
                 if game['game_id'] in all_series and game['game_id'] not in current_team:
                     current_team.append(game['game_id'])
 
+                skipped_games += 1
                 continue
 
             # We need to add series blocks if this is the first time iterating over the games.
             # See if a new series is starting or if we're adding to an existing one.
             #
-            if current_series is None or current_series['home'] != str(game['home_id']) or current_series['away'] != str(game['away_id']):
+            if current_series is None or current_series['home'] != str(game['home_id']) or current_series['away'] != str(game['away_id']) or skipped_games > 0:
                 if current_series is not None:
                     all_series[current_series_id] = current_series
 
@@ -157,6 +171,7 @@ def process(teams_json, year):
                 ])
 
             processed_game_ids.add(game['game_id'])
+            skipped_games = 0
         
         if current_series_id is not None:
             all_series[current_series_id] = current_series

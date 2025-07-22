@@ -15,6 +15,7 @@ export class CdkStack extends Stack {
 
     new StatsLambda(this, "stats-lambda", {
       publicBucket: staticSite.publicBucket,
+      distributionId: staticSite.distributionId,
     });
   }
 }

@@ -104,22 +104,20 @@ export function SeriesResults({
       ))}
 
       {playedSchedule.map((id: SeriesId) => (
-        <g transform={`translate(-100%, 0)`}>
-          <text
-            key={id}
-            text-anchor="middle"
-            x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
-            fontSize={`${heatIndexSize(opponentHeatIndexBeforeSeries(id))}px`}
-            height={OPPONENT_HEAT_INDEX_OFFSET}
-            width={
-              xScale(scheduleData.series[id].end) -
-              xScale(scheduleData.series[id].start)
-            }
-            y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_OFFSET / 2}
-          >
-            {heatIndexIcon(opponentHeatIndexBeforeSeries(id))}
-          </text>
-        </g>
+        <text
+          key={id}
+          textAnchor="middle"
+          x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
+          fontSize={`${heatIndexSize(opponentHeatIndexBeforeSeries(id))}px`}
+          height={OPPONENT_HEAT_INDEX_OFFSET}
+          width={
+            xScale(scheduleData.series[id].end) -
+            xScale(scheduleData.series[id].start)
+          }
+          y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_OFFSET / 2}
+        >
+          {heatIndexIcon(opponentHeatIndexBeforeSeries(id))}
+        </text>
       ))}
     </g>
   );

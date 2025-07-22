@@ -1,8 +1,10 @@
 import * as d3 from "d3";
 import {
   CHART_WIDTH,
+  CURRENT_SEASON,
   RANKINGS_HEIGHT,
   RANKINGS_PADDING,
+  TODAY,
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
@@ -42,15 +44,15 @@ export function Rankings({
     (id) => scheduleData.series[id]
   );
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
   let start = new Date();
   start.setTime(scheduleData.start.getTime());
 
   let end = lastDayPlayed(scheduleData.end);
 
   const daySamples = d3.timeDays(start, end);
+
+  const showTodayMarker =
+    scheduleData.start.getFullYear() === parseInt(CURRENT_SEASON);
 
   const rankingLineGenerator = d3
     .line<Date>()
@@ -81,13 +83,15 @@ export function Rankings({
       className="border-x-1 border-gray-300 bg-white"
     >
       <g>
-        <line
-          x1={xScale(earlierDate(scheduleData.end, today))}
-          x2={xScale(earlierDate(scheduleData.end, today))}
-          y1={0}
-          y2={RANKINGS_HEIGHT}
-          stroke="#a0a0a0"
-        />
+        {showTodayMarker && (
+          <line
+            x1={xScale(TODAY)}
+            x2={xScale(TODAY)}
+            y1={0}
+            y2={RANKINGS_HEIGHT}
+            stroke="#a0a0a0"
+          />
+        )}
 
         {schedule.map((id: SeriesId) => (
           <line
@@ -143,6 +147,7 @@ export function Rankings({
 
         {schedule.map((id: SeriesId) => (
           <RankingPoint
+            key={id}
             x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
             yStart={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
             yEnd={yScale(opponentRankFinal(id)) + RANKINGS_PADDING / 2}

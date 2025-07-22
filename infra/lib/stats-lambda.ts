@@ -2,6 +2,7 @@ import { Stack, StackProps, CfnOutput, Duration } from "aws-cdk-lib";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import { Construct } from "constructs";
@@ -11,6 +12,7 @@ import fs from "fs";
 
 export interface StatsLambdaProps {
   publicBucket: s3.Bucket;
+  distributionId: string;
 }
 
 export class StatsLambda extends Construct {
@@ -47,6 +49,7 @@ export class StatsLambda extends Construct {
       environment: {
         SCHEDULE_DATA_BUCKET: scheduleDataBucket.bucketName,
         PUBLIC_BUCKET: props.publicBucket.bucketName,
+        CF_DISTRIBUTION_ID: props.distributionId,
       },
       timeout: Duration.minutes(10),
       memorySize: 256,
@@ -65,6 +68,13 @@ export class StatsLambda extends Construct {
     });
 
     rule.addTarget(new targets.LambdaFunction(dailyLambda));
+
+    dailyLambda.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["cloudfront:CreateInvalidation"],
+        resources: ["*"], // Ideally restrict this
+      })
+    );
 
     scheduleDataBucket.grantReadWrite(dailyLambda);
     props.publicBucket.grantReadWrite(dailyLambda);

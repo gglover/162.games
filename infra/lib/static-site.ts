@@ -22,6 +22,7 @@ export interface StaticSiteProps {
  */
 export class StaticSite extends Construct {
   public readonly publicBucket: s3.Bucket;
+  public readonly distributionId: string;
 
   constructor(parent: Stack, name: string, props: StaticSiteProps) {
     super(parent, name);
@@ -103,6 +104,7 @@ export class StaticSite extends Construct {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
     });
+    this.distributionId = distribution.distributionId;
 
     new CfnOutput(this, "DistributionId", {
       value: distribution.distributionId,

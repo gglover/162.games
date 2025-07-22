@@ -1,10 +1,12 @@
-import { Link } from "@tanstack/react-router";
-import { TEAMS } from "../constants";
+import { Link, useParams } from "@tanstack/react-router";
+import { CURRENT_SEASON, SITE_TITLE, TEAMS } from "../constants";
 
 export function Header() {
   const teamLinks = Object.values(TEAMS).sort((a, b) =>
     a.symbol.localeCompare(b.symbol)
   );
+  let { season } = useParams({ strict: false });
+  season ??= CURRENT_SEASON;
 
   // Group teams by division
   const teamsByDivision = teamLinks.reduce(
@@ -23,25 +25,24 @@ export function Header() {
     <header>
       <div className="text-white bg-gray-800 border-gray-200 shadow-md">
         <div className="p-2 text-[12px]">
-          {/* <img src="/logo.png" width="40" height="40" className="inline" /> */}
-          <h1 className=" text-center font-bold">Baseball Series Charts</h1>
+          <h1 className="text-center font-bold">{SITE_TITLE}</h1>
         </div>
       </div>
 
       <div className="text-black bg-gray-200 border-b-2 border-gray-300 shadow-md">
         <div className="p-3">
-          {/* <img className="w-12 h-12" src="/logo.png" /> */}
           <div className="flex gap-5 justify-center flex-wrap">
             {divisionOrder.map((division) => (
               <div
                 key={division}
-                className="flex gap-0.5 text-[10px] items-center"
+                className="flex gap-0.5 text-[10px] items-center flex-col md:flex-row"
               >
                 {teamsByDivision[division].map((team) => (
                   <Link
                     key={team.id}
-                    to="/teams/$teamSymbol"
-                    params={{ teamSymbol: team.symbol }}
+                    replace
+                    to="/teams/$teamSymbol/$season"
+                    params={{ teamSymbol: team.symbol, season }}
                   >
                     <span className="px-0.5">{team.symbol}</span>
                   </Link>

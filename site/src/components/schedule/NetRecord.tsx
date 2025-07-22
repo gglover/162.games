@@ -1,14 +1,16 @@
 import * as d3 from "d3";
 import {
   CHART_WIDTH,
+  CURRENT_SEASON,
   DIVISION_LEADER_COLOR,
   PLAYOFF_INDEX,
   TEAMS,
+  TODAY,
   WC3_COLOR,
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
-import { dateToRecordsKey, earlierDate } from "../../utils";
+import { dateToRecordsKey } from "../../utils";
 import {
   SeriesHashing,
   SeriesHighlightDefs,
@@ -45,23 +47,20 @@ export function NetRecord({
     (id) => scheduleData.series[id]
   );
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
   const playedSchedule = schedule.filter(
-    (id) => scheduleData.series[id].start < today
+    (id) => scheduleData.series[id].start < TODAY
   );
 
-  const daySamples = playedSchedule.map((id) => scheduleData.series[id].end);
+  const daySamples = playedSchedule.map((id) => scheduleData.series[id].start);
   // const daySamples = d3.timeDays(scheduleData.start, scheduleData.end);
+
+  const showTodayMarker =
+    scheduleData.start.getFullYear() === parseInt(CURRENT_SEASON);
 
   const playoffLineGenerator = d3
     .line<Date>()
     .x((day: Date) => xScale(day))
     .y((day: Date) => {
-      // const dayBeforeSeries = new Date(day);
-      // dayBeforeSeries.setDate(day.getDate() - 1);
-
       const dateKey = dateToRecordsKey(day);
       const lastInId =
         scheduleData.playoffs[dateKey][PLAYOFF_INDEX[TEAMS[teamId].league]];
@@ -126,13 +125,15 @@ export function NetRecord({
         />
       ))}
 
-      <line
-        x1={xScale(earlierDate(scheduleData.end, today))}
-        x2={xScale(earlierDate(scheduleData.end, today))}
-        y1={0}
-        y2={height}
-        stroke="#a0a0a0"
-      />
+      {showTodayMarker && (
+        <line
+          x1={xScale(TODAY)}
+          x2={xScale(TODAY)}
+          y1={0}
+          y2={height}
+          stroke="#a0a0a0"
+        />
+      )}
 
       <path
         d={playoffLineGenerator(daySamples)!}

@@ -5,7 +5,7 @@ export function Footer() {
         className="underline"
         href="https://github.com/gglover/mlb-season-data-vis"
       >
-        github
+        contribute
       </a>
       <span>⚾</span>
       <a className="underline" href="https://gus.city">

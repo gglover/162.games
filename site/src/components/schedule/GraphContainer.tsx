@@ -42,9 +42,12 @@ export function GraphContainer({
 
   const scheduleData = useScheduleDataContext();
 
+  const end = new Date(scheduleData.end);
+  end.setDate(end.getDate() + 1);
+
   const xScale = d3
     .scaleTime()
-    .domain([scheduleData.start, scheduleData.end])
+    .domain([scheduleData.start, end])
     .range([0, CHART_WIDTH]);
 
   let recordBounds = [DEFAULT_NET_RECORD_BOUNDS, -DEFAULT_NET_RECORD_BOUNDS];
@@ -90,7 +93,7 @@ export function GraphContainer({
   }, []);
 
   const resolveSeriesFromMousePosition = (x: number): string | undefined => {
-    if (!containerRef.current) {
+    if (!containerRef.current || screen.width < 765) {
       return;
     }
 

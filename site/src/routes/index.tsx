@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { fetchScheduleData } from "../schedule";
 import { useState } from "react";
 import { SeasonSelect } from "../components/SeasonSelect";
@@ -9,6 +9,14 @@ import { ScheduleDataContext } from "../contexts";
 
 export const Route = createFileRoute("/")({
   component: HomePageComponent,
+  loader: () => {
+    throw redirect({
+      to: "/teams/$teamSymbol",
+      params: {
+        teamSymbol: "SEA",
+      },
+    });
+  },
 });
 
 function HomePageComponent() {

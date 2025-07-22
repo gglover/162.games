@@ -14,6 +14,7 @@ SEASON_START = '03/1'
 SEASON_END = '10/30'
 
 s3_client = boto3.client('s3')
+cloudfront_client = boto3.client('cloudfront')
 logger = logging.getLogger()
 logger.setLevel("INFO")
 
@@ -32,12 +33,16 @@ def lambda_handler(event, context):
 
         schedule_bucket_name = os.environ.get('SCHEDULE_DATA_BUCKET')
         public_bucket_name = os.environ.get('PUBLIC_BUCKET')
+        distribution_id = os.environ.get("CF_DISTRIBUTION_ID")
 
         if not schedule_bucket_name:
             raise ValueError("Missing required environment variable SCHEDULE_DATA_BUCKET")
         
         if not public_bucket_name:
             raise ValueError("Missing required environment variable PUBLIC_BUCKET")
+                
+        if not distribution_id:
+            raise ValueError("CF_DISTRIBUTION_ID environment variable not set.")
         
         teams_json = None
 
@@ -91,6 +96,26 @@ def lambda_handler(event, context):
 
 
         logger.info(f"Successfully processed schedule for {year}.")
+
+        # Issue CF invalidation for newly processed schedule.
+        #
+        try:
+            caller_reference = f"invalidate-{int(time.time())}"
+            invalidation = cloudfront_client.create_invalidation(
+                DistributionId=distribution_id,
+                InvalidationBatch={
+                    'Paths': {
+                        'Quantity': 1,
+                        'Items': [f'/data_{year}.json']
+                    },
+                    'CallerReference': caller_reference
+                }
+            )
+            logger.info(f"Invalidation created: {invalidation['Invalidation']['Id']}")
+
+        except Exception as e:
+            logger.error(f"Error creating invalidation: {str(e)}")
+            raise
         
         return {
             "statusCode": 200,

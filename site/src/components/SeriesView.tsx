@@ -10,7 +10,6 @@ export interface SeriesViewProps {
 export function SeriesView({ seriesId }: SeriesViewProps) {
   const scheduleData = useScheduleDataContext();
   const series = scheduleData.series[seriesId];
-  const length = daysBetween(series.start, series.end);
 
   const dayBeforeSeries = new Date(series.start);
   dayBeforeSeries.setDate(series.start.getDate() - 1);
@@ -23,7 +22,7 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
 
   // Link to day's games https://www.mlb.com/scores/2025-05-04 ex.
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < series.scores.length / 2; i++) {
     const homeWon = series.scores[i * 2] > series.scores[i * 2 + 1];
 
     const gameDate = new Date(series.start);
@@ -60,7 +59,7 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
   }
 
   return (
-    <div className="shadow-md rounded-sm p-3 flex flex-col h-[175px] bg-white">
+    <div className="shadow-md rounded-sm p-3 flex flex-col h-[175px] bg-white overflow-scroll">
       <div className="flex justify-between items-center mb-2">
         <div className="text-center">
           <div className="bg-gray-300 rounded-full p-2 w-8 m-auto">

@@ -48,15 +48,15 @@ export function TeamSidebar({
   const mlbRanking = ordinalSuffixFormat(records[2]);
 
   return (
-    <div className="flex flex-col gap-2 team-overview w-38 mt-12">
-      <div className="h-[150px] flex items-center mb-5">
-        <div className="w-30 h-30 mx-auto bg-gray-300 p-7 rounded-full relative shadow-sm border-1 border-gray-400">
+    <div className="flex w-1/1 px-5 md:px-0 gap-10 items-center md:flex-col md:gap-2 team-overview md:w-38 md:mt-12">
+      <div className="h-[150px] flex mb-2">
+        <div className="w-30 h-30 mx-auto bg-gray-200 p-6 rounded-3xl relative shadow-md border-1 border-gray-300">
           <img
             className="object-contain w-1/1 h-1/1"
             src={teamLogoFromId(teamId)}
           />
           {heatIndexIcon(heatIndex) && (
-            <div className="absolute rounded-full border-b-gray-100 border border-gray-200 bg-white w-7 h-7 text-center bottom-0 right-0">
+            <div className="absolute pt-[2px] rounded-full bg-white w-8 h-8 border-1 border-gray-300 shadow-md text-center -bottom-2 -right-2">
               <span style={{ fontSize: `${heatIndexSize(heatIndex)}px` }}>
                 {heatIndexIcon(heatIndex)}
               </span>
@@ -64,25 +64,27 @@ export function TeamSidebar({
           )}
         </div>
       </div>
-      <h1 className="text-lg text-gray-800 team-name">{team.name}</h1>
-      <p className="text-black text-xs mb-6 team-record">
-        {records[0]} – {records[1]}
-      </p>
-      <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center  justify-between">
-        {team.division}
-        <span className="font-bold ">{divisionRanking}</span>
-      </p>
-      <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center justify-between">
-        MLB
-        <span className="font-bold">{mlbRanking}</span>
-      </p>
+      <div className="flex-grow w-1/1 flex flex-col gap-1 md:gap-2">
+        <h1 className="text-lg text-gray-800 team-name">{team.name}</h1>
+        <p className="text-black text-xs mb-2 md:mb-6 team-record">
+          {records[0]} – {records[1]}
+        </p>
+        <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center  justify-between">
+          {team.division}
+          <span className="font-bold ">{divisionRanking}</span>
+        </p>
+        <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center justify-between">
+          MLB
+          <span className="font-bold">{mlbRanking}</span>
+        </p>
 
-      <div className="flex-grow"></div>
+        <div className="flex-grow"></div>
 
-      {selectedSeriesId && <SeriesView seriesId={selectedSeriesId} />}
+        {selectedSeriesId && <SeriesView seriesId={selectedSeriesId} />}
 
-      <div className="content-end my-3">
-        <SeasonSelect onChange={onSeasonChange} season={season} />
+        <div className="content-end my-3">
+          <SeasonSelect onChange={onSeasonChange} season={season} />
+        </div>
       </div>
     </div>
   );
