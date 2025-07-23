@@ -31,6 +31,8 @@ const BBREF_TRANSLATIONS: Record<string, string> = {
   TB: "TBA",
   KC: "KCR",
   CHC: "CHN",
+  NYY: "NYA",
+  SF: "SFN",
 };
 
 export const bballRefLinkFromDate = (series: Series, date: Date) => {

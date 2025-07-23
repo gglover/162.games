@@ -10,7 +10,7 @@ import {
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
-import { dateToRecordsKey } from "../../utils";
+import { dateToRecordsKey, earlierDate } from "../../utils";
 import {
   SeriesHashing,
   SeriesHighlightDefs,
@@ -52,6 +52,7 @@ export function NetRecord({
   );
 
   const daySamples = playedSchedule.map((id) => scheduleData.series[id].start);
+  daySamples.push(earlierDate(TODAY, scheduleData.end));
   // const daySamples = d3.timeDays(scheduleData.start, scheduleData.end);
 
   const showTodayMarker =

@@ -111,10 +111,11 @@ def process(teams_json, year):
             did_home_team_win = game['home_score'] > game['away_score']
             did_team_win = (did_home_team_win and is_home_team) or (not did_home_team_win and not is_home_team)
 
-            if did_team_win:
-                record[0] += 1 
-            else:
-                record[1] += 1
+            if game['home_score'] != game['away_score']:
+                if did_team_win:
+                    record[0] += 1 
+                else:
+                    record[1] += 1
 
             # Create a new entry in the records log if this is our first time processing this day.
             #

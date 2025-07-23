@@ -66,7 +66,7 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
     <div className="shadow-md rounded-sm p-3 flex flex-col h-[175px] bg-white overflow-scroll">
       <div className="flex justify-between items-center mb-2">
         <div className="text-center">
-          <div className="bg-gray-300 rounded-full p-2 w-8 m-auto">
+          <div className="bg-gray-300 rounded-lg p-2 w-8 m-auto">
             <img className="w-4 h-4" src={teamLogoFromId(series.home)} />
           </div>
           <span className="text-[9px] text-gray-600">
@@ -77,7 +77,7 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
         <div className="text-xs text-gray-600">vs</div>
 
         <div className="text-center">
-          <div className="bg-gray-300 rounded-full p-2 w-8">
+          <div className="bg-gray-300 rounded-lg p-2 w-8">
             <img className="w-4 h-4" src={teamLogoFromId(series.away)} />
           </div>
           <span className="text-[9px] text-gray-600">

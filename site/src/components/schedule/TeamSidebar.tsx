@@ -48,8 +48,8 @@ export function TeamSidebar({
   const mlbRanking = ordinalSuffixFormat(records[2]);
 
   return (
-    <div className="flex w-1/1 px-5 md:px-0 gap-10 items-center md:flex-col md:gap-2 team-overview md:w-38 md:mt-12">
-      <div className="h-[150px] flex mb-2">
+    <div className="flex w-1/1 px-5 border-b-gray-300 border-b-1 md:border-0 md:px-0 gap-10 items-center md:flex-col md:gap-2 team-overview md:w-38 md:mt-12">
+      <div className="md:h-[150px] flex mb-2">
         <div className="w-30 h-30 mx-auto bg-gray-200 p-6 rounded-3xl relative shadow-md border-1 border-gray-300">
           <img
             className="object-contain w-1/1 h-1/1"
