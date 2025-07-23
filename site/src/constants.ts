@@ -16,8 +16,8 @@ export const Y_AXIS_WIDTH = 30;
 export const SQUARE_SIZE = 400;
 export const SQUARE_PADDING = 10;
 
-export const WC3_COLOR = "#d0d0d0";
-export const DIVISION_LEADER_COLOR = "#d0d050";
+export const WC3_COLOR = "#d8d8d8";
+export const DIVISION_LEADER_COLOR = "#e0e090";
 
 export const SERIES_HIGHLIGHT_PATTERN_DEF = "#series-highlight";
 
@@ -31,7 +31,7 @@ export const ALL_STAR_GAMES: Record<string, Date> = {
 
 export const CURRENT_SEASON = SEASONS[0];
 
-export const SITE_TITLE = "Baseball Series Charts";
+export const SITE_TITLE = "Season Breakdowns";
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);

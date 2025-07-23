@@ -1,7 +1,12 @@
 import clsx from "clsx";
 import { useScheduleDataContext } from "../contexts";
-import { SeriesId } from "../interfaces";
-import { dateToRecordsKey, daysBetween, teamLogoFromId } from "../utils";
+import { Series, SeriesId } from "../interfaces";
+import {
+  bballRefLinkFromDate,
+  dateToRecordsKey,
+  daysBetween,
+  teamLogoFromId,
+} from "../utils";
 
 export interface SeriesViewProps {
   seriesId: SeriesId;
@@ -11,22 +16,27 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
   const scheduleData = useScheduleDataContext();
   const series = scheduleData.series[seriesId];
 
-  const dayBeforeSeries = new Date(series.start);
-  dayBeforeSeries.setDate(series.start.getDate() - 1);
+  // const dayBeforeSeries = new Date(series.start);
+  // dayBeforeSeries.setDate(series.start.getDate() - 1);
 
-  const dateKey = dateToRecordsKey(dayBeforeSeries);
+  const dateKey = dateToRecordsKey(series.start);
   const homeRecord = scheduleData.records[dateKey]?.[series.home] ?? 0;
   const awayRecord = scheduleData.records[dateKey]?.[series.away] ?? 0;
 
   const results = [];
 
-  // Link to day's games https://www.mlb.com/scores/2025-05-04 ex.
+  const gamesToShow = Math.max(
+    daysBetween(series.start, series.end),
+    series.scores.length / 2
+  );
 
-  for (let i = 0; i < series.scores.length / 2; i++) {
+  for (let i = 0; i < gamesToShow; i++) {
     const homeWon = series.scores[i * 2] > series.scores[i * 2 + 1];
-
     const gameDate = new Date(series.start);
-    gameDate.setDate(series.start.getDate() + i + 1);
+
+    const isUnplayedGame = i * 2 >= series.scores.length;
+
+    gameDate.setDate(series.start.getDate() + i);
 
     results.push(
       <div
@@ -38,17 +48,11 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
         >
           {series.scores[i * 2] ?? "-"}
         </span>
-        <span className="text-[10px]">
-          <a
-            href={`https://www.mlb.com/scores/${dateToRecordsKey(gameDate)}`}
-            target="_blank"
-          >
-            {gameDate.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-            })}
-          </a>
-        </span>
+        <GameLink
+          series={series}
+          gameDate={gameDate}
+          isUnplayed={isUnplayedGame}
+        />
         <span
           className={clsx("w-8 text-sm text-center", { "font-bold": !homeWon })}
         >
@@ -83,5 +87,53 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
       </div>
       {results}
     </div>
+  );
+}
+
+interface GameLinkProps {
+  series: Series;
+  gameDate: Date;
+  isUnplayed: boolean;
+}
+
+function GameLink({ series, gameDate, isUnplayed }: GameLinkProps) {
+  const dateText = gameDate.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+
+  if (isUnplayed) {
+    return (
+      <span className="flex-grow text-center text-[10px]">{dateText}</span>
+    );
+  }
+
+  return (
+    <span className="pl-2 flex-grow text-center text-[10px]">
+      <a
+        href={bballRefLinkFromDate(series, gameDate)}
+        target="_blank"
+        className="border-b-1"
+      >
+        {dateText}
+      </a>
+      <svg
+        className="inline"
+        xmlns="http://www.w3.org/2000/svg"
+        width="10"
+        height="10"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <title>external link</title>
+        <path d="M7 7h10v10"></path>
+        <path d="M7 17 17 7"></path>
+      </svg>
+    </span>
   );
 }

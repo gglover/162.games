@@ -14,15 +14,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  border-bottom: 2px solid transparent;
-}
-
-a.active {
-  background-color: white;
-  border-bottom: 2px solid black;
-}
-
 .axis text {
   color: var(--color-gray-500);
 }

@@ -5,8 +5,9 @@ export function Header() {
   const teamLinks = Object.values(TEAMS).sort((a, b) =>
     a.symbol.localeCompare(b.symbol)
   );
-  let { season } = useParams({ strict: false });
-  season ??= CURRENT_SEASON;
+  let { season = CURRENT_SEASON, teamSymbol = "" } = useParams({
+    strict: false,
+  });
 
   // Group teams by division
   const teamsByDivision = teamLinks.reduce(
@@ -24,8 +25,11 @@ export function Header() {
   return (
     <header>
       <div className="text-white bg-gray-800 border-gray-200 shadow-md">
-        <div className="p-2 text-[12px]">
-          <h1 className="text-center font-bold">{SITE_TITLE}</h1>
+        <div className="p-2.5 text-[12px]">
+          <h1 className="text-center">
+            <span className="font-bold">{SITE_TITLE}</span> – Series-by-series
+            MLB graphs
+          </h1>
         </div>
       </div>
 
@@ -44,7 +48,11 @@ export function Header() {
                     to="/teams/$teamSymbol/$season"
                     params={{ teamSymbol: team.symbol, season }}
                   >
-                    <span className="px-0.5">{team.symbol}</span>
+                    <span
+                      className={`border-b-2 p-0.5 ${team.symbol === teamSymbol ? "border-b-gray-800 bg-white" : "border-b-transparent"}`}
+                    >
+                      {team.symbol}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -55,3 +63,12 @@ export function Header() {
     </header>
   );
 }
+
+// a {
+//   border-bottom: 2px solid transparent;
+// }
+
+// a.active {
+//   background-color: white;
+//   border-bottom: 2px solid black;
+// }

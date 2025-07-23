@@ -118,7 +118,11 @@ export function GraphContainer({
 
   const handleClick: MouseEventHandler = (event) => {
     const series = resolveSeriesFromMousePosition(event.clientX);
-    series && onSelectedSeriesIdChange(series);
+    if (series === selectedSeriesId) {
+      onSelectedSeriesIdChange(null);
+    } else if (series) {
+      onSelectedSeriesIdChange(series);
+    }
   };
 
   return (

@@ -10,7 +10,6 @@ import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
   dateToRecordsKey,
-  earlierDate,
   goodBadColorScale,
   lastDayPlayed,
   opponentId,
@@ -60,7 +59,7 @@ export function Rankings({
     .y(
       (day: Date) =>
         yScale(scheduleData.records[dateToRecordsKey(day)][teamId][2]) +
-        RANKINGS_PADDING
+        RANKINGS_PADDING / 2
     )
     .curve(d3.curveNatural);
 
@@ -130,8 +129,8 @@ export function Rankings({
         <line
           x1="0"
           x2={CHART_WIDTH}
-          y1={yScale(15) + RANKINGS_PADDING}
-          y2={yScale(15) + RANKINGS_PADDING}
+          y1={yScale(15) + RANKINGS_PADDING / 2}
+          y2={yScale(15) + RANKINGS_PADDING / 2}
           style={{
             strokeDasharray: "5,3",
             stroke: MIDDLE_LINE_COLOR,
@@ -149,8 +148,8 @@ export function Rankings({
           <RankingPoint
             key={id}
             x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
-            yStart={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 2}
-            yEnd={yScale(opponentRankFinal(id)) + RANKINGS_PADDING / 2}
+            yStart={yScale(opponentRankForSeries(id)) + RANKINGS_PADDING / 4}
+            yEnd={yScale(opponentRankFinal(id)) + RANKINGS_PADDING / 4}
             color={goodBadColorScale(opponentRankForSeries(id) / 30)}
             seriesId={id}
           />

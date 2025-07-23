@@ -36,6 +36,8 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   };
 
   const handleSeasonChange = (season: string) => {
+    setSelectedSeriesId(null);
+    setHighlightedSeriesId(null);
     navigate({
       to: "/teams/$teamSymbol/$season",
       params: { season, teamSymbol: TEAMS[teamId].symbol },
@@ -52,7 +54,7 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <></>;
   }
 
   if (error || !scheduleData || !teamId) {

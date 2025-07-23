@@ -27,6 +27,20 @@ export const lastDayPlayed = (seasonEnd: Date) => {
   return today > end ? end : today;
 };
 
+const BBREF_TRANSLATIONS: Record<string, string> = {
+  TB: "TBA",
+  KC: "KCR",
+  CHC: "CHN",
+};
+
+export const bballRefLinkFromDate = (series: Series, date: Date) => {
+  let teamSymbol = TEAMS[series.home].symbol;
+  teamSymbol = BBREF_TRANSLATIONS[teamSymbol] ?? teamSymbol;
+  const serializedDate = dateToRecordsKey(date).replace(/-/g, "");
+
+  return `https://www.baseball-reference.com/boxes/${teamSymbol}/${teamSymbol}${serializedDate}0.shtml`;
+};
+
 export const daysBetween = (date1: Date, date2: Date) => {
   const timeDiff = Math.abs(date2.getTime() - date1.getTime());
   const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
