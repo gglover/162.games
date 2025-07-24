@@ -31,7 +31,7 @@ export const ALL_STAR_GAMES: Record<string, Date> = {
 
 export const CURRENT_SEASON = SEASONS[0];
 
-export const SITE_TITLE = "Season Breakdowns";
+export const SITE_TITLE = "162.games";
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);

@@ -32,7 +32,12 @@ const BBREF_TRANSLATIONS: Record<string, string> = {
   KC: "KCR",
   CHC: "CHN",
   NYY: "NYA",
+  NYM: "NYN",
   SF: "SFN",
+  LAD: "LAN",
+  LAA: "ANA",
+  STL: "SLN",
+  SD: "SDN",
 };
 
 export const bballRefLinkFromDate = (series: Series, date: Date) => {

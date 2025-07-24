@@ -1,1 +1,10 @@
-{}
+{
+  "hosted-zone:account=426089565269:domainName=162.games:region=us-west-2": {
+    "Id": "/hostedzone/Z03791023X0DCGN77RH6",
+    "Name": "162.games."
+  },
+  "hosted-zone:account=426089565269:domainName=162.games:region=us-east-1": {
+    "Id": "/hostedzone/Z03791023X0DCGN77RH6",
+    "Name": "162.games."
+  }
+}

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/teams/$teamSymbol/$season")({
   head: ({ params }) => ({
     meta: [
       {
-        title: `${params.teamSymbol.toUpperCase()} • ${params.season} • ${SITE_TITLE}`,
+        title: `${params.teamSymbol.toUpperCase()} ${params.season} • ${SITE_TITLE}`,
       },
     ],
   }),

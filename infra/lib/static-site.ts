@@ -11,7 +11,7 @@ import path = require("path");
 
 export interface StaticSiteProps {
   domainName: string;
-  siteSubDomain: string;
+  certificateArn: string;
 }
 
 /**
@@ -27,17 +27,15 @@ export class StaticSite extends Construct {
   constructor(parent: Stack, name: string, props: StaticSiteProps) {
     super(parent, name);
 
-    // const zone = route53.HostedZone.fromLookup(this, "Zone", {
-    //   domainName: props.domainName,
-    // });
+    const zone = route53.HostedZone.fromLookup(this, "Zone", {
+      domainName: props.domainName,
+    });
 
-    const siteDomain = props.siteSubDomain + "." + props.domainName;
-
-    new CfnOutput(this, "Site", { value: "https://" + siteDomain });
+    new CfnOutput(this, "Site", { value: "https://" + props.domainName });
 
     // Content bucket
     const siteBucket = new s3.Bucket(this, "SiteBucket", {
-      bucketName: siteDomain,
+      bucketName: props.domainName,
       cors: [
         {
           allowedOrigins: ["*"],
@@ -55,11 +53,22 @@ export class StaticSite extends Construct {
 
     // TLS certificate
     // const certificate = new acm.Certificate(this, "SiteCertificate", {
-    //   domainName: siteDomain,
+    //   domainName: props.domainName,
     //   validation: acm.CertificateValidation.fromDns(zone),
     // });
 
-    // new CfnOutput(this, "Certificate", { value: certificate.certificateArn });
+    // const certificate = new acm.DnsValidatedCertificate(this, "SiteCert", {
+    //   domainName: "yourdomain.com",
+    //   hostedZone: hostedZone,
+    //   region: "us-east-1",
+    // });
+    const certificate = acm.Certificate.fromCertificateArn(
+      this,
+      "ImportedCert",
+      props.certificateArn
+    );
+
+    new CfnOutput(this, "Certificate", { value: certificate.certificateArn });
 
     const allowAllOriginCachePolicy = new cloudfront.CachePolicy(
       this,
@@ -77,9 +86,9 @@ export class StaticSite extends Construct {
 
     // CloudFront distribution
     const distribution = new cloudfront.Distribution(this, "SiteDistribution", {
-      // certificate: certificate,
+      certificate: certificate,
       defaultRootObject: "index.html",
-      // domainNames: [siteDomain],
+      domainNames: [props.domainName],
       minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
       errorResponses: [
         {
@@ -111,13 +120,13 @@ export class StaticSite extends Construct {
     });
 
     // Route53 alias record for the CloudFront distribution
-    // new route53.ARecord(this, "SiteAliasRecord", {
-    //   recordName: siteDomain,
-    //   target: route53.RecordTarget.fromAlias(
-    //     new targets.CloudFrontTarget(distribution)
-    //   ),
-    //   zone,
-    // });
+    new route53.ARecord(this, "SiteAliasRecord", {
+      recordName: props.domainName,
+      target: route53.RecordTarget.fromAlias(
+        new targets.CloudFrontTarget(distribution)
+      ),
+      zone,
+    });
 
     // Deploy site contents to S3 bucket
     new s3deploy.BucketDeployment(this, "DeployWithInvalidation", {
@@ -127,15 +136,5 @@ export class StaticSite extends Construct {
       distribution,
       distributionPaths: ["/*"],
     });
-
-    // Put teams.json in the initial deployment bucket.
-    //
-    // Have python handler fetch that instead of local files.
-    // Have python handler publish output to secure bucket.
-    // process.py should pull from secure bucket.
-    // process.py should write to public bucket.
-    //
-    // Want to be able to run this locally...? Maybe not. Let's just switch everything over to cloud.
-    // How to test?
   }
 }
