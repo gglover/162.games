@@ -1,9 +1,9 @@
-# MLB Season Timeline (working title)
+# 162.games
 
 This project is an effort to visualize an MLB season as series-by-series outcomes. This is conceptually what
 many fans already do. There's a lot of noise with 162 individual results.
 
-## Monorepo setup for https://d48vmuz4fbfgs.cloudfront.net/teams/SEA (DNS TBD).
+## Monorepo setup for https://162.games/.
 
 ### `site/`
 
