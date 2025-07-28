@@ -27,7 +27,7 @@ export function Header() {
       <div className="text-white bg-gray-800 border-gray-200 shadow-md">
         <div className="p-2.5 text-[12px]">
           <h1 className="text-center">
-            <span className="font-bold">{SITE_TITLE}</span> – Series-by-series
+            <span className="font-bold">{SITE_TITLE}</span> • Series-by-series
             MLB season breakdowns
           </h1>
         </div>

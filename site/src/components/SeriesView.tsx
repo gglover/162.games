@@ -16,12 +16,12 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
   const scheduleData = useScheduleDataContext();
   const series = scheduleData.series[seriesId];
 
-  // const dayBeforeSeries = new Date(series.start);
-  // dayBeforeSeries.setDate(series.start.getDate() - 1);
+  const dayBeforeSeries = new Date(series.start);
+  dayBeforeSeries.setDate(series.start.getDate() - 1);
 
-  const dateKey = dateToRecordsKey(series.start);
-  const homeRecord = scheduleData.records[dateKey]?.[series.home] ?? 0;
-  const awayRecord = scheduleData.records[dateKey]?.[series.away] ?? 0;
+  const dateKey = dateToRecordsKey(dayBeforeSeries);
+  const homeRecord = scheduleData.records[dateKey]?.[series.home] ?? [0, 0];
+  const awayRecord = scheduleData.records[dateKey]?.[series.away] ?? [0, 0];
 
   const results = [];
 
@@ -63,8 +63,8 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
   }
 
   return (
-    <div className="shadow-md rounded-sm p-3 flex flex-col h-[175px] bg-white overflow-scroll">
-      <div className="flex justify-between items-center mb-2">
+    <div className="shadow-md rounded-sm p-3 flex flex-col h-[165px] bg-white">
+      <div className="flex justify-between items-center mb-1">
         <div className="text-center">
           <div className="bg-gray-300 rounded-lg p-2 w-8 m-auto">
             <img className="w-4 h-4" src={teamLogoFromId(series.home)} />

@@ -48,7 +48,7 @@ export function TeamSidebar({
   const mlbRanking = ordinalSuffixFormat(records[2]);
 
   return (
-    <div className="flex w-1/1 px-5 border-b-gray-300 border-b-1 md:border-0 md:px-0 gap-10 items-center md:flex-col md:gap-2 team-overview md:w-38 md:mt-12">
+    <div className="flex px-5 min-w-[160px] border-b-gray-300 border-b-1 md:border-0 md:px-0 gap-10 items-center md:flex-col md:gap-2 team-overview md:w-38 md:mt-12 md:mb-4">
       <div className="md:h-[150px] flex mb-2">
         <div className="w-30 h-30 mx-auto bg-gray-200 p-6 rounded-3xl relative shadow-md border-1 border-gray-300">
           <img
@@ -66,7 +66,7 @@ export function TeamSidebar({
       </div>
       <div className="flex-grow w-1/1 flex flex-col gap-1 md:gap-2">
         <h1 className="text-lg text-gray-800 team-name">{team.name}</h1>
-        <p className="text-black text-xs mb-2 md:mb-6 team-record">
+        <p className="text-black text-xs mb-2 md:mb-4 team-record">
           {records[0]} – {records[1]}
         </p>
         <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center  justify-between">

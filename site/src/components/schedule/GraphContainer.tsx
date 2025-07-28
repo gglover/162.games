@@ -138,8 +138,11 @@ export function GraphContainer({
       className="overflow-x-scroll"
     >
       <div></div>
-      <div className="flex">
+      <div className="flex justify-between">
         <TitleBadge>MLB Ranking</TitleBadge>
+        {/* <TitleBadge>
+          <span className="font-normal">Data source:</span> https://162.games
+        </TitleBadge> */}
       </div>
       <div></div>
 

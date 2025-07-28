@@ -8,7 +8,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "synth": "npx aws-cdk synth --profile personal",
-    "deploy": "npx aws-cdk deploy --profile personal"
+    "deploy": "npx aws-cdk deploy CdkStack --profile personal"
   },
   "devDependencies": {
     "@types/node": "22.7.9",
