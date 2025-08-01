@@ -10,7 +10,7 @@ export const RANKINGS_PADDING = 10;
 export const LOGOS_HEIGHT = 25;
 export const FOOTER_HEIGHT = 30;
 
-export const WIN_INTERVAL_HEIGHT = 6;
+export const WIN_INTERVAL_HEIGHT = 6.5;
 export const Y_AXIS_WIDTH = 30;
 
 export const SQUARE_SIZE = 400;

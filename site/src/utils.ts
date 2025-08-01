@@ -54,6 +54,11 @@ export const daysBetween = (date1: Date, date2: Date) => {
   return daysDiff;
 };
 
+export const truncate3Digits = (num: number) => {
+  const res = Math.trunc(num * 1000) / 1000;
+  return res.toFixed(3);
+};
+
 export const earlierDate = (date1: Date, date2: Date) =>
   date1 < date2 ? date1 : date2;
 

@@ -59,11 +59,13 @@ def heat_index(last_10_results_queue):
 def process(teams_json, year):
     """
     """
+    all_games = {}
     all_records = {}
     all_series = {}
     all_schedules = {}
     all_teams = {}
     playoffs = {}
+    stats = {}
     processed_game_ids = set()
 
     schedule_bucket_name = os.environ.get('SCHEDULE_DATA_BUCKET')
@@ -73,8 +75,6 @@ def process(teams_json, year):
         all_teams[team['id']] = team
 
     for team_id in all_schedules:
-        current_team = all_schedules[team_id]
-
         response = s3_client.get_object(
             Bucket=schedule_bucket_name,
             Key=f'{year}/{team_id}.json'
@@ -93,9 +93,15 @@ def process(teams_json, year):
             if game['game_id'] not in schedule_set and game['game_type'] == 'R' and game['status'] != 'Postponed':
                 schedule_set.add(game['game_id'])
                 regular_season.insert(0, game)
+        
+        all_games[team_id] = regular_season
 
+    
+    for team_id in all_schedules:
+        regular_season = all_games[team_id]
         record = [0, 0]
 
+        current_team = all_schedules[team_id]
         current_series = None
         current_series_id = None
 
@@ -185,8 +191,9 @@ def process(teams_json, year):
     season_start = sorted_dates[0]
     season_end = sorted_dates[-1]
 
+    # Fill gaps in records
+    #
     current_date = season_start
-
     while current_date <= season_end:
         prev_date_key = (current_date - timedelta(days = 1)).strftime("%Y-%m-%d")
         date_key = current_date.strftime("%Y-%m-%d")
@@ -256,6 +263,67 @@ def process(teams_json, year):
             divisions['NL West'][0],
         ]
 
+
+    # Strength of schedule stats
+    #
+    for team_id in all_schedules:
+        regular_season = all_games[team_id]
+        current_team = all_schedules[team_id]
+
+        aggregate_record = [0, 0]
+        played_record_now = [0, 0]
+        played_record_during_series = [0, 0]
+
+        final_records = all_records[season_end.strftime("%Y-%m-%d")]
+
+        for game in regular_season:
+            records = all_records[game['game_date']]
+            opponent_id = str(game['home_id']) if str(game['away_id']) == team_id else str(game['away_id'])
+
+            aggregate_record[0] = aggregate_record[0] + final_records[opponent_id][0]
+            aggregate_record[1] = aggregate_record[1] + final_records[opponent_id][1]
+
+            if game['status'] == 'Final':
+                played_record_now[0] = played_record_now[0] + final_records[opponent_id][0]
+                played_record_now[1] = played_record_now[1] + final_records[opponent_id][1]
+
+                played_record_during_series[0] = played_record_during_series[0] + records[opponent_id][0]
+                played_record_during_series[1] = played_record_during_series[1] + records[opponent_id][1]
+
+        def safe_division(n, d):
+            return n / d if d else 0
+
+        sos = safe_division(played_record_now[0], (played_record_now[0] + played_record_now[1]))
+
+        remaining_record = [aggregate_record[0] - played_record_now[0], aggregate_record[1] - played_record_now[1]]
+        rsos = safe_division(remaining_record[0], (remaining_record[0] + remaining_record[1]))
+
+        sos_during = safe_division(played_record_during_series[0], (played_record_during_series[0] + played_record_during_series[1]))
+        
+        stats[team_id] = {
+            'sos': sos,
+            'rsos': rsos,
+            'delta': sos - sos_during
+        }
+
+    sos_ranks = [(data['sos'], team_id) for team_id, data in stats.items()]
+    sos_ranks.sort(reverse=True)
+
+    rsos_ranks = [(data['rsos'], team_id) for team_id, data in stats.items()]
+    rsos_ranks.sort(reverse=True)
+
+    delta_ranks = [(data['delta'], team_id) for team_id, data in stats.items()]
+    delta_ranks.sort(reverse=True)
+
+    for i in range(len(sos_ranks)):
+        stats[sos_ranks[i][1]]['sosRank'] = i + 1
+        stats[rsos_ranks[i][1]]['rsosRank'] = i + 1
+        stats[delta_ranks[i][1]]['deltaRank'] = i + 1
+
+
+    # print(f"{team_id}: sos {sos}, rsos {rsos}, delta {sos / sos_during}")
+
+
     # Calculate last-in for playoffs
     #
     # division_leaders = ....
@@ -273,6 +341,7 @@ def process(teams_json, year):
         'series': all_series,
         'records': all_records,
         'playoffs': playoffs,
+        'stats': stats,
         'start': season_start.strftime("%Y-%m-%d"),
         'end': season_end.strftime("%Y-%m-%d"),
     }

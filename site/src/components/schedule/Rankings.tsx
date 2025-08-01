@@ -20,7 +20,7 @@ import { SeriesHashing, SeriesYellowHighlighter } from "../SeriesHighlightDefs";
 
 const SERIES_LINE_COLOR = "#e0e0e0";
 const MIDDLE_LINE_COLOR = "#a0a0a0";
-const RANKING_LINE_COLOR = "#707070";
+const RANKING_LINE_COLOR = "#909090";
 
 export interface RankingsProps {
   teamId: TeamId;

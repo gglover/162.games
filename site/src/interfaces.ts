@@ -18,6 +18,15 @@ export interface Series {
   scores: number[];
 }
 
+export interface Stats {
+  sos: number;
+  sosRank: number;
+  rsos: number;
+  rsosRank: number;
+  delta: number;
+  deltaRank: number;
+}
+
 export interface ScheduleData {
   schedules: Record<TeamId, SeriesId[]>;
   series: Record<SeriesId, Series>;
@@ -26,6 +35,7 @@ export interface ScheduleData {
     string,
     [TeamId, TeamId, TeamId, TeamId, TeamId, TeamId, TeamId, TeamId]
   >;
+  stats: Record<TeamId, Stats>;
   start: Date;
   end: Date;
 }

@@ -1,6 +1,6 @@
 import { SeriesId } from "../../interfaces";
 
-const RANKING_LINE_COLOR = "#707070";
+const RANKING_LINE_COLOR = "#909090";
 const RANKING_CHANGE_LINE_COLOR = "#666";
 const RANKING_POINT_SIZE = 6;
 

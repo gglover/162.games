@@ -1,4 +1,4 @@
-import { TEAMS, TODAY } from "../../constants";
+import { CURRENT_SEASON, TEAMS, TODAY } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
@@ -8,6 +8,7 @@ import {
   lastDayPlayed,
   ordinalSuffixFormat,
   teamLogoFromId,
+  truncate3Digits,
 } from "../../utils";
 import { SeasonSelect } from "../SeasonSelect";
 import { SeriesView } from "../SeriesView";
@@ -48,7 +49,7 @@ export function TeamSidebar({
   const mlbRanking = ordinalSuffixFormat(records[2]);
 
   return (
-    <div className="flex px-5 min-w-[160px] border-b-gray-300 border-b-1 md:border-0 md:px-0 gap-10 items-center md:flex-col md:gap-2 team-overview md:w-38 md:mt-12 md:mb-4">
+    <div className="flex px-5 min-w-[160px] border-b-gray-300 border-b-1 md:border-0 md:px-0 gap-10 items-center md:flex-col md:gap-2 team-overview md:w-38 md:mt-12">
       <div className="md:h-[150px] flex mb-2">
         <div className="w-30 h-30 mx-auto bg-gray-200 p-6 rounded-3xl relative shadow-md border-1 border-gray-300">
           <img
@@ -66,9 +67,10 @@ export function TeamSidebar({
       </div>
       <div className="flex-grow w-1/1 flex flex-col gap-1 md:gap-2">
         <h1 className="text-lg text-gray-800 team-name">{team.name}</h1>
-        <p className="text-black text-xs mb-2 md:mb-4 team-record">
+        <p className="text-black text-xs team-record">
           {records[0]} – {records[1]}
         </p>
+        <hr />
         <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center  justify-between">
           {team.division}
           <span className="font-bold ">{divisionRanking}</span>
@@ -77,15 +79,65 @@ export function TeamSidebar({
           MLB
           <span className="font-bold">{mlbRanking}</span>
         </p>
+        <hr />
+        {season === CURRENT_SEASON && (
+          <StatEntry
+            name="Remaining SoS"
+            value={scheduleData.stats[teamId].rsos}
+            ranking={scheduleData.stats[teamId].rsosRank}
+          />
+        )}
+
+        <StatEntry
+          name="Played SoS"
+          value={scheduleData.stats[teamId].sos}
+          ranking={scheduleData.stats[teamId].sosRank}
+        />
+
+        <StatEntry
+          name="Opponent WP∆"
+          value={scheduleData.stats[teamId].delta}
+          ranking={scheduleData.stats[teamId].deltaRank}
+          annotation="Difference between opponent's combined winning percentage using latest records and records at time of games. Larger number means opponents generally improved after playing this team. ie. this team has faced opponents at good times."
+        />
 
         <div className="flex-grow"></div>
 
         {selectedSeriesId && <SeriesView seriesId={selectedSeriesId} />}
 
-        <div className="content-end my-3">
+        <div className="content-end mb-3">
           <SeasonSelect onChange={onSeasonChange} season={season} />
         </div>
       </div>
     </div>
+  );
+}
+
+interface StatEntryProps {
+  name: string;
+  value: number;
+  ranking: number;
+  annotation?: string;
+}
+
+function StatEntry({ name, value, ranking, annotation }: StatEntryProps) {
+  const statFormatted = truncate3Digits(value);
+  const rankingFormatted = ordinalSuffixFormat(ranking);
+
+  return (
+    <p className="text-black relative text-[10px] team-mlb-ranking flex gap-3 items-center justify-between">
+      <span
+        className={`flex-grow group ${annotation && "underline decoration-dashed underline-offset-2 cursor-help"}`}
+      >
+        {annotation && (
+          <span className="absolute z-10 w-60 left-0 mt-2 p-2 top-1 bg-white shadow-lg hidden group-hover:block">
+            {annotation}
+          </span>
+        )}
+        {name}
+      </span>
+      <span>{statFormatted}</span>
+      <span className="font-bold w-6 text-right">{rankingFormatted}</span>
+    </p>
   );
 }

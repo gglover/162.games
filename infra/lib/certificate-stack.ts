@@ -4,7 +4,7 @@ import { Construct } from "constructs";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
 
-// Satisfies requirement that acm certs be issued in us-east-1
+// Satisfies requirement that all acm certs be issued in us-east-1
 //
 export class CertificateStack extends Stack {
   public readonly certificate: acm.ICertificate;
