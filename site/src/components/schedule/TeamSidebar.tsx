@@ -95,10 +95,10 @@ export function TeamSidebar({
         />
 
         <StatEntry
-          name="Opponent WP∆"
+          name="Opponent WP ∆"
           value={scheduleData.stats[teamId].delta}
           ranking={scheduleData.stats[teamId].deltaRank}
-          annotation="Difference between opponent's combined winning percentage using latest records and records at time of games. Larger number means opponents generally improved after playing this team. ie. this team has faced opponents at good times."
+          annotation="Difference between opponents’ combined winning percentage using latest records and records at time of the matchup. A larger value means opponents generally improved after playing this team, suggesting that this team has faced opponents at advantageous times."
         />
 
         <div className="flex-grow"></div>

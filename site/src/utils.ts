@@ -31,6 +31,7 @@ const BBREF_TRANSLATIONS: Record<string, string> = {
   TB: "TBA",
   KC: "KCR",
   CHC: "CHN",
+  CHA: "CWS",
   NYY: "NYA",
   NYM: "NYN",
   SF: "SFN",

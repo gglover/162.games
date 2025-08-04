@@ -44,9 +44,9 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
         className="flex justify-between items-center text-gray-600"
       >
         <span
-          className={clsx("w-8 text-sm text-center", { "font-bold": homeWon })}
+          className={clsx("w-8 text-sm text-center", { "font-bold": !homeWon })}
         >
-          {series.scores[i * 2] ?? "-"}
+          {series.scores[i * 2 + 1] ?? "-"}
         </span>
         <GameLink
           series={series}
@@ -54,9 +54,9 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
           isUnplayed={isUnplayedGame}
         />
         <span
-          className={clsx("w-8 text-sm text-center", { "font-bold": !homeWon })}
+          className={clsx("w-8 text-sm text-center", { "font-bold": homeWon })}
         >
-          {series.scores[i * 2 + 1] ?? "-"}
+          {series.scores[i * 2] ?? "-"}
         </span>
       </div>
     );
@@ -67,21 +67,21 @@ export function SeriesView({ seriesId }: SeriesViewProps) {
       <div className="flex justify-between items-center mb-1">
         <div className="text-center">
           <div className="bg-gray-300 rounded-lg p-2 w-8 m-auto">
-            <img className="w-4 h-4" src={teamLogoFromId(series.home)} />
-          </div>
-          <span className="text-[9px] text-gray-600">
-            {homeRecord[0]} - {homeRecord[1]}
-          </span>
-        </div>
-
-        <div className="text-xs text-gray-600">vs</div>
-
-        <div className="text-center">
-          <div className="bg-gray-300 rounded-lg p-2 w-8">
             <img className="w-4 h-4" src={teamLogoFromId(series.away)} />
           </div>
           <span className="text-[9px] text-gray-600">
             {awayRecord[0]} - {awayRecord[1]}
+          </span>
+        </div>
+
+        <div className="text-sm text-gray-600">@</div>
+
+        <div className="text-center">
+          <div className="bg-gray-300 rounded-lg p-2 w-8">
+            <img className="w-4 h-4" src={teamLogoFromId(series.home)} />
+          </div>
+          <span className="text-[9px] text-gray-600">
+            {homeRecord[0]} - {homeRecord[1]}
           </span>
         </div>
       </div>

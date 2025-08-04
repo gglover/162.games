@@ -59,7 +59,7 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
 
   if (error || !scheduleData || !teamId) {
     console.log(error);
-    return <div>error.</div>;
+    return <div>Error loading season data.</div>;
   }
 
   return (
