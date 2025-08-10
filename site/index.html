@@ -4,9 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="https://fav.farm/baseball" />
+    <meta
+      property="og:description"
+      content="Series-by-series MLB season breakdowns."
+    />
+    <meta property="og:image" content="/share-image.png" />
+    <meta property="og:type" content="website" />
+
+    <meta
+      name="twitter:description"
+      content="Series-by-series MLB season breakdowns."
+    />
+    <meta name="twitter:image" content="/share-image.png" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-DTSR4LRJWK"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-DTSR4LRJWK");
+    </script>
   </body>
 </html>

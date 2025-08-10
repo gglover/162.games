@@ -51,17 +51,6 @@ export class StaticSite extends Construct {
     this.publicBucket = siteBucket;
     new CfnOutput(this, "Bucket", { value: siteBucket.bucketName });
 
-    // TLS certificate
-    // const certificate = new acm.Certificate(this, "SiteCertificate", {
-    //   domainName: props.domainName,
-    //   validation: acm.CertificateValidation.fromDns(zone),
-    // });
-
-    // const certificate = new acm.DnsValidatedCertificate(this, "SiteCert", {
-    //   domainName: "yourdomain.com",
-    //   hostedZone: hostedZone,
-    //   region: "us-east-1",
-    // });
     const certificate = acm.Certificate.fromCertificateArn(
       this,
       "ImportedCert",
