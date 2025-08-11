@@ -1,4 +1,4 @@
-import { CURRENT_SEASON, TEAMS, TODAY } from "../../constants";
+import { CURRENT_SEASON, TEAMS, TODAY, YESTERDAY } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
@@ -31,7 +31,15 @@ export function TeamSidebar({
   const records = scheduleData.records[dateToRecordsKey(seasonEnd)][teamId];
   const team = TEAMS[teamId];
 
-  const heatIndex = scheduleData.records[dateToRecordsKey(TODAY)]?.[teamId][3];
+  const heatIndex =
+    scheduleData.records[dateToRecordsKey(YESTERDAY)]?.[teamId][3];
+
+  console.log(
+    dateToRecordsKey(YESTERDAY),
+    dateToRecordsKey(TODAY),
+    scheduleData.records[dateToRecordsKey(YESTERDAY)],
+    scheduleData.records[dateToRecordsKey(TODAY)]
+  );
 
   const divisionTeams = [];
   for (let teamId in TEAMS) {

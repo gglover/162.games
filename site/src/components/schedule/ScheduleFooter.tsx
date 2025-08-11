@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { CHART_WIDTH, FOOTER_HEIGHT, TODAY } from "../../constants";
+import { CHART_WIDTH, FOOTER_HEIGHT, TODAY, YESTERDAY } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { TeamId } from "../../interfaces";
 import { dateToRecordsKey, goodBadColorScale } from "../../utils";
@@ -27,7 +27,7 @@ export function ScheduleFooter({ teamId, xScale }: ScheduleFooterProps) {
   let currentDate = new Date(startDate);
   currentDate.setHours(0, 0, 0, 0);
 
-  while (currentDate < TODAY && currentDate < scheduleData.end) {
+  while (currentDate < YESTERDAY && currentDate < scheduleData.end) {
     // Format as YYYY-MM-DD (optional)
     currentDate.setDate(currentDate.getDate() + 1);
     dateList.push(new Date(currentDate));

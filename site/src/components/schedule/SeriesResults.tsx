@@ -1,4 +1,8 @@
-import { TODAY, WIN_INTERVAL_HEIGHT } from "../../constants";
+import {
+  SERIES_HIGHLIGHT_PATTERN_DEF,
+  TODAY,
+  WIN_INTERVAL_HEIGHT,
+} from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
@@ -65,7 +69,6 @@ export function SeriesResults({
     const recordChange = outcome[1] - outcome[0];
 
     const record = recordBeforeSeries(id, teamId);
-    // let initialY = (record[0] - record[1]) * -WIN_INTERVAL_HEIGHT;
     let initialY = yScale(record[0] - record[1]);
 
     if (recordChange === 0) {

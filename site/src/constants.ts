@@ -37,6 +37,11 @@ const today = new Date();
 today.setHours(0, 0, 0, 0);
 export const TODAY = today;
 
+const yesterday = new Date();
+yesterday.setHours(0, 0, 0, 0);
+yesterday.setDate(yesterday.getDate() - 1);
+export const YESTERDAY = yesterday;
+
 export const GOOD_BAD_COLOR_SCALE = d3
   .scaleLinear()
   .domain([0.0, 0.333, 0.666, 1.0])
