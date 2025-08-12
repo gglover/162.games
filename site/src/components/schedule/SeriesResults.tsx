@@ -1,4 +1,8 @@
-import { TODAY, WIN_INTERVAL_HEIGHT } from "../../constants";
+import {
+  GRAYSCAPE_FILTER_DEF,
+  TODAY,
+  WIN_INTERVAL_HEIGHT,
+} from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
@@ -88,9 +92,10 @@ export function SeriesResults({
   };
 
   return (
-    <g className={minimal ? "grayscale opacity-60" : ""}>
+    <g className={minimal ? "opacity-60" : ""}>
       {playedSchedule.map((id: SeriesId) => (
         <rect
+          filter={minimal ? `url(#${GRAYSCAPE_FILTER_DEF})` : ""}
           key={id}
           height={seriesOutcomeHeight(id)}
           width={

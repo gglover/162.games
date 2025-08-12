@@ -1,4 +1,7 @@
-import { SERIES_HIGHLIGHT_PATTERN_DEF } from "../constants";
+import {
+  GRAYSCAPE_FILTER_DEF,
+  SERIES_HIGHLIGHT_PATTERN_DEF,
+} from "../constants";
 import { Series } from "../interfaces";
 
 export function SeriesHighlightDefs() {
@@ -15,6 +18,15 @@ export function SeriesHighlightDefs() {
       >
         <line x1="0" y1="0" x2="100" y2="0" stroke="#888" />
       </pattern>
+      <filter id={GRAYSCAPE_FILTER_DEF}>
+        <feColorMatrix
+          type="matrix"
+          values="0.33 0.33 0.33 0 0
+                  0.33 0.33 0.33 0 0
+                  0.33 0.33 0.33 0 0
+                  0 0 0 1 0"
+        />
+      </filter>
     </defs>
   );
 }

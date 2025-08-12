@@ -19,7 +19,8 @@ export const SQUARE_PADDING = 10;
 export const WC3_COLOR = "#d8d8d8";
 export const DIVISION_LEADER_COLOR = "#e0e090";
 
-export const SERIES_HIGHLIGHT_PATTERN_DEF = "#series-highlight";
+export const SERIES_HIGHLIGHT_PATTERN_DEF = "series-highlight";
+export const GRAYSCAPE_FILTER_DEF = "grayscale-filter";
 
 export const SEASONS = ["2025", "2024", "2023", "2022"];
 export const ALL_STAR_GAMES: Record<string, Date> = {
