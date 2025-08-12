@@ -63,12 +63,3 @@ export function Header() {
     </header>
   );
 }
-
-// a {
-//   border-bottom: 2px solid transparent;
-// }
-
-// a.active {
-//   background-color: white;
-//   border-bottom: 2px solid black;
-// }

@@ -10,7 +10,7 @@ import {
 } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
-import { dateToRecordsKey, earlierDate } from "../../utils";
+import { dateToRecordsKey, earlierDate, opponentId } from "../../utils";
 import {
   SeriesHashing,
   SeriesHighlightDefs,
@@ -183,12 +183,15 @@ export function NetRecord({
           stroke: FIVE_HUNDRED_STROKE_COLOR,
         }}
       />
-      <SeriesResults
-        teamId={teamId}
-        seriesIds={schedule}
-        xScale={xScale}
-        yScale={yScale}
-      />
+      {selectedSeriesId && (
+        <SeriesResults
+          teamId={opponentId(teamId, scheduleData.series[selectedSeriesId])}
+          xScale={xScale}
+          yScale={yScale}
+          minimal
+        />
+      )}
+      <SeriesResults teamId={teamId} xScale={xScale} yScale={yScale} />
     </svg>
   );
 }

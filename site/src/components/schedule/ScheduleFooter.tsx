@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { CHART_WIDTH, FOOTER_HEIGHT, TODAY, YESTERDAY } from "../../constants";
+import { CHART_WIDTH, FOOTER_HEIGHT, YESTERDAY } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { TeamId } from "../../interfaces";
 import { dateToRecordsKey, goodBadColorScale } from "../../utils";

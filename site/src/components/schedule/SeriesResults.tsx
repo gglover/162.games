@@ -1,8 +1,4 @@
-import {
-  SERIES_HIGHLIGHT_PATTERN_DEF,
-  TODAY,
-  WIN_INTERVAL_HEIGHT,
-} from "../../constants";
+import { TODAY, WIN_INTERVAL_HEIGHT } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {
@@ -20,24 +16,25 @@ const OPPONENT_HEAT_INDEX_OFFSET = 12;
 
 export interface SeriesResultsProps {
   teamId: TeamId;
-  seriesIds: SeriesId[];
   xScale: d3.ScaleTime<number, number>;
   yScale: d3.ScaleLinear<number, number>;
+  minimal?: boolean;
 }
 
 export function SeriesResults({
   teamId,
-  seriesIds,
   xScale,
   yScale,
+  minimal = false,
 }: SeriesResultsProps) {
   const scheduleData = useScheduleDataContext();
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const seriesIds = scheduleData.schedules[teamId].filter(
+    (id) => scheduleData.series[id]
+  );
 
   const playedSchedule = seriesIds.filter(
-    (id) => scheduleData.series[id].start <= today
+    (id) => scheduleData.series[id].start <= TODAY
   );
 
   const seriesOutcomeHeight = (id: SeriesId) => {
@@ -91,7 +88,7 @@ export function SeriesResults({
   };
 
   return (
-    <g>
+    <g className={minimal ? "grayscale opacity-60" : ""}>
       {playedSchedule.map((id: SeriesId) => (
         <rect
           key={id}
@@ -106,22 +103,23 @@ export function SeriesResults({
         />
       ))}
 
-      {playedSchedule.map((id: SeriesId) => (
-        <text
-          key={id}
-          textAnchor="middle"
-          x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
-          fontSize={`${heatIndexSize(opponentHeatIndexBeforeSeries(id))}px`}
-          height={OPPONENT_HEAT_INDEX_OFFSET}
-          width={
-            xScale(scheduleData.series[id].end) -
-            xScale(scheduleData.series[id].start)
-          }
-          y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_OFFSET / 2}
-        >
-          {heatIndexIcon(opponentHeatIndexBeforeSeries(id))}
-        </text>
-      ))}
+      {!minimal &&
+        playedSchedule.map((id: SeriesId) => (
+          <text
+            key={id}
+            textAnchor="middle"
+            x={seriesHalfwayPoint(scheduleData.series[id], xScale)}
+            fontSize={`${heatIndexSize(opponentHeatIndexBeforeSeries(id))}px`}
+            height={OPPONENT_HEAT_INDEX_OFFSET}
+            width={
+              xScale(scheduleData.series[id].end) -
+              xScale(scheduleData.series[id].start)
+            }
+            y={seriesOutcomeY(id) - OPPONENT_HEAT_INDEX_OFFSET / 2}
+          >
+            {heatIndexIcon(opponentHeatIndexBeforeSeries(id))}
+          </text>
+        ))}
     </g>
   );
 }
