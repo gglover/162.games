@@ -4,10 +4,10 @@ import { Division, League, Team } from "./interfaces";
 
 export const ASSETS_BASE_PATH = "https://d48vmuz4fbfgs.cloudfront.net";
 
-export const CHART_WIDTH = 900;
+export const CHART_WIDTH = 1000;
 export const RANKINGS_HEIGHT = 150;
 export const RANKINGS_PADDING = 10;
-export const LOGOS_HEIGHT = 25;
+export const LOGOS_HEIGHT = 30;
 export const FOOTER_HEIGHT = 30;
 
 export const WIN_INTERVAL_HEIGHT = 6.5;

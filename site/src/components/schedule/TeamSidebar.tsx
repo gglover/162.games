@@ -1,4 +1,4 @@
-import { CURRENT_SEASON, TEAMS, TODAY, YESTERDAY } from "../../constants";
+import { CURRENT_SEASON, TEAMS, YESTERDAY } from "../../constants";
 import { useScheduleDataContext } from "../../contexts";
 import { SeriesId, TeamId } from "../../interfaces";
 import {

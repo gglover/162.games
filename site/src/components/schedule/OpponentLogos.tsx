@@ -9,7 +9,7 @@ import { SeriesId, TeamId } from "../../interfaces";
 import { opponentId, seriesHalfwayPoint } from "../../utils";
 import { TeamLogo } from "../TeamLogo";
 
-const LOGO_SIZE = 12;
+const LOGO_SIZE = 15;
 
 export interface OpponentLogosProps {
   teamId: TeamId;
@@ -41,7 +41,7 @@ export function OpponentLogos({ teamId, xScale }: OpponentLogosProps) {
         ))}
       </g>
       <g
-        transform={`translate(${xScale(ALL_STAR_GAMES[scheduleData.start.getFullYear()])} 0)`}
+        transform={`translate(${xScale(ALL_STAR_GAMES[scheduleData.start.getFullYear()])} 3)`}
       >
         <path
           transform="scale(0.5) translate(0 12)"
