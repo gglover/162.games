@@ -22,7 +22,11 @@ const HOME_BLOCK_COLOR = "#f0f0f0";
 const AWAY_BLOCK_COLOR = "#f7f7f7";
 const FIVE_HUNDRED_STROKE_COLOR = "#a0a0a0";
 const SUBDIVISION_STROKE_COLOR = "#e5e5e5";
-const DIVISION_MARKS = [60, 50, 40, 30, 20, 10, -10, -20, -30, -40, -50, -60];
+const DIVISION_MARKS: number[] = [];
+
+for (let x = 5; x <= 60; x += 5) {
+  DIVISION_MARKS.push(x, x * -1);
+}
 
 export interface NetRecordProps {
   teamId: TeamId;

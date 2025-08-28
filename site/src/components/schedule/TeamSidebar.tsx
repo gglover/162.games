@@ -34,13 +34,6 @@ export function TeamSidebar({
   const heatIndex =
     scheduleData.records[dateToRecordsKey(YESTERDAY)]?.[teamId][3];
 
-  console.log(
-    dateToRecordsKey(YESTERDAY),
-    dateToRecordsKey(TODAY),
-    scheduleData.records[dateToRecordsKey(YESTERDAY)],
-    scheduleData.records[dateToRecordsKey(TODAY)]
-  );
-
   const divisionTeams = [];
   for (let teamId in TEAMS) {
     TEAMS[teamId].division === team.division && divisionTeams.push(teamId);
@@ -78,7 +71,7 @@ export function TeamSidebar({
         <p className="text-black text-xs team-record">
           {records[0]} – {records[1]}
         </p>
-        <hr />
+        <hr className="text-gray-300" />
         <p className="text-black text-xs team-mlb-ranking flex gap-1 items-center  justify-between">
           {team.division}
           <span className="font-bold ">{divisionRanking}</span>
@@ -87,7 +80,7 @@ export function TeamSidebar({
           MLB
           <span className="font-bold">{mlbRanking}</span>
         </p>
-        <hr />
+        <hr className="text-gray-300" />
         {season === CURRENT_SEASON && (
           <StatEntry
             name="Remaining SoS"

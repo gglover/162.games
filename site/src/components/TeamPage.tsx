@@ -28,7 +28,10 @@ export function TeamPage({ season, teamId }: TeamPageProps) {
   });
 
   const handleHighlightedSeriesIdChange = (id: SeriesId | null) => {
-    setHighlightedSeriesId(id);
+    // Disable hover highlights on mobile
+    if (screen.width > 765) {
+      setHighlightedSeriesId(id);
+    }
   };
 
   const handleSelectedSeriesIdChange = (id: SeriesId | null) => {

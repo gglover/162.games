@@ -93,12 +93,13 @@ export function GraphContainer({
   }, []);
 
   const resolveSeriesFromMousePosition = (x: number): string | undefined => {
-    if (!containerRef.current || screen.width < 765) {
+    if (!containerRef.current) {
       return;
     }
 
     const rect = containerRef.current.getBoundingClientRect();
-    const position = x - rect.left - Y_AXIS_WIDTH;
+    const position =
+      x - rect.left - Y_AXIS_WIDTH + containerRef.current.scrollLeft;
 
     const date = xScale.invert(position);
 
