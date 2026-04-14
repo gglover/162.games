@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePageComponent() {
-  const [season, setSeason] = useState("2025");
+  const [season, setSeason] = useState("2026");
   const [date, setDate] = useState(new Date());
 
   const {

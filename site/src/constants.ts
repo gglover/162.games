@@ -22,8 +22,9 @@ export const DIVISION_LEADER_COLOR = "#e0e090";
 export const SERIES_HIGHLIGHT_PATTERN_DEF = "series-highlight";
 export const GRAYSCAPE_FILTER_DEF = "grayscale-filter";
 
-export const SEASONS = ["2025", "2024", "2023", "2022"];
+export const SEASONS = ["2026", "2025", "2024", "2023", "2022"];
 export const ALL_STAR_GAMES: Record<string, Date> = {
+  2026: new Date("2026-07-14"),
   2025: new Date("2025-07-15"),
   2024: new Date("2024-07-16"),
   2023: new Date("2023-07-11"),
@@ -61,5 +62,5 @@ export const PLAYOFF_INDEX: Record<League | Division, number> = {
 };
 
 export const TEAMS = Object.fromEntries(
-  teamsJson.map((team) => [team.id, team as Team])
+  teamsJson.map((team) => [team.id, team as Team]),
 );
